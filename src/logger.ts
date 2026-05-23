@@ -1,9 +1,9 @@
 // LOGGING FUNCTION
-// Usage: customLog("This is a log message", "OK" | "ERROR" | "WARN")
+// Usage: customLog("This is a log message", LogPriority)
 //
-// Si aucun type n'est spécifié, "OK" est utilisé par défaut.
+// Si aucun type n'est spécifié, "INFO" est utilisé par défaut.
 // vvv
-// [2024-06-01 12:00:00] (OK)   This is a log message
+// [2024-06-01 12:00:00] (INFO)   This is a log message
 //
 // Utilise \n pour plusieurs ligne avec le même timestamp
 // Si plusieurs lignes sont utilisées, le type est appliqué à toutes les lignes
@@ -17,22 +17,32 @@ import { appendFile } from "node:fs/promises";
 type LogPriority = "TRACE" | "DEBUG" | "INFO" | "WARN" | "ERROR" | "CRITICAL";
 
 export function customLog(message: string, type: LogPriority = "INFO") {
-  const timestamp = formatDate(new Date());
+  const date = new Date();
+  const timestamp = formatDate(date);
   message = message.replaceAll("\n", "\n\t\t\t\t\t(" + type + ")\t");
-  appendFile("server.log", `${timestamp} (${type})\t${message}\n`);
+  appendFile(
+    `server-${formatDate(date, false)}.log`,
+    `${timestamp} (${type})\t${message}\n`,
+  );
 }
 
 function padTo2Digits(num: number) {
   return num.toString().padStart(2, "0");
 }
 
-function formatDate(date: Date) {
+function formatDate(date: Date, includeHours = true) {
+  const dateOnly = [
+    date.getFullYear(),
+    padTo2Digits(date.getMonth() + 1),
+    padTo2Digits(date.getDate()),
+  ].join("-");
+
+  if (!includeHours) {
+    return dateOnly;
+  }
+
   return (
-    [
-      date.getFullYear(),
-      padTo2Digits(date.getMonth() + 1),
-      padTo2Digits(date.getDate()),
-    ].join("-") +
+    dateOnly +
     " " +
     [
       padTo2Digits(date.getHours()),
