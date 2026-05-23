@@ -11,5 +11,8 @@
   },
   "scripts": {
     "dev": "bun --watch index.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
   }
 }

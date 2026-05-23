@@ -1,0 +1,12 @@
+server:
+  host: "localhost"
+  port: 3000
+
+zl:
+  api_url: "https://www.api.zerolatencyvr.com"
+  site_id: 71
+
+packages:
+  - roller_name: "Outbreak"
+    zl_id: 12
+    zl_name: "Outbreak"
