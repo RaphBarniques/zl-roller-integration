@@ -14,14 +14,16 @@
 
 import { appendFile } from "node:fs/promises";
 
-export function customLog(message: string, type: "OK" | "ERROR" | "WARN" = "OK") {
+type LogPriority = "TRACE" | "DEBUG" | "INFO" | "WARN" | "ERROR" | "CRITICAL";
+
+export function customLog(message: string, type: LogPriority = "INFO") {
   const timestamp = formatDate(new Date());
-  message = message.replaceAll("\n", '\n\t\t\t\t\t(' + type + ')\t');
+  message = message.replaceAll("\n", "\n\t\t\t\t\t(" + type + ")\t");
   appendFile("server.log", `${timestamp} (${type})\t${message}\n`);
 }
 
 function padTo2Digits(num: number) {
-  return num.toString().padStart(2, '0');
+  return num.toString().padStart(2, "0");
 }
 
 function formatDate(date: Date) {
@@ -30,12 +32,12 @@ function formatDate(date: Date) {
       date.getFullYear(),
       padTo2Digits(date.getMonth() + 1),
       padTo2Digits(date.getDate()),
-    ].join('-') +
-    ' ' +
+    ].join("-") +
+    " " +
     [
       padTo2Digits(date.getHours()),
       padTo2Digits(date.getMinutes()),
       padTo2Digits(date.getSeconds()),
-    ].join(':')
+    ].join(":")
   );
 }
