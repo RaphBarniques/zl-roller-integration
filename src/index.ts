@@ -1,5 +1,7 @@
 import { customLog } from "./logger.ts";
 import { parse } from "yaml";
+import chain from "./middleware/middleware.ts";
+import logging from "./middleware/logging.ts";
 
 const configFile = Bun.file("config.yaml");
 const configContent = await configFile.text();
@@ -10,9 +12,11 @@ const server = Bun.serve({
   hostname: config.server.host,
   port: config.server.port,
   routes: {
-    "/status": new Response("OK", { status: 200 }),
+    "/status": chain([logging], async (req) => {
+      return new Response("OK", { status: 200 });
+    }),
     "/webhooks/roller": {
-      POST: async (req) => {
+      POST: chain([logging], async (req) => {
         const url = new URL(req.url);
         const secret = url.searchParams.get("secret");
 
@@ -35,12 +39,12 @@ const server = Bun.serve({
         await handleWebhook(payload);
 
         return new Response("OK", { status: 200 });
-      },
+      }),
     },
   },
 
-  // 3. Fallback: Handles any requests that don't match the `routes` object.
   fetch(req) {
+    customLog(`${req.method} ${req.url}`);
     return new Response("Not Found", { status: 404 });
   },
 });
