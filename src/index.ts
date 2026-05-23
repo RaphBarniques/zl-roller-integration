@@ -37,17 +37,14 @@ const server = Bun.serve({
       await handleWebhook(payload);
 
       return new Response("OK", { status: 200 });
-
     }
 
     return new Response("Not Found", { status: 404 });
   },
-
-
 });
 
 async function handleWebhook(payload: any) {
-        // Todo : Logique de traitement du webhook
-      }
+  // Todo : Logique de traitement du webhook
+}
 
 customLog(`Server started at ${server.url}`);
