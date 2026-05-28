@@ -1,12 +1,14 @@
 import { customLog } from "./logger.ts";
-import { parse } from "yaml";
+import { initDb, initConfig, db, config, initEnv} from "./preflight.ts";
 import chain from "./middleware/middleware.ts";
-import logging from "./middleware/logging.ts";
+import logging from "./middleware/req_logging.ts";
 
-const configFile = Bun.file("config.yaml");
-const configContent = await configFile.text();
-const config = parse(configContent);
-console.log(config);
+customLog("-------------------------------------------------");
+customLog("ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...");
+
+await initDb();
+await initConfig();
+await initEnv();
 
 const server = Bun.serve({
   hostname: config.server.host,
@@ -53,4 +55,4 @@ async function handleWebhook(payload: any) {
   // Todo : Logique de traitement du webhook
 }
 
-customLog(`Server started at ${server.url}`);
+customLog(`Listening for webhooks at ${server.url}`);
