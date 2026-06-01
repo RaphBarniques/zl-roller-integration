@@ -3,10 +3,10 @@ server:
   port: 3000
 
 zl:
-  api_url: "https://www.api.zerolatencyvr.com"
+  api_base_url: "https://api.zerolatencyvr.com/api/v1"
   site_id: 71
 
 packages:
-  - roller_name: "Outbreak"
+  - package_name: "Package"
+    roller_id: 12
     zl_id: 12
-    zl_name: "Outbreak"

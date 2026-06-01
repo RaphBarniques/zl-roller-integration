@@ -83,7 +83,7 @@ export async function initConfig() {
     const configContent = await configFile.text();
     config = parse(configContent);
   } catch (error) {
-    customLog("Failed to load config.yaml", "ERROR");
+    customLog("Failed to load config.yaml\nShutting down...", "ERROR");
     process.exit(1);
   }
 

@@ -1,0 +1,1 @@
+// Todo : Envoyer des mails d'alertes pour les cas où une action manuelle est requise (prix à 0, échec de booking, etc.)

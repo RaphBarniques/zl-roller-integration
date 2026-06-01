@@ -1,5 +1,10 @@
 import { customLog } from "./logger.ts";
 import { initDb, initConfig, db, config, initEnv} from "./preflight.ts";
+import { getToken } from "./zlAuth.ts";
+import { createZLSession, deleteZLSession } from "./zlAPI.ts";
+import { handleCreatedWebhook } from "./webhooks/bookingCreated.ts";
+import { handleUpdatedWebhook } from "./webhooks/bookingUpdated.ts";
+import { handleDeletedWebhook } from "./webhooks/bookingDeleted.ts";
 import chain from "./middleware/middleware.ts";
 import logging from "./middleware/req_logging.ts";
 
@@ -9,6 +14,7 @@ customLog("ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...");
 await initDb();
 await initConfig();
 await initEnv();
+await getToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
 
 const server = Bun.serve({
   hostname: config.server.host,
@@ -20,7 +26,7 @@ const server = Bun.serve({
     "/webhooks/roller": {
       POST: chain([logging], async (req) => {
         const url = new URL(req.url);
-        const secret = url.searchParams.get("secret");
+        const secret = url.searchParams.get("apiKey");
 
         if (secret !== Bun.env.ROLLER_WEBHOOK_SECRET) {
           customLog(`Unauthorized webhook access attempt`, "WARN");
@@ -35,10 +41,27 @@ const server = Bun.serve({
           return new Response("Bad Request", { status: 400 });
         }
 
-        // Todo : Ajouter l'ID et le type de request dans le log
-        customLog(`Received webhook from ROLLER with ID: id and type: type`);
-
-        await handleWebhook(payload);
+        let reqType = "";
+        switch (payload.eventType) {
+          case 1:
+            reqType = "CREATED";
+            customLog(`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`);
+            await handleCreatedWebhook(payload);
+            break;
+          case 2:
+            reqType = "UPDATED";
+            customLog(`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`);
+            await handleUpdatedWebhook(payload);
+            break;
+          case 3:
+            reqType = "DELETED";
+            customLog(`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`);
+            await handleDeletedWebhook(payload);
+            break;
+          default:
+            reqType = "UNKNOWN";
+            customLog(`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`, "WARN");
+        }
 
         return new Response("OK", { status: 200 });
       }),
@@ -51,8 +74,6 @@ const server = Bun.serve({
   },
 });
 
-async function handleWebhook(payload: any) {
-  // Todo : Logique de traitement du webhook
-}
+customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 
-customLog(`Listening for webhooks at ${server.url}`);
+
