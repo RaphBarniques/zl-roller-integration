@@ -17,7 +17,7 @@ export async function createZLSession(rollerSessionID: string, rollerBookingID: 
     let delay = 1000;
 
     for (let attempt = 1; attempt <= retryMax; attempt++) {
-    const response = await fetch(`${config.zl_api_base_url}/sites/${Bun.env.ZL_SITE_ID}/bookings`, {
+    const response = await fetch(`${config.zl.api_base_url}/sites/${Bun.env.ZL_SITE_ID}/bookings`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -2,7 +2,6 @@ import { customLog } from "./logger.ts";
 import { initDb, initConfig, db, config, initEnv} from "./preflight.ts";
 import { getToken } from "./zlAuth.ts";
 import { createZLSession, deleteZLSession } from "./zlAPI.ts";
-import { handleCreatedWebhook } from "./webhooks/bookingCreated.ts";
 import { handleUpdatedWebhook } from "./webhooks/bookingUpdated.ts";
 import { handleDeletedWebhook } from "./webhooks/bookingDeleted.ts";
 import chain from "./middleware/middleware.ts";
@@ -46,7 +45,7 @@ const server = Bun.serve({
           case 1:
             reqType = "CREATED";
             customLog(`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`);
-            await handleCreatedWebhook(payload);
+            await handleUpdatedWebhook(payload);
             break;
           case 2:
             reqType = "UPDATED";

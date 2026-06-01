@@ -7,6 +7,6 @@ zl:
   site_id: 71
 
 packages:
-  - package_name: "Package"
+  - package_name: "Outnreak"
     roller_id: 12
     zl_id: 12

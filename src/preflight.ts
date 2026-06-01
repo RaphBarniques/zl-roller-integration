@@ -5,7 +5,25 @@ import { customLog } from "./logger";
 const DB_PATH = "sync.db";
 const dbExists = await Bun.file(DB_PATH).exists();
 export const db = new Database(DB_PATH);
+export let allowedPackages: Map<number, PackageConfig> = new Map();
 
+type AppConfig = {
+  server: {
+    host: string;
+    port: number;
+  };
+  zl: {
+    api_base_url: string;
+    site_id: number;
+  };
+  packages: PackageConfig[];
+};
+
+type PackageConfig = {
+  package_name: string;
+  roller_id: number;
+  zl_id: number;
+};
 
 // --DATABASE INITIALIZATION--
 export async function initDb() {
@@ -19,7 +37,7 @@ export async function initDb() {
   }
 
 
-  const tableExists = db
+  const itemTableExists = db
     .query(`
       SELECT name
       FROM sqlite_master
@@ -28,6 +46,14 @@ export async function initDb() {
     `)
     .get();
 
+  const eventTableExists = db
+    .query(`
+      SELECT name
+      FROM sqlite_master
+      WHERE type='table'
+      AND name='processed_events'
+    `)
+    .get();
 
   db.run(`
     CREATE TABLE IF NOT EXISTS synced_items (
@@ -45,9 +71,6 @@ export async function initDb() {
       package_name TEXT,
       price REAL,
 
-      last_signature TEXT,
-      message TEXT,
-
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -58,11 +81,26 @@ export async function initDb() {
     )
   `);
 
+  db.run(`
+  CREATE TABLE IF NOT EXISTS processed_events (
+    event_id TEXT PRIMARY KEY,
+    event_type TEXT,
+    booking_reference TEXT,
+    received_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )
+`);
 
-  if (tableExists) {
+
+  if (itemTableExists) {
     logMessage += "Found table: synced_items\n";
   } else {
     logMessage += "Created table: synced_items\n";
+  }
+
+  if (eventTableExists) {
+    logMessage += "Found table: processed_events\n";
+  } else {
+    logMessage += "Created table: processed_events\n";
   }
 
   logMessage += "Database ready";
@@ -72,7 +110,7 @@ export async function initDb() {
 
 // --CONFIG INITIALIZATION--
 
-export let config : any = null;
+export let config : AppConfig;
 
 export async function initConfig() {
 
@@ -81,7 +119,7 @@ export async function initConfig() {
   try {
     const configFile = Bun.file("config.yaml");
     const configContent = await configFile.text();
-    config = parse(configContent);
+    config = parse(configContent) as AppConfig;
   } catch (error) {
     customLog("Failed to load config.yaml\nShutting down...", "ERROR");
     process.exit(1);
@@ -89,6 +127,7 @@ export async function initConfig() {
 
 if (config != null) {
     logMessage += "Config loaded successfully";
+    allowedPackages = new Map(config.packages.map(pkg => [pkg.roller_id, pkg]));
     customLog(logMessage);
   } else {
     customLog("Config file is empty", "ERROR");
