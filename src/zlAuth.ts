@@ -42,12 +42,15 @@ export async function getToken() {
         logMessage = "";
         setTimeout(() => {}, delay);
     } else {
-        const data = await response.json() as { accessToken: string, refreshToken: string };
-        ZLRefreshToken = data.refreshToken;
-        ZLAuthToken = data.accessToken;
-        logMessage += "ZL API refresh token obtained successfully";
-        customLog(logMessage, "INFO");
-        return data.accessToken;
+      const data = (await response.json()) as {
+        AccessToken: string;
+        RefreshToken: string;
+      };
+      ZLRefreshToken = data.RefreshToken;
+      ZLAuthToken = data.AccessToken;
+      logMessage += "ZL API refresh token obtained successfully";
+      customLog(logMessage, "INFO");
+      return data.AccessToken;
     }
   }
     customLog(`Failed to get token after ${retryMax} attempts`, "ERROR");
