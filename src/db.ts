@@ -1,9 +1,37 @@
 import { db, config } from "./preflight.ts";
 
+type Booking = {
+  roller_booking_id: string;
+  roller_item_id: string;
+  zl_booking_id: string;
+  payment_status: string;
+  sync_status: string;
+  email: string;
+  players: number;
+  start_time: string;
+  roller_package_id: number;
+  zl_package_id: number;
+  package_name: string;
+  price: number;
+};
+
+type ProcessedEvent = {
+  event_id: string;
+  event_type: string;
+  booking_reference: string;
+  received_at: string;
+};
+
 export async function checkProcessedEvent(eventId: string) {
       return db
       .query("SELECT event_id FROM processed_events WHERE event_id = ?")
       .get(eventId) !== null;
+    }
+
+export async function getProcessedEvent(eventId: string) {
+      return db
+      .query("SELECT * FROM processed_events WHERE event_id = ?")
+      .get(eventId) as ProcessedEvent | null;
     }
 
 export async function saveProcessedEvent(eventId: string, eventType: string, bookingReference: string) {
@@ -30,7 +58,7 @@ export async function getSyncedItem(rollerBookingId: string, rollerItemId: strin
         AND roller_item_id = ?
         `
     )
-    .get(rollerBookingId, rollerItemId);
+    .get(rollerBookingId, rollerItemId) as Booking | null;
 }
 
 export async function saveSyncedItem(booking:any, bookingItem: any) {

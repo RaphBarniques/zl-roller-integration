@@ -1,4 +1,4 @@
-import { checkProcessedEvent, saveProcessedEvent, getSyncedItem, saveSyncedItem } from "../db.ts";
+import { checkProcessedEvent, getProcessedEvent, saveProcessedEvent, getSyncedItem, saveSyncedItem } from "../db.ts";
 import { config, allowedPackages } from "../preflight.ts";
 import { customLog } from "../logger.ts";
 import { createZLSession, deleteZLSession } from "../zlAPI.ts";
@@ -23,7 +23,7 @@ export async function handleUpdatedWebhook(payload: any) {
     return;
   }
 
-  //Loop through remaining items and process each booking if they are in the allowedPackages list
+  // Loop through remaining items and process each booking if they are in the allowedPackages list
   const bookingItems = booking.items;
   for (const item of bookingItems) {
     let logMessage = `Processing item ${item.roller_id} for booking ${bookingReference}...\n`;
@@ -35,29 +35,53 @@ export async function handleUpdatedWebhook(payload: any) {
     }
 
     const packageName = packageConfig.package_name;
-    const rollerItemId = item.roller_id;
     const zlPackageId = packageConfig.zl_id;
 
     // Vérifier si le booking existe déjà dans la base de données (Create or update)
-    const existingItem = await getSyncedItem(booking.roller_booking_id, item.roller_id);
-    if (existingItem) {
+    const dbItem = await getSyncedItem(booking.roller_booking_id, item.roller_id);
+    if (dbItem) {
       logMessage += `Found existing synced item for booking ${bookingReference} and item ${item.roller_id}. Updating the record and ZL session if necessary...\n`;
-        
+
       // Si le booking existe déjà, vérifier si les détails ont changé (ex: nombre de joueurs, date, etc.) et mettre à jour la session ZL en conséquence
-        if (existingItem.players !== item.quantity || existingItem.start_time !== booking.startDate || existingItem.roller_package_id !== item.roller_id) {
-            // Todo: Delete and recreate the ZL session with the updated details
+        if (dbItem.players !== item.quantity || dbItem.start_time !== booking.startDate || dbItem.roller_package_id !== item.roller_id) {
+            await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
+            await createZLSession(
+                item.bookingItemId,
+                booking.bookingReference,
+                dbItem.email,
+                zlPackageId,
+                booking.startDate,
+                item.quantity,
+                item.price
+            );
+            logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.roller_id} due to changes in booking details.\n`;
+            
             // Todo: Update the record in the database with the new details
+            await saveSyncedItem(booking, item);
+            logMessage += `Updated synced item for booking ${bookingReference} and item ${item.roller_id}.\n`;
+            customLog(logMessage, "INFO");
         } else {
             logMessage += `No changes detected for booking ${bookingReference} and item ${item.roller_id}. No update needed for ZL session.\n`;
         }
     } else {
       logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.roller_id}. Creating new record and ZL session...\n`;
-      
-      // Todo: Create a new session in ZL
+      const email:string = "";
+      // Todo : Query Roller API to get email from customerID
+
+      createZLSession(
+        item.bookingItemId,
+        booking.bookingReference,
+        email,
+        zlPackageId,
+        booking.startDate,
+        item.quantity,
+        item.price
+      );
+
       // Todo: Save the new synced item in the database
     }
   }
-  
+
   // Todo : Trouver une facon de ne pas recréer une session qui as été bookée manuellement du côté de ZL
   // Todo : Si le prix est à + de 50% de rabais, envoyer une alerte email pour remplir l'ecplicatif du booking manuellement
 }
