@@ -19,7 +19,7 @@ type LogPriority = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
 export function customLog(message: string, type: LogPriority = 'INFO') {
 	const date = new Date();
 	const timestamp = formatDate(date);
-	message = message.replaceAll('\n', '\n\t\t\t\t\t(' + type + ')\t');
+	message = message.replaceAll('\n', `\n\t\t\t\t\t(${type})\t`);
 	message = `${timestamp} (${type})\t${message}`;
 	console.log(message);
 	appendFile(`server-${formatDate(date, false)}.log`, `${message}\n`);
