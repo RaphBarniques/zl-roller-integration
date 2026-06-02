@@ -8,9 +8,9 @@
 // Usage: deleteZLSession(ZLSessionID, rollerBookingID)
 // Returns: true if successful, null if failed
 
-import { ZLAuthToken, refreshToken } from './zlAuth.ts';
 import { customLog } from './logger.ts';
 import { config } from './preflight.ts';
+import { refreshToken, ZLAuthToken } from './zlAuth.ts';
 
 export async function createZLSession(
 	rollerSessionID: string,
@@ -21,8 +21,8 @@ export async function createZLSession(
 	slots: number,
 	price: number,
 ) {
-	let retryMax = 3;
-	let delay = 1000;
+	const retryMax = 3;
+	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const response = await fetch(
@@ -78,8 +78,8 @@ export async function deleteZLSession(
 	ZLSessionID: string,
 	rollerBookingID: string,
 ) {
-	let retryMax = 3;
-	let delay = 1000;
+	const retryMax = 3;
+	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const response = await fetch(

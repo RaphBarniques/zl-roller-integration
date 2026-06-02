@@ -1,5 +1,5 @@
-import { parse } from 'yaml';
 import { Database } from 'bun:sqlite';
+import { parse } from 'yaml';
 import { customLog } from './logger';
 
 const DB_PATH = 'sync.db';

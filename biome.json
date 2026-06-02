@@ -11,12 +11,19 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+		"useEditorconfig": true
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"correctness": {
+				"noUnusedImports": {
+					"fix": "safe",
+					"level": "on"
+				}
+			}
 		}
 	},
 	"javascript": {

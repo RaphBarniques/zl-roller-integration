@@ -1,12 +1,5 @@
-import {
-	checkProcessedEvent,
-	saveProcessedEvent,
-	getSyncedItem,
-	saveSyncedItem,
-} from '../db.ts';
-import { config, allowedPackages } from '../preflight.ts';
+import { checkProcessedEvent, saveProcessedEvent } from '../db.ts';
 import { customLog } from '../logger.ts';
-import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 
 export async function handleDeletedWebhook(payload: any) {
 	const eventId = payload.id;

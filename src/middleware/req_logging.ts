@@ -1,5 +1,5 @@
 import { customLog } from '../logger';
-import type { Handler, Middleware } from './middleware';
+import type { Handler } from './middleware';
 
 async function logging(req: Request, next: Handler): Promise<Response> {
 	const start = Date.now();

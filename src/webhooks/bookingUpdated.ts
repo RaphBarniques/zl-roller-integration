@@ -1,12 +1,11 @@
 import {
 	checkProcessedEvent,
-	getProcessedEvent,
-	saveProcessedEvent,
 	getSyncedItem,
+	saveProcessedEvent,
 	saveSyncedItem,
 } from '../db.ts';
-import { config, allowedPackages } from '../preflight.ts';
 import { customLog } from '../logger.ts';
+import { allowedPackages } from '../preflight.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {

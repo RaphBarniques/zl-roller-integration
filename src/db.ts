@@ -1,4 +1,4 @@
-import { db, config } from './preflight.ts';
+import { db } from './preflight.ts';
 
 type Booking = {
 	roller_booking_id: string;

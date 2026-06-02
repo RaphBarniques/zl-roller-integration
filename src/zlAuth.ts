@@ -18,8 +18,8 @@ let ZLRefreshToken: string | null = null;
 let logMessage: string = 'Initializing ZL API authentication...\n';
 
 export async function getToken() {
-	let retryMax = 3;
-	let delay = 1000;
+	const retryMax = 3;
+	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const response = await fetch(`${config.zl.api_base_url}/auth/user/token`, {
 			method: 'POST',
@@ -59,8 +59,8 @@ export async function getToken() {
 }
 
 export async function refreshToken() {
-	let retryMax = 3;
-	let delay = 1000;
+	const retryMax = 3;
+	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		if (!ZLRefreshToken) {

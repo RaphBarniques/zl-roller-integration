@@ -1,11 +1,10 @@
 import { customLog } from './logger.ts';
-import { initDb, initConfig, db, config, initEnv } from './preflight.ts';
-import { getToken } from './zlAuth.ts';
-import { createZLSession, deleteZLSession } from './zlAPI.ts';
-import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
-import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
 import chain from './middleware/middleware.ts';
 import logging from './middleware/req_logging.ts';
+import { config, initConfig, initDb, initEnv } from './preflight.ts';
+import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
+import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
+import { getToken } from './zlAuth.ts';
 
 customLog('-------------------------------------------------');
 customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
