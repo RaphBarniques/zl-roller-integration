@@ -1,18 +1,19 @@
 {
-  "name": "zl-roller-integration",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "scripts": {
-    "dev": "bun --watch src/index.ts"
-  },
-  "dependencies": {
-    "yaml": "^2.9.0"
-  }
+	"name": "zl-roller-integration",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.16",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"scripts": {
+		"dev": "bun --watch src/index.ts"
+	},
+	"dependencies": {
+		"yaml": "^2.9.0"
+	}
 }
