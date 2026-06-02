@@ -1,61 +1,59 @@
-import { parse } from "yaml";
-import { Database } from "bun:sqlite";
-import { customLog } from "./logger";
+import { parse } from 'yaml';
+import { Database } from 'bun:sqlite';
+import { customLog } from './logger';
 
-const DB_PATH = "sync.db";
+const DB_PATH = 'sync.db';
 const dbExists = await Bun.file(DB_PATH).exists();
 export const db = new Database(DB_PATH);
 export let allowedPackages: Map<number, PackageConfig> = new Map();
 
 type AppConfig = {
-  server: {
-    host: string;
-    port: number;
-  };
-  zl: {
-    api_base_url: string;
-    site_id: number;
-  };
-  packages: PackageConfig[];
+	server: {
+		host: string;
+		port: number;
+	};
+	zl: {
+		api_base_url: string;
+		site_id: number;
+	};
+	packages: PackageConfig[];
 };
 
 type PackageConfig = {
-  package_name: string;
-  roller_id: number;
-  zl_id: number;
+	package_name: string;
+	roller_id: number;
+	zl_id: number;
 };
 
 // --DATABASE INITIALIZATION--
 export async function initDb() {
+	let logMessage: string = 'Initializing database...\n';
 
-  let logMessage : string = "Initializing database...\n";
+	if (dbExists) {
+		logMessage += 'Found database\n';
+	} else {
+		logMessage += 'Created database\n';
+	}
 
-  if (dbExists) {
-    logMessage += "Found database\n";
-  } else {
-    logMessage += "Created database\n";
-  }
-
-
-  const itemTableExists = db
-    .query(`
+	const itemTableExists = db
+		.query(`
       SELECT name
       FROM sqlite_master
       WHERE type='table'
       AND name='synced_items'
     `)
-    .get();
+		.get();
 
-  const eventTableExists = db
-    .query(`
+	const eventTableExists = db
+		.query(`
       SELECT name
       FROM sqlite_master
       WHERE type='table'
       AND name='processed_events'
     `)
-    .get();
+		.get();
 
-  db.run(`
+	db.run(`
     CREATE TABLE IF NOT EXISTS synced_items (
       roller_booking_id TEXT NOT NULL,
       roller_item_id TEXT NOT NULL,
@@ -81,7 +79,7 @@ export async function initDb() {
     )
   `);
 
-  db.run(`
+	db.run(`
   CREATE TABLE IF NOT EXISTS processed_events (
     event_id TEXT PRIMARY KEY,
     event_type TEXT,
@@ -90,66 +88,62 @@ export async function initDb() {
   )
 `);
 
+	if (itemTableExists) {
+		logMessage += 'Found table: synced_items\n';
+	} else {
+		logMessage += 'Created table: synced_items\n';
+	}
 
-  if (itemTableExists) {
-    logMessage += "Found table: synced_items\n";
-  } else {
-    logMessage += "Created table: synced_items\n";
-  }
+	if (eventTableExists) {
+		logMessage += 'Found table: processed_events\n';
+	} else {
+		logMessage += 'Created table: processed_events\n';
+	}
 
-  if (eventTableExists) {
-    logMessage += "Found table: processed_events\n";
-  } else {
-    logMessage += "Created table: processed_events\n";
-  }
-
-  logMessage += "Database ready";
-  customLog(logMessage);
+	logMessage += 'Database ready';
+	customLog(logMessage);
 }
-
 
 // --CONFIG INITIALIZATION--
 
-export let config : AppConfig;
+export let config: AppConfig;
 
 export async function initConfig() {
+	let logMessage: string = 'Loading config...\n';
 
-  let logMessage : string = "Loading config...\n";
+	try {
+		const configFile = Bun.file('config.yaml');
+		const configContent = await configFile.text();
+		config = parse(configContent) as AppConfig;
+	} catch (error) {
+		customLog('Failed to load config.yaml\nShutting down...', 'ERROR');
+		process.exit(1);
+	}
 
-  try {
-    const configFile = Bun.file("config.yaml");
-    const configContent = await configFile.text();
-    config = parse(configContent) as AppConfig;
-  } catch (error) {
-    customLog("Failed to load config.yaml\nShutting down...", "ERROR");
-    process.exit(1);
-  }
-
-if (config != null) {
-    logMessage += "Config loaded successfully";
-    allowedPackages = new Map(config.packages.map(pkg => [pkg.roller_id, pkg]));
-    customLog(logMessage);
-  } else {
-    customLog("Config file is empty", "ERROR");
-    process.exit(1);
-  }
-
+	if (config != null) {
+		logMessage += 'Config loaded successfully';
+		allowedPackages = new Map(
+			config.packages.map((pkg) => [pkg.roller_id, pkg]),
+		);
+		customLog(logMessage);
+	} else {
+		customLog('Config file is empty', 'ERROR');
+		process.exit(1);
+	}
 }
 
 // --ENVIRONMENT INITIALIZATION--
 
 export async function initEnv() {
+	let logMessage: string = 'Loading environment variables...\n';
 
-  let logMessage : string = "Loading environment variables...\n";
+	const envFileExists = await Bun.file('.env').exists();
 
-  const envFileExists = await Bun.file(".env").exists();
-
-  if (envFileExists) {
-
-    logMessage += "Environment file loaded successfully";
-    customLog(logMessage);
-  } else {
-    customLog("Environment file not found", "ERROR");
-    process.exit(1);
-  }
+	if (envFileExists) {
+		logMessage += 'Environment file loaded successfully';
+		customLog(logMessage);
+	} else {
+		customLog('Environment file not found', 'ERROR');
+		process.exit(1);
+	}
 }
