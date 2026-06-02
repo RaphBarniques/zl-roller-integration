@@ -25,11 +25,15 @@ export async function getToken() {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-        username: Bun.env.ZL_USERNAME,
-        password: Bun.env.ZL_PASSWORD,
-        }),
+      },
+      body: JSON.stringify({
+        clientId: Bun.env.ZL_USERNAME,
+        clientSecret: Bun.env.ZL_PASSWORD,
+        otpCode: null,
+        apiKey: "string",
+        scopes: [],
+        isTrustedDevice: true,
+      }),
     });
 
     if (!response.ok) {
