@@ -1,4 +1,4 @@
-import { customLog } from '../logger';
+import { customLog } from '../utils/logger.ts';
 import type { Handler } from './middleware';
 
 async function logging(req: Request, next: Handler): Promise<Response> {

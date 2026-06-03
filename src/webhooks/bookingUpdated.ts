@@ -3,8 +3,8 @@ import {
 	getSyncedItem,
 	saveProcessedEvent,
 	saveSyncedItem,
-} from '../db.ts';
-import { customLog } from '../logger.ts';
+} from '../utils/db.ts';
+import { customLog } from '../utils/logger.ts';
 import { allowedPackages } from '../preflight.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 

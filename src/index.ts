@@ -1,4 +1,4 @@
-import { customLog } from './logger.ts';
+import { customLog } from './utils/logger.ts';
 import chain from './middleware/middleware.ts';
 import logging from './middleware/req_logging.ts';
 import { config, initConfig, initDb, initEnv } from './preflight.ts';
