@@ -11,7 +11,8 @@
     "typescript": "^5"
   },
   "scripts": {
-    "dev": "bun --watch src/index.ts"
+    "dev": "bun --watch src/index.ts",
+		"format": "bunx biome check --write ."
   },
   "dependencies": {
     "nodemailer": "^8.0.10",

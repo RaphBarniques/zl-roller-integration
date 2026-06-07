@@ -148,30 +148,29 @@ export async function initEnv() {
 	}
 }
 
-
-const nodemailer = require("nodemailer");
-export let transporter : any;
+const nodemailer = require('nodemailer');
+export let transporter: any;
 
 export async function initMailer() {
-  let logMessage : string = "Initializing mailer...\n";
+	let logMessage: string = 'Initializing mailer...\n';
 
-  // Create a transporter using SMTP
-  transporter = nodemailer.createTransport({
-    host: process.env.MAILER_HOST,
-    port: parseInt(process.env.MAILER_PORT || "0"),
-    secure: true, // use SSL/TLS
-    auth: {
-      user: process.env.MAILER_USER,
-      pass: process.env.MAILER_PASS,
-    },
-  });
+	// Create a transporter using SMTP
+	transporter = nodemailer.createTransport({
+		host: process.env.MAILER_HOST,
+		port: parseInt(process.env.MAILER_PORT || '0'),
+		secure: true, // use SSL/TLS
+		auth: {
+			user: process.env.MAILER_USER,
+			pass: process.env.MAILER_PASS,
+		},
+	});
 
-  try {
-    await transporter.verify();
-    logMessage += "Mailer initialized successfully";
-    customLog(logMessage);
-  } catch (err) {
-    logMessage += `Failed to initialize mailer: ${err}`;
-    customLog(logMessage, "ERROR");
-  }
+	try {
+		await transporter.verify();
+		logMessage += 'Mailer initialized successfully';
+		customLog(logMessage);
+	} catch (err) {
+		logMessage += `Failed to initialize mailer: ${err}`;
+		customLog(logMessage, 'ERROR');
+	}
 }

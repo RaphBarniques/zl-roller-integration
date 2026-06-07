@@ -12,41 +12,41 @@
 // [2024-06-01 12:00:00] (ERROR) This is a log message
 //                       (ERROR) This is another line
 
-import { appendFile } from "node:fs/promises";
+import { appendFile } from 'node:fs/promises';
 
-type LogPriority = "TRACE" | "DEBUG" | "INFO" | "WARN" | "ERROR" | "CRITICAL";
+type LogPriority = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
 
-export function customLog(message: string, type: LogPriority = "INFO") {
-  const date = new Date();
-  const timestamp = formatDate(date);
-  message = message.replaceAll("\n", "\n\t\t\t\t\t(" + type + ")\t");
-  message = `${timestamp} (${type})\t${message}`;
-  console.log(message);
-  appendFile(`./logs/server-${formatDate(date, false)}.log`, `${message}\n`);
+export function customLog(message: string, type: LogPriority = 'INFO') {
+	const date = new Date();
+	const timestamp = formatDate(date);
+	message = message.replaceAll('\n', `\n\t\t\t\t\t(${type})\t`);
+	message = `${timestamp} (${type})\t${message}`;
+	console.log(message);
+	appendFile(`./logs/server-${formatDate(date, false)}.log`, `${message}\n`);
 }
 
 function padTo2Digits(num: number) {
-  return num.toString().padStart(2, "0");
+	return num.toString().padStart(2, '0');
 }
 
 function formatDate(date: Date, includeHours = true) {
-  const dateOnly = [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
-  ].join("-");
+	const dateOnly = [
+		date.getFullYear(),
+		padTo2Digits(date.getMonth() + 1),
+		padTo2Digits(date.getDate()),
+	].join('-');
 
-  if (!includeHours) {
-    return dateOnly;
-  }
+	if (!includeHours) {
+		return dateOnly;
+	}
 
-  return (
-    dateOnly +
-    " " +
-    [
-      padTo2Digits(date.getHours()),
-      padTo2Digits(date.getMinutes()),
-      padTo2Digits(date.getSeconds()),
-    ].join(":")
-  );
+	return (
+		dateOnly +
+		' ' +
+		[
+			padTo2Digits(date.getHours()),
+			padTo2Digits(date.getMinutes()),
+			padTo2Digits(date.getSeconds()),
+		].join(':')
+	);
 }

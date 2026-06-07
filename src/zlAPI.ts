@@ -8,36 +8,44 @@
 // Usage: deleteZLSession(ZLSessionID, rollerBookingID)
 // Returns: true if successful, null if failed
 
-import { customLog } from './utils/logger.ts';
 import { config } from './preflight.ts';
+import { customLog } from './utils/logger.ts';
 import { refreshToken, ZLAuthToken } from './zlAuth.ts';
 
 export async function getSession() {
-	// const result = await fetch('https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512', {
-	// 	headers: {
-	// 		'Content-Type': 'application/json',
-	// 		cookie: `X-Access-Token=${ZLAuthToken}`
-	// 	},
-	// })
+	console.log(ZLAuthToken);
+	await refreshToken();
+	console.log(ZLAuthToken);
 
-	const result = await
-		fetch("https://api.zerolatencyvr.com/api/v1/sites/71/session/2443113", {
-		"headers": {
-			"accept": "application/json, text/plain, */*",
-				"accept-language": "en-US,en;q=0.9",
-				"sec-ch-ua": "\"Not/A)Brand\";v=\"99\", \"Chromium\";v=\"148\"",
-				"sec-ch-ua-mobile": "?0",
-				"sec-ch-ua-platform": "\"Linux\"",
-				"sec-fetch-dest": "empty",
-				"sec-fetch-mode": "cors",
-				"sec-fetch-site": "same-site",
-				"cookie": `zlLang=en-US; ARRAffinity=be2659cc2d9504e74d97b2cd41b31c91b2570f6dabbdfeae6c640ee016c785a3; ARRAffinitySameSite=be2659cc2d9504e74d97b2cd41b31c91b2570f6dabbdfeae6c640ee016c785a3; X-Access-Token=${ZLAuthToken}`
+	const result = await fetch(
+		'https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512',
+		{
+			headers: {
+				'Content-Type': 'application/json',
+				cookie: `X-Access-Token=${ZLAuthToken}`,
+				// Authorization: `Bearer ${ZLAuthToken}`,
+			},
 		},
-		"body": null,
-			"method": "GET"
-	});
+	);
 
-	console.log(result.json)
+	// const result = await
+	// 	fetch("https://api.zerolatencyvr.com/api/v1/sites/71/session/2443113", {
+	// 	"headers": {
+	// 		"accept": "application/json, text/plain, */*",
+	// 			"accept-language": "en-US,en;q=0.9",
+	// 			"sec-ch-ua": "\"Not/A)Brand\";v=\"99\", \"Chromium\";v=\"148\"",
+	// 			"sec-ch-ua-mobile": "?0",
+	// 			"sec-ch-ua-platform": "\"Linux\"",
+	// 			"sec-fetch-dest": "empty",
+	// 			"sec-fetch-mode": "cors",
+	// 			"sec-fetch-site": "same-site",
+	// 			"cookie": `zlLang=en-US; ARRAffinity=be2659cc2d9504e74d97b2cd41b31c91b2570f6dabbdfeae6c640ee016c785a3; ARRAffinitySameSite=be2659cc2d9504e74d97b2cd41b31c91b2570f6dabbdfeae6c640ee016c785a3; X-Access-Token=${ZLAuthToken}`
+	// 	},
+	// 	"body": null,
+	// 		"method": "GET"
+	// });
+
+	console.log(result.status);
 }
 
 export async function createZLSession(

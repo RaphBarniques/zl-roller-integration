@@ -1,3 +1,4 @@
+import { allowedPackages } from '../preflight.ts';
 import {
 	checkProcessedEvent,
 	getSyncedItem,
@@ -5,7 +6,6 @@ import {
 	saveSyncedItem,
 } from '../utils/db.ts';
 import { customLog } from '../utils/logger.ts';
-import { allowedPackages } from '../preflight.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {
