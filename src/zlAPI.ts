@@ -25,7 +25,6 @@ export async function getSession() {
 		},
 	);
 
-
 	console.log(result.status);
 }
 
