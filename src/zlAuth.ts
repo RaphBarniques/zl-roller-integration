@@ -10,7 +10,7 @@
 // Returns: New access token string or null if failed
 // Also stores it and refresh token for next calls
 
-import { customLog } from './utils/logger.ts';
+import { customLog } from './logger.ts';
 import { config } from './preflight.ts';
 
 export let ZLAuthToken: string | null = null;
