@@ -101,18 +101,6 @@ export async function refreshToken() {
 			);
 			return null;
 		}
-		// const response = await fetch(
-		// 	`${config.zl.api_base_url}/auth/user/refresh`,
-		// 	{
-		// 		method: 'POST',
-		// 		headers: {
-		// 			'Content-Type': 'application/json',
-		// 		},
-		// 		body: JSON.stringify({
-		// 			refreshToken: ZLRefreshToken,
-		// 		}),
-		// 	},
-		// );
 
 		const response = await fetch(
 			'https://api.zerolatencyvr.com/api/v1/auth/user/refresh',
