@@ -5,6 +5,7 @@ import { handleUpdatedWebhook } from "./webhooks/bookingUpdated.ts";
 import { handleDeletedWebhook } from "./webhooks/bookingDeleted.ts";
 import chain from "./middleware/middleware.ts";
 import logging from "./middleware/req_logging.ts";
+import {getSession} from "./zlAPI.ts";
 
 customLog('-------------------------------------------------');
 customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
@@ -20,6 +21,7 @@ const server = Bun.serve({
 	port: config.server.port,
 	routes: {
 		'/status': chain([logging], async (req) => {
+			await getSession()
 			return new Response('OK', { status: 200 });
 		}),
 		'/webhooks/roller': {
