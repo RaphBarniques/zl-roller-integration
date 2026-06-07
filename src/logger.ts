@@ -22,7 +22,7 @@ export function customLog(message: string, type: LogPriority = "INFO") {
   message = message.replaceAll("\n", "\n\t\t\t\t\t(" + type + ")\t");
   message = `${timestamp} (${type})\t${message}`;
   console.log(message);
-  appendFile(`server-${formatDate(date, false)}.log`, `${message}\n`);
+  appendFile(`./logs/server-${formatDate(date, false)}.log`, `${message}\n`);
 }
 
 function padTo2Digits(num: number) {

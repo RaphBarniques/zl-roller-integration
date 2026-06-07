@@ -1,5 +1,5 @@
 import { customLog } from "./logger.ts";
-import { initDb, initConfig, db, config, initEnv} from "./preflight.ts";
+import { initDb, initConfig, db, config, initEnv, initMailer} from "./preflight.ts";
 import { getToken } from "./zlAuth.ts";
 import { createZLSession, deleteZLSession } from "./zlAPI.ts";
 import { handleUpdatedWebhook } from "./webhooks/bookingUpdated.ts";
@@ -13,6 +13,7 @@ customLog("ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...");
 await initDb();
 await initConfig();
 await initEnv();
+await initMailer();
 await getToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
 
 const server = Bun.serve({
