@@ -8,10 +8,12 @@ import {
 	initEnv,
 	initMailer,
 } from './preflight.ts';
+import { getRollerToken } from './rollerAuth.ts';
 import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
 import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
 import { getSession } from './zlAPI.ts';
-import { getToken } from './zlAuth.ts';
+import { getZLToken } from './zlAuth.ts';
+import { getCustomerEmail } from './rollerAPI.ts';
 
 customLog('-------------------------------------------------');
 customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
@@ -20,7 +22,10 @@ await initDb();
 await initConfig();
 await initEnv();
 await initMailer();
-await getToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
+//await getZLToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
+//await getRollerToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
+
+customLog(await getCustomerEmail(15681739))
 
 const server = Bun.serve({
 	hostname: config.server.host,

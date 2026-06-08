@@ -1,7 +1,5 @@
 // ZL API AUTHENTICATION FUNCTIONS
 //
-// UNTESTED - TO REVIEW
-//
 // Usage: getToken()
 // Returns: Access token string or null if failed
 // Also stores it and refresh token for next calls
@@ -16,7 +14,7 @@ export let ZLAuthToken: string | null = null;
 let ZLRefreshToken: string | null = null;
 let logMessage: string = 'Initializing ZL API authentication...\n';
 
-export async function getToken() {
+export async function getZLToken() {
 	const retryMax = 3;
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
@@ -78,18 +76,17 @@ export async function getToken() {
 			};
 			ZLRefreshToken = data.RefreshToken;
 			ZLAuthToken = data.AccessToken;
-			console.log(responseJson, 'INFO');
-			logMessage += 'ZL API refresh token obtained successfully';
+			logMessage += 'ZL API token obtained successfully';
 			customLog(logMessage, 'INFO');
 			return data.AccessToken;
 		}
 	}
-	customLog(`Failed to get token after ${retryMax} attempts`, 'ERROR');
+	customLog(`Failed to get ZL token after ${retryMax} attempts`, 'ERROR');
 	return null;
 	//process.exit(1);
 }
 
-export async function refreshToken() {
+export async function refreshZLToken() {
 	const retryMax = 3;
 	const delay = 1000;
 

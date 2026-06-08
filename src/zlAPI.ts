@@ -10,10 +10,10 @@
 
 import { config } from './preflight.ts';
 import { customLog } from './utils/logger.ts';
-import { refreshToken, ZLAuthToken } from './zlAuth.ts';
+import { refreshZLToken, ZLAuthToken } from './zlAuth.ts';
 
 export async function getSession() {
-	await refreshToken();
+	await refreshZLToken();
 
 	const result = await fetch(
 		'https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512',
@@ -66,7 +66,7 @@ export async function createZLSession(
 				`Unauthorized when creating ZL session for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			await refreshToken();
+			await refreshZLToken();
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
 			customLog(
@@ -115,7 +115,7 @@ export async function deleteZLSession(
 				`Unauthorized when cancelling ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			await refreshToken();
+			await refreshZLToken();
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
 			customLog(

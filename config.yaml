@@ -6,6 +6,9 @@ zl:
   api_base_url: "https://api.zerolatencyvr.com/api/v1"
   site_id: 71
 
+roller:
+  api_base_url: "api.play.roller.app"
+
 packages:
   - package_name: "Outnreak"
     roller_id: 12
