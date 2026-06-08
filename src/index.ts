@@ -25,8 +25,6 @@ await initMailer();
 //await getZLToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
 //await getRollerToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
 
-customLog(await getCustomerEmail(15681739))
-
 const server = Bun.serve({
 	hostname: config.server.host,
 	port: config.server.port,
