@@ -7,6 +7,7 @@ import {
 } from '../utils/db.ts';
 import { customLog } from '../utils/logger.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
+import { getCustomerEmail } from '../rollerAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -74,7 +75,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.roller_id} due to changes in booking details.\n`;
 
-				// Todo: Update the record in the database with the new details
+				// Update the record in the database with the new details
 				await saveSyncedItem(booking, item);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.roller_id}.\n`;
 				customLog(logMessage, 'INFO');
@@ -83,8 +84,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			}
 		} else {
 			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.roller_id}. Creating new record and ZL session...\n`;
-			const email: string = '';
-			// Todo : Query Roller API to get email from customerID
+			const email : string = await getCustomerEmail(booking.customerID);
 
 			createZLSession(
 				item.bookingItemId,
@@ -96,10 +96,14 @@ export async function handleUpdatedWebhook(payload: any) {
 				item.price,
 			);
 
-			// Todo: Save the new synced item in the database
+            // Save into DB
+			await saveSyncedItem(booking, item);
+            logMessage += `Created synced item for booking ${bookingReference} and item ${item.roller_id}.\n`
+            customLog(logMessage, "INFO")
 		}
 	}
 
 	// Todo : Trouver une facon de ne pas recréer une session qui as été bookée manuellement du côté de ZL
 	// Todo : Si le prix est à + de 50% de rabais, envoyer une alerte email pour remplir l'ecplicatif du booking manuellement
+    // Je penses qu'il doit y avoir un flag dans la réponse su call API pour créer la session
 }

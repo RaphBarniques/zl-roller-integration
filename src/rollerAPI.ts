@@ -43,5 +43,5 @@ export async function getCustomerEmail(customerID:string){
             `Failed to get customer email for customer ${customerID} after ${retryMax} attempts`,
             'ERROR',
         );
-        return null;
+        return "undefined";
 }
