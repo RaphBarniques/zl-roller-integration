@@ -7,7 +7,6 @@ import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
 import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
 import { getSession } from './zlAPI.ts';
 import { getZLToken } from './zlAuth.ts';
-import { getCustomerEmail } from './rollerAPI.ts';
 import { dashboardLogin, dashboardLogout, requireDashboardAuth, } from "./dashboardAuth";
 import { getLogs, getLogsStream, getLatestBooking, searchBookings } from "./dashboardAPI";
 
@@ -152,7 +151,7 @@ const server = Bun.serve({
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
 
-const debug = 0;
+const debug = 1;
 if (debug == 1) {
   const file = Bun.file("./input_webhook.json");
   const payload = await file.json();

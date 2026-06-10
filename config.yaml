@@ -10,6 +10,51 @@ roller:
   api_base_url: "api.play.roller.app"
 
 packages:
-  - package_name: "Outnreak"
+  - package_name: "Engineerium + Undead Arena"
+    roller_id: 7158424
+    zl_id: 1766
+  - package_name: "Haunted + Undead Arena"
+    roller_id: 7158428
+    zl_id: 5849
+  - package_name: "Undead + Sol Raiders"
+    roller_id: 7158475
+    zl_id: 
+  - package_name: "Sol Raiders + Sol Raiders"
+    roller_id: 
+    zl_id: 1768
+  - package_name: "Outbreak"
+    roller_id: 7158396
+    zl_id: 3127
+  - package_name: "Outbreak 2 : Mall Mayhem"
+    roller_id: 7158412
+    zl_id: 6496
+  - package_name: "Space Marine Avarax"
+    roller_id: 7158420
+    zl_id: 3913
+  - package_name: "Far Cry VR"
+    roller_id: 7158408
+    zl_id: 1764
+  - package_name: "Singularity"
+    roller_id: 7158416
+    zl_id: 1769
+  - package_name: "Far Cry VR + Singularity"
     roller_id: 7158455
-    zl_id: 123
+    zl_id: 1999
+  - package_name: "Far Cry VR + Space Marine"
+    roller_id: 7158459
+    zl_id: 4048
+  - package_name: "Far Cry VR + Outbreak"
+    roller_id: 
+    zl_id: 3128
+  - package_name: "Far Cry VR + Outbreak 2"
+    roller_id: 7158471
+    zl_id: 7897
+  - package_name: "Space Marine + Outbreak "
+    roller_id: 
+    zl_id: 4047
+  - package_name: "Space Marine + Outbreak 2"
+    roller_id: 7158467
+    zl_id: 7752
+  - package_name: "Outbreak + Outbreak 2"
+    roller_id: 7158463
+    zl_id: 6670

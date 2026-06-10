@@ -8,6 +8,7 @@ import {
 import { customLog } from '../logger.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
+import { sendEmail } from '../sendMail.ts'
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -40,14 +41,17 @@ export async function handleUpdatedWebhook(payload: any) {
 	for (const item of bookingItems) {
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		const packageConfig = allowedPackages.get(item.productId);
-		if (!packageConfig) {
-			logMessage += `Item ${item.bookingItemId} is not in the allowed packages list. Skipping this item.`;
+        if (!packageConfig) {
+			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			customLog(logMessage, 'WARN');
 			continue;
 		}
 
 		const packageName = packageConfig.package_name;
 		const zlPackageId = packageConfig.zl_id;
+        const isoDate = new Date(`${item.bookingDate} ${item.sessionStartTime}`).toISOString()
+        const price = Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
+        const isPriceTooLow = item.discount / item.quantity > item.cost / 2;
 
 		// Vérifier si le booking existe déjà dans la base de données (Create or update)
 		const dbItem = await getSyncedItem(
@@ -60,7 +64,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			// Si le booking existe déjà, vérifier si les détails ont changé (ex: nombre de joueurs, date, etc.) et mettre à jour la session ZL en conséquence
 			if (
 				dbItem.players !== item.quantity ||
-				dbItem.start_time !== booking.startDate ||
+				dbItem.start_time !== isoDate ||
 				dbItem.roller_package_id !== item.roller_id
 			) {
 				await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
@@ -69,22 +73,27 @@ export async function handleUpdatedWebhook(payload: any) {
 					booking.bookingReference,
 					dbItem.email,
 					zlPackageId,
-					booking.startDate,
+					isoDate,
 					item.quantity,
-					item.price,
+					price,
 				);
-				logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.roller_id} due to changes in booking details.\n`;
+				logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
 
 				// Update the record in the database with the new details
-				await saveSyncedItem(booking, item, packageConfig, dbItem.email, "Matched");
-				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.roller_id}.\n`;
-				customLog(logMessage, 'INFO');
+				await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Matched");
+				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
+
+                if (isPriceTooLow) {
+                    logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`
+                    sendEmail("raph.barniques@gmail.com", 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
+                }
+                customLog(logMessage, 'INFO');
 			} else {
-                await saveSyncedItem(booking, item, packageConfig, dbItem.email, "Skipped");
-				logMessage += `No changes detected for booking ${bookingReference} and item ${item.roller_id}. No update needed for ZL session.\n`;
+                await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Skipped");
+				logMessage += `No changes detected for booking ${bookingReference} and item ${item.bookingItemId}. No update needed for ZL session.\n`;
 			}
 		} else {
-			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.roller_id}. Creating new record and ZL session...\n`;
+			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.bookingItemId}. Creating new record and ZL session...\n`;
 			const email : string = await getCustomerEmail(booking.customerId);
 
 			createZLSession(
@@ -94,17 +103,18 @@ export async function handleUpdatedWebhook(payload: any) {
 				zlPackageId,
 				booking.startDate,
 				item.quantity,
-				item.price,
+				price,
 			);
 
             // Save into DB
-			await saveSyncedItem(booking, item, packageConfig, email, "Matched");
-            logMessage += `Created synced item for booking ${bookingReference} and item ${item.roller_id}.\n`
+			await saveSyncedItem(booking, item, packageConfig, email, isoDate, price, "Matched");
+            logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`
+            
+            if (isPriceTooLow) {
+                    logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`
+                    sendEmail("raph.barniques@gmail.com", 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
+                }
             customLog(logMessage, "INFO")
 		}
 	}
-
-	// Todo : Trouver une facon de ne pas recréer une session qui as été bookée manuellement du côté de ZL
-	// Todo : Si le prix est à + de 50% de rabais, envoyer une alerte email pour remplir l'ecplicatif du booking manuellement
-    // Je penses qu'il doit y avoir un flag dans la réponse su call API pour créer la session
 }

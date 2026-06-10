@@ -70,7 +70,7 @@ export async function getSyncedItem(
 		.get(rollerBookingId, rollerItemId) as Booking | null;
 }
 
-export async function saveSyncedItem(booking: any, bookingItem: any, packageConfig:any, email:any, status:any) {
+export async function saveSyncedItem(booking: any, bookingItem: any, packageConfig:any, email:any, isoDate:any, price:any, status:any) {
 	db.run(
 		`
     INSERT OR REPLACE INTO synced_items (
@@ -91,17 +91,17 @@ export async function saveSyncedItem(booking: any, bookingItem: any, packageConf
     `,
 		[
 			booking.bookingReference,
-			bookingItem.bookingItemI,
+			bookingItem.bookingItemId,
 			booking.zl_booking_id || null,
 			booking.status,
 			status,
 			email,
 			bookingItem.quantity,
-			booking.start_time,
-			booking.productId,
+			isoDate,
+			bookingItem.productId,
 			packageConfig.zl_id,
 			packageConfig.package_name,
-			booking.price,
+			price,
 		],
 	);
 }
