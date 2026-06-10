@@ -17,8 +17,8 @@ await initDb();
 await initConfig();
 await initEnv();
 await initMailer();
-//await getZLToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
-//await getRollerToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
+await getZLToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
+await getRollerToken(); // ATTENTION AU RATE LIMIT, LE SERVEUR BUN RESTART A CHAQUE FOIS QUE LE SCRIPT EST MODIFIÉ.
 
 const server = Bun.serve({
 	hostname: config.server.host,
@@ -151,7 +151,7 @@ const server = Bun.serve({
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
 
-const debug = 1;
+const debug = 0;
 if (debug == 1) {
   const file = Bun.file("./input_webhook.json");
   const payload = await file.json();

@@ -1,6 +1,6 @@
 import { db } from '../preflight.ts';
 
-type Booking = {
+export type Booking = {
 	roller_booking_id: string;
 	roller_item_id: string;
 	zl_booking_id: string;
@@ -92,16 +92,32 @@ export async function saveSyncedItem(booking: any, bookingItem: any, packageConf
 		[
 			booking.bookingReference,
 			bookingItem.bookingItemId,
-			booking.zl_booking_id || null,
+			bookingItem.bookingItemId,
 			booking.status,
 			status,
 			email,
 			bookingItem.quantity,
 			isoDate,
 			bookingItem.productId,
-			packageConfig.zl_id,
-			packageConfig.package_name,
+			packageConfig.zl_id ?? null,
+			packageConfig.package_name ?? null,
 			price,
+		],
+	);
+}
+
+export async function deleteSyncedItem(rollerBookingID:any, rollerItemID:any) {
+	db.run(
+		`
+    DELETE *
+        FROM synced_items
+        WHERE roller_booking_id = ?
+        AND roller_item_id = ?
+    VALUES (?, ?)
+    `,
+		[
+			rollerBookingID,
+			rollerItemID,
 		],
 	);
 }

@@ -37,7 +37,6 @@ export async function createZLSession(
 	slots: number,
 	price: number,
 ) {
-    return
 	const retryMax = 3;
 	const delay = 1000;
 
@@ -95,7 +94,6 @@ export async function deleteZLSession(
 	ZLSessionID: string,
 	rollerBookingID: string,
 ) {
-    return
 	const retryMax = 3;
 	const delay = 1000;
 

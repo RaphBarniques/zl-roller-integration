@@ -43,7 +43,8 @@ export async function handleUpdatedWebhook(payload: any) {
 		const packageConfig = allowedPackages.get(item.productId);
         if (!packageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
-			customLog(logMessage, 'WARN');
+			await saveSyncedItem(booking, item, {}, null, null, null, "Skipped");
+            customLog(logMessage, 'WARN');
 			continue;
 		}
 
@@ -91,6 +92,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			} else {
                 await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Skipped");
 				logMessage += `No changes detected for booking ${bookingReference} and item ${item.bookingItemId}. No update needed for ZL session.\n`;
+                customLog(logMessage, 'INFO');
 			}
 		} else {
 			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.bookingItemId}. Creating new record and ZL session...\n`;
@@ -108,10 +110,10 @@ export async function handleUpdatedWebhook(payload: any) {
 
             // Save into DB
 			await saveSyncedItem(booking, item, packageConfig, email, isoDate, price, "Matched");
-            logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`
+            logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`
             
             if (isPriceTooLow) {
-                    logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`
+                    logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`
                     sendEmail("raph.barniques@gmail.com", 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
                 }
             customLog(logMessage, "INFO")
