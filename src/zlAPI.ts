@@ -11,6 +11,7 @@
 import { config } from './preflight.ts';
 import { customLog } from './logger.ts';
 import { refreshZLToken, ZLAuthToken } from './zlAuth.ts';
+import { sendEmail } from './sendMail.ts';
 
 export async function getSession() {
 	await refreshZLToken();

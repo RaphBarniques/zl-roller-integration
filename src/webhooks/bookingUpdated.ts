@@ -1,4 +1,4 @@
-import { allowedPackages } from '../preflight.ts';
+import { allowedPackages, config } from '../preflight.ts';
 import {
 	checkProcessedEvent,
 	getSyncedItem,
@@ -69,7 +69,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				dbItem.roller_package_id !== item.roller_id
 			) {
 				await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
-				await createZLSession(
+				const created = await createZLSession(
 					item.bookingItemId,
 					booking.bookingReference,
 					dbItem.email,
@@ -78,7 +78,15 @@ export async function handleUpdatedWebhook(payload: any) {
 					item.quantity,
 					price,
 				);
-				logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
+                if (created) {
+                    logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
+                } else {
+                    logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
+                    customLog(logMessage, "ERROR")
+                    logMessage="";
+                    sendEmail("raph.barniques@gmail.com", 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: dbItem.email, packageName: packageName, quantity: item.quantity });
+                }
+				
 
 				// Update the record in the database with the new details
 				await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Matched");
@@ -98,7 +106,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.bookingItemId}. Creating new record and ZL session...\n`;
 			const email : string = await getCustomerEmail(booking.customerId);
 
-			createZLSession(
+			const created = await createZLSession(
 				item.bookingItemId,
 				booking.bookingReference,
 				email,
@@ -107,6 +115,15 @@ export async function handleUpdatedWebhook(payload: any) {
 				item.quantity,
 				price,
 			);
+
+            if (created) {
+                    logMessage += `Created ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
+                } else {
+                    logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
+                    customLog(logMessage, "ERROR")
+                    logMessage="";
+                    sendEmail("raph.barniques@gmail.com", 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: email, packageName: packageName, quantity: item.quantity });
+                }
 
             // Save into DB
 			await saveSyncedItem(booking, item, packageConfig, email, isoDate, price, "Matched");
