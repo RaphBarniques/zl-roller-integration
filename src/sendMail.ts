@@ -9,6 +9,10 @@ export async function sendEmail(email: string, type: number, infos: { [key: stri
     let subject: string = "";
     let text: string = "";
 
+    if (!email) {
+        return
+    }
+
     switch (type) {
         case 1:
             subject = `Justification requise pour le booking ${infos.bookingReference}`;

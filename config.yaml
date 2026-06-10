@@ -10,8 +10,8 @@ roller:
   api_base_url: "api.play.roller.app"
 
 email:
-  admin_email: ""
-  info_email: ""
+  admin_email: null
+  info_email: null
   dev_email: "raph.barniques@gmail.com"
 
 packages:
