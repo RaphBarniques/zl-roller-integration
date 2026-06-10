@@ -6,15 +6,14 @@
   <style>
     body {
       margin: 0;
-      background: #101014;
+      background: #DDE9EF;
       color: #eee;
       font-family: Arial, sans-serif;
     }
 
     header {
-      padding: 16px 22px;
-      background: #181820;
-      border-bottom: 1px solid #333;
+      padding: 0px 22px;
+      background: #3994BC;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -23,22 +22,22 @@
     nav {
       display: flex;
       padding-left: 20px;
-      background: #14141a;
-      border-bottom: 1px solid #333;
+      background: #2A3640;
+
     }
 
     button, select, input {
-      background: #22222b;
-      color: white;
-      border: 1px solid #444;
-      border-radius: 7px;
+      background: #ececec;
+      color: 101014;
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
       padding: 9px;
     }
 
     nav button {
       cursor: pointer;
       width: 100px;
-      background: #14141a;
+      background: #2A3640;
       color: white;
       border:none;
       border-radius: 0;
@@ -46,7 +45,8 @@
     }
 
     nav button.active {
-        border-bottom: 2px solid #eee;
+        background-color: #2D4351;
+        border-bottom: 4px solid #3994BC;
     }
 
     .tab {
@@ -59,11 +59,13 @@
     }
 
     .panel {
-      background: #181820;
-      border: 1px solid #333;
-      border-radius: 12px;
+      color: #101014;
+      background: #FFFFFF;
+      border: 1px solid #c9c9c9;
+      border-radius: 5px;
       padding: 16px;
       margin-bottom: 18px;
+      box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px;
     }
 
     pre {
@@ -83,7 +85,7 @@
     }
 
     th, td {
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #c5c5c5;
       padding: 9px;
       text-align: left;
       vertical-align: top;
@@ -153,10 +155,9 @@
     }
 
     .field {
-      background: #101014;
+      background: #ececec;
       padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #333;
+      border-radius: 3px;
     }
 
     .field strong {
@@ -212,7 +213,7 @@
         <h3>Search bookings</h3>
 
         <div class="toolbar">
-          <input id="bookingSearch" placeholder="Search booking, item, ZL ID, message..." />
+          <input id="bookingSearch" style="width: 250px;" placeholder="Search booking, ID, email, date..." />
           <select id="bookingStatus">
             <option value="ALL">All statuses</option>
             <option value="Matched">Matched</option>
