@@ -9,6 +9,11 @@ zl:
 roller:
   api_base_url: "api.play.roller.app"
 
+email:
+  admin_email: ""
+  info_email: ""
+  dev_email: "raph.barniques@gmail.com"
+
 packages:
   - package_name: "Engineerium + Undead Arena"
     roller_id: 7158424

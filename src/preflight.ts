@@ -16,6 +16,11 @@ type AppConfig = {
 		api_base_url: string;
 		site_id: number;
 	};
+  email: {
+		admin_email: string;
+    info_email: string;
+		dev_email: string;
+	};
 	packages: PackageConfig[];
 };
 

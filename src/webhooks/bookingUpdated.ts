@@ -37,13 +37,16 @@ export async function handleUpdatedWebhook(payload: any) {
 	}
 
 	// Loop through remaining items and process each booking if they are in the allowedPackages list
-	const bookingItems = booking.items;
+    const bookingItems = booking.items;
+
 	for (const item of bookingItems) {
+        let sync_status = "Matched";
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		const packageConfig = allowedPackages.get(item.productId);
         if (!packageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
-			await saveSyncedItem(booking, item, {}, null, null, null, "Skipped");
+			sync_status = "Skipped";
+            await saveSyncedItem(booking, item, {}, null, null, null, sync_status);
             customLog(logMessage, 'WARN');
 			continue;
 		}
@@ -84,21 +87,24 @@ export async function handleUpdatedWebhook(payload: any) {
                     logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
                     customLog(logMessage, "ERROR")
                     logMessage="";
-                    sendEmail("raph.barniques@gmail.com", 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: dbItem.email, packageName: packageName, quantity: item.quantity });
+                    sync_status = "Error"
+                    sendEmail(config.email.dev_email, 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: dbItem.email, packageName: packageName, quantity: item.quantity });
+                    sendEmail(config.email.info_email, 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: dbItem.email, packageName: packageName, quantity: item.quantity });
                 }
 				
 
 				// Update the record in the database with the new details
-				await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Matched");
+				await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, sync_status);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
                 if (isPriceTooLow) {
                     logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`
-                    sendEmail("raph.barniques@gmail.com", 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
+                    sendEmail(config.email.admin_email, 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
                 }
                 customLog(logMessage, 'INFO');
 			} else {
-                await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, "Skipped");
+                sync_status = "Skipped"
+                await saveSyncedItem(booking, item, packageConfig, dbItem.email, isoDate, price, sync_status);
 				logMessage += `No changes detected for booking ${bookingReference} and item ${item.bookingItemId}. No update needed for ZL session.\n`;
                 customLog(logMessage, 'INFO');
 			}
@@ -122,16 +128,18 @@ export async function handleUpdatedWebhook(payload: any) {
                     logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
                     customLog(logMessage, "ERROR")
                     logMessage="";
-                    sendEmail("raph.barniques@gmail.com", 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: email, packageName: packageName, quantity: item.quantity });
+                    sync_status = "Error"
+                    sendEmail(config.email.dev_email, 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: email, packageName: packageName, quantity: item.quantity });
+                    sendEmail(config.email.info_email, 2, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime, email: email, packageName: packageName, quantity: item.quantity });
                 }
 
             // Save into DB
-			await saveSyncedItem(booking, item, packageConfig, email, isoDate, price, "Matched");
+			await saveSyncedItem(booking, item, packageConfig, email, isoDate, price, sync_status);
             logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`
             
             if (isPriceTooLow) {
                     logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`
-                    sendEmail("raph.barniques@gmail.com", 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
+                    sendEmail(config.email.admin_email, 1, {bookingReference : bookingReference, startDate : item.bookingDate, startTime: item.sessionStartTime})
                 }
             customLog(logMessage, "INFO")
 		}
