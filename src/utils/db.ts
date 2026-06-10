@@ -87,7 +87,7 @@ export async function saveSyncedItem(booking: any, bookingItem: any) {
       package_name,
       price
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
 		[
 			booking.roller_booking_id,

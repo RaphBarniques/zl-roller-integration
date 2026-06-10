@@ -1,19 +1,15 @@
 import { customLog } from './logger.ts';
 import chain from './middleware/middleware.ts';
 import logging from './middleware/req_logging.ts';
-import {
-	config,
-	initConfig,
-	initDb,
-	initEnv,
-	initMailer,
-} from './preflight.ts';
+import { config, initConfig, initDb, initEnv, initMailer } from './preflight.ts';
 import { getRollerToken } from './rollerAuth.ts';
 import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
 import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
 import { getSession } from './zlAPI.ts';
 import { getZLToken } from './zlAuth.ts';
 import { getCustomerEmail } from './rollerAPI.ts';
+import { dashboardLogin, dashboardLogout, requireDashboardAuth, } from "./dashboardAuth";
+import { getLogs, getLogsStream, getLatestBooking, searchBookings } from "./dashboardAPI";
 
 customLog('-------------------------------------------------');
 customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
@@ -33,6 +29,57 @@ const server = Bun.serve({
 			await getSession();
 			return new Response('OK', { status: 200 });
 		}),
+    "/dashboard/login": {
+      GET: () =>
+        new Response(Bun.file("./public/dashboard-login.html")),
+
+      POST: async (req) => dashboardLogin(req),
+    },
+
+    "/dashboard/logout": () => dashboardLogout(),
+
+    "/dashboard": async (req) => {
+      const authResponse = requireDashboardAuth(req);
+      if (authResponse) return authResponse;
+
+      return new Response(Bun.file("./public/dashboard.html"));
+    },
+
+    "/api/dashboard/logs": {
+      GET: async (req) => {
+        const authResponse = requireDashboardAuth(req);
+        if (authResponse) return authResponse;
+
+        return getLogs(req);
+      },
+    },
+
+    "/api/dashboard/logs/stream": {
+      GET: (req) => {
+        const authResponse = requireDashboardAuth(req);
+        if (authResponse) return authResponse;
+
+        return getLogsStream(req);
+      },
+    },
+
+    "/api/dashboard/bookings/latest": {
+      GET: (req) => {
+        const authResponse = requireDashboardAuth(req);
+        if (authResponse) return authResponse;
+
+        return getLatestBooking();
+      },
+    },
+
+    "/api/dashboard/bookings/search": {
+      GET: (req) => {
+        const authResponse = requireDashboardAuth(req);
+        if (authResponse) return authResponse;
+
+        return searchBookings(req);
+      },
+    },
 		'/webhooks/roller': {
 			POST: chain([logging], async (req) => {
 				const url = new URL(req.url);
@@ -87,6 +134,7 @@ const server = Bun.serve({
 		},
 	},
 
+  idleTimeout: 255,
 	fetch(req) {
 		customLog(`${req.method} ${req.url}`);
 		return new Response('Not Found', { status: 404 });
@@ -94,3 +142,4 @@ const server = Bun.serve({
 });
 
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
+customLog(`Dashboard up at ${server.url}dashboard`);

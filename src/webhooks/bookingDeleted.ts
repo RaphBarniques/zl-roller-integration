@@ -1,5 +1,5 @@
 import { checkProcessedEvent, saveProcessedEvent } from '../utils/db.ts';
-import { customLog } from '../utils/logger.ts';
+import { customLog } from '../logger.ts';
 
 export async function handleDeletedWebhook(payload: any) {
 	const eventId = payload.id;

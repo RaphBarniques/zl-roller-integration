@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>ROLLER → ZL Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      background: #101014;
+      color: #eee;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 16px 22px;
+      background: #181820;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav {
+      display: flex;
+      padding-left: 20px;
+      background: #14141a;
+      border-bottom: 1px solid #333;
+    }
+
+    button, select, input {
+      background: #22222b;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 7px;
+      padding: 9px;
+    }
+
+    nav button {
+      cursor: pointer;
+      width: 100px;
+      background: #14141a;
+      color: white;
+      border:none;
+      border-radius: 0;
+      padding: 15px;
+    }
+
+    nav button.active {
+        border-bottom: 2px solid #eee;
+    }
+
+    .tab {
+      display: none;
+      padding: 20px;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    .panel {
+      background: #181820;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    pre {
+      background: #050507;
+      border-radius: 8px;
+      padding: 12px;
+      height: 70vh;
+      overflow: auto;
+      white-space: pre-wrap;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #333;
+      padding: 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    #logOutput {
+        background: #050507;
+        border-radius: 8px;
+        padding: 12px;
+        height: 70vh;
+        overflow: auto;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        white-space: normal;
+        }
+
+        .log-line {
+        display: grid;
+        grid-template-columns: 170px 80px 1fr;
+        gap: 12px;
+        align-items: start;
+        line-height: 1.35;
+        }
+
+        .log-time {
+        color: #9ad1ff;
+        white-space: nowrap;
+        }
+
+        .log-level {
+        white-space: nowrap;
+        font-weight: bold;
+        }
+
+        .log-message {
+        white-space: pre-wrap;
+        color: #dffaff;
+        }
+
+        .INFO {
+        color: #9ad1ff;
+        }
+
+        .WARN {
+        color: #ffd166;
+        }
+
+        .ERROR {
+        color: #ff6b6b;
+        }
+
+    .status-matched { color: #8fff9d; }
+    .status-error { color: #ff6b6b; }
+    .status-skipped { color: #ffd166; }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .latest {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .field {
+      background: #101014;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .field strong {
+      display: block;
+      color: #aaa;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    a {
+      color: #9ad1ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Dashboard - Intégration ROLLER > ZL</h2>
+    <a href="/dashboard/logout"><button>Logout</button></a>
+  </header>
+
+  <nav>
+    <button id="bookingsButton" onclick="showTab('bookings')" class="navButton active">Bookings</button>
+    <button id="logsButton" onclick="showTab('logs')" class="navButton">Logs</button>
+  </nav>
+
+  <main>
+    <section id="logs" class="tab">
+      <div class="panel">
+        <div class="toolbar">
+          <select id="logLevel">
+            <option value="ALL">All logs</option>
+            <option value="INFO">Info</option>
+            <option value="WARN">Warnings</option>
+            <option value="ERROR">Errors</option>
+          </select>
+
+          <button onclick="loadLogs()">Refresh</button>
+          <button onclick="clearVisibleLogs()">Clear visible</button>
+        </div>
+
+        <pre id="logOutput"></pre>
+      </div>
+    </section>
+
+    <section id="bookings" class="tab active">
+      <div class="panel">
+        <h3>Last booking processed</h3>
+        <div id="latestBooking" class="latest"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Search bookings</h3>
+
+        <div class="toolbar">
+          <input id="bookingSearch" placeholder="Search booking, item, ZL ID, message..." />
+          <select id="bookingStatus">
+            <option value="ALL">All statuses</option>
+            <option value="Matched">Matched</option>
+            <option value="Skipped">Skipped</option>
+            <option value="Error">Error</option>
+          </select>
+          <button onclick="searchBookings()">Search</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ROLLER Booking</th>
+              <th>Date</th>
+              <th>Email</th>
+              <th>Package</th>
+              <th>Players</th>
+              <th>Status</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="bookingRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function showTab(name) {
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.remove("active");
+      });
+
+      document.querySelectorAll(".navButton").forEach(tab => {
+        tab.classList.remove("active");
+      });
+
+      
+      document.getElementById(name+"Button").classList.add("active");
+      document.getElementById(name).classList.add("active");
+
+      if (name === "bookings") {
+        loadLatestBooking();
+        searchBookings();
+      }
+    }
+
+    function classForLog(line) {
+      if (line.includes("(ERROR)")) return "ERROR";
+      if (line.includes("(WARN)")) return "WARN";
+      return "INFO";
+    }
+
+    function renderLogLine(line) {
+        const div = document.createElement("div");
+        div.className = "log-line";
+
+        const match = line.match(/^(.+?)\s+\((INFO|WARN|ERROR)\)\s+([\s\S]*)$/);
+
+        if (!match) {
+            div.textContent = line;
+            return div;
+        }
+
+        const [, timestamp, level, message] = match;
+
+        div.innerHTML = `
+            <span class="log-time">${timestamp}</span>
+            <span class="log-level ${level}">(${level})</span>
+            <span class="log-message">${message}</span>
+        `;
+
+        return div;
+        }
+
+    async function loadLogs() {
+      const level = document.getElementById("logLevel").value;
+      const res = await fetch(`/api/dashboard/logs?level=${encodeURIComponent(level)}`);
+      const lines = await res.json();
+
+      const output = document.getElementById("logOutput");
+      output.innerHTML = "";
+
+      for (const line of lines) {
+        output.appendChild(renderLogLine(line));
+      }
+    }
+
+    function clearVisibleLogs() {
+      document.getElementById("logOutput").innerHTML = "";
+    }
+
+    const eventSource = new EventSource("/api/dashboard/logs/stream");
+
+    eventSource.onmessage = (event) => {
+      const line = JSON.parse(event.data);
+
+      if (line === "connected") return;
+
+      const level = document.getElementById("logLevel").value;
+
+      if (level !== "ALL" && !line.includes(`(${level})`)) {
+        return;
+      }
+
+      const output = document.getElementById("logOutput");
+      output.prepend(renderLogLine(line));
+    };
+
+    async function loadLatestBooking() {
+      const res = await fetch("/api/dashboard/bookings/latest");
+      const booking = await res.json();
+
+      const container = document.getElementById("latestBooking");
+
+      if (!booking) {
+        container.innerHTML = "<p>No booking processed yet.</p>";
+        return;
+      }
+
+      const date = new Date(booking.start_time);
+      const formattedDate = formatDate(date);
+
+      container.innerHTML = `
+        <div class="field"><strong>ROLLER Booking</strong>${booking.roller_booking_reference ?? booking.roller_booking_id ?? ""}</div>
+        <div class="field"><strong>Email</strong>${booking.email ?? ""}</div>
+        <div class="field"><strong>ROLLER Item</strong>${booking.roller_booking_item_id ?? booking.roller_item_id ?? ""}</div>
+        <div class="field"><strong>Package</strong>${booking.package_name ?? ""}</div>
+        <div class="field"><strong>ZL Booking</strong>${booking.zl_booking_id ?? ""}</div>
+        <div class="field"><strong>Date</strong>${formattedDate ?? ""}</div>
+        <div class="field"><strong>Status</strong>${booking.sync_status ?? ""}</div>
+        <div class="field"><strong>Players</strong>${booking.players ?? ""}</div>
+        <div class="field"><strong>Created</strong>${booking.created_at ?? ""}</div>
+        <div class="field"><strong>Updated</strong>${booking.updated_at ?? ""}</div>
+      `;
+    }
+
+    async function searchBookings() {
+      const q = document.getElementById("bookingSearch").value;
+      const status = document.getElementById("bookingStatus").value;
+
+      const res = await fetch(
+        `/api/dashboard/bookings/search?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`
+      );
+
+      const rows = await res.json();
+
+      console.log(rows)
+
+      if (rows.length == 0) {
+        document.getElementById("bookingRows").innerHTML = "<tr><td>No booking that fits that search.</td></tr>";
+        console.log("empty")
+        return;
+      }
+
+      document.getElementById("bookingRows").innerHTML = rows.map(row => {
+        const statusClass = `status-${row.sync_status}`;
+
+        return `
+          <tr>
+            <td>${row.roller_booking_id ?? ""}</td>
+            <td>${row.start_time ?? ""}</td>
+            <td>${row.email ?? ""}</td>
+            <td>${row.package_name ?? ""}</td>
+            <td>${row.players ?? ""}</td>
+            <td class="${statusClass}">${row.sync_status ?? ""}</td>
+            <td>${row.updated_at ?? ""}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("logLevel").addEventListener("change", loadLogs);
+    document.getElementById("bookingSearch").addEventListener("input", () => {
+      clearTimeout(window.searchTimer);
+      window.searchTimer = setTimeout(searchBookings, 250);
+    });
+    document.getElementById("bookingStatus").addEventListener("change", searchBookings);
+
+    loadLogs();
+    loadLatestBooking();
+    searchBookings();
+
+    function padTo2Digits(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function formatDate(date, includeHours = true) {
+        const dateOnly = [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join('-');
+
+        if (!includeHours) {
+            return dateOnly;
+        }
+
+        return (
+            dateOnly +
+            ' ' +
+            [
+                padTo2Digits(date.getHours()),
+                padTo2Digits(date.getMinutes()),
+                padTo2Digits(date.getSeconds()),
+            ].join(':')
+        );
+    }
+  </script>
+</body>
+</html>

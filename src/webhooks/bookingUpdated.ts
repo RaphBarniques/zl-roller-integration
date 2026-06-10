@@ -5,7 +5,7 @@ import {
 	saveProcessedEvent,
 	saveSyncedItem,
 } from '../utils/db.ts';
-import { customLog } from '../utils/logger.ts';
+import { customLog } from '../logger.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
 

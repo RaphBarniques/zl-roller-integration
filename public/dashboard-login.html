@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Login</title>
+  <style>
+    body {
+      background: #101014;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background: #1b1b22;
+      padding: 28px;
+      border-radius: 12px;
+      width: 320px;
+      border: 1px solid #333;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      box-sizing: border-box;
+    }
+
+    input {
+      background: #111;
+      color: white;
+    }
+
+    button {
+      background: #2b7cff;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form method="POST" action="/dashboard/login">
+    <h2>Sync Dashboard</h2>
+    <input type="password" name="password" placeholder="Password" autofocus />
+    <button type="submit">Login</button>
+  </form>
+</body>
+</html>
