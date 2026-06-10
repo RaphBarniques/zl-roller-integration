@@ -29,6 +29,14 @@ const server = Bun.serve({
 			await getSession();
 			return new Response('OK', { status: 200 });
 		}),
+
+    "/": async (req) => {
+          const authResponse = requireDashboardAuth(req);
+          if (authResponse) return authResponse;
+
+          return new Response(Bun.file("./public/dashboard.html"));
+        },
+
     "/dashboard/login": {
       GET: () =>
         new Response(Bun.file("./public/dashboard-login.html")),
@@ -142,4 +150,12 @@ const server = Bun.serve({
 });
 
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
-customLog(`Dashboard up at ${server.url}dashboard`);
+customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
+
+const debug = 0;
+if (debug == 1) {
+  const file = Bun.file("./input_webhook.json");
+  const payload = await file.json();
+  handleUpdatedWebhook(payload)
+}
+

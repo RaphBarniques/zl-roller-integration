@@ -27,7 +27,7 @@ export async function handleUpdatedWebhook(payload: any) {
 	await saveProcessedEvent(eventId, eventType, bookingReference);
 
 	// Checker le paiment et continuer seulement si le paiment est complété
-	if (booking.paymentStatus !== 'paid') {
+	if (booking.status !== 'Paid') {
 		customLog(
 			`Booking ${bookingReference} has been skipped because it is not fully paid`,
 			'WARN',
@@ -38,10 +38,10 @@ export async function handleUpdatedWebhook(payload: any) {
 	// Loop through remaining items and process each booking if they are in the allowedPackages list
 	const bookingItems = booking.items;
 	for (const item of bookingItems) {
-		let logMessage = `Processing item ${item.roller_id} for booking ${bookingReference}...\n`;
-		const packageConfig = allowedPackages.get(item.roller_id);
+		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
+		const packageConfig = allowedPackages.get(item.productId);
 		if (!packageConfig) {
-			logMessage += `Item ${item.roller_id} is not in the allowed packages list. Skipping this item.`;
+			logMessage += `Item ${item.bookingItemId} is not in the allowed packages list. Skipping this item.`;
 			customLog(logMessage, 'WARN');
 			continue;
 		}
@@ -51,11 +51,11 @@ export async function handleUpdatedWebhook(payload: any) {
 
 		// Vérifier si le booking existe déjà dans la base de données (Create or update)
 		const dbItem = await getSyncedItem(
-			booking.roller_booking_id,
-			item.roller_id,
+			bookingReference,
+			item.bookingItemId,
 		);
 		if (dbItem) {
-			logMessage += `Found existing synced item for booking ${bookingReference} and item ${item.roller_id}. Updating the record and ZL session if necessary...\n`;
+			logMessage += `Found existing synced item for booking ${bookingReference} and item ${item.bookingItemId}. Updating the record and ZL session if necessary...\n`;
 
 			// Si le booking existe déjà, vérifier si les détails ont changé (ex: nombre de joueurs, date, etc.) et mettre à jour la session ZL en conséquence
 			if (
@@ -76,15 +76,16 @@ export async function handleUpdatedWebhook(payload: any) {
 				logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.roller_id} due to changes in booking details.\n`;
 
 				// Update the record in the database with the new details
-				await saveSyncedItem(booking, item);
+				await saveSyncedItem(booking, item, packageConfig, dbItem.email, "Matched");
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.roller_id}.\n`;
 				customLog(logMessage, 'INFO');
 			} else {
+                await saveSyncedItem(booking, item, packageConfig, dbItem.email, "Skipped");
 				logMessage += `No changes detected for booking ${bookingReference} and item ${item.roller_id}. No update needed for ZL session.\n`;
 			}
 		} else {
 			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.roller_id}. Creating new record and ZL session...\n`;
-			const email : string = await getCustomerEmail(booking.customerID);
+			const email : string = await getCustomerEmail(booking.customerId);
 
 			createZLSession(
 				item.bookingItemId,
@@ -97,7 +98,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 
             // Save into DB
-			await saveSyncedItem(booking, item);
+			await saveSyncedItem(booking, item, packageConfig, email, "Matched");
             logMessage += `Created synced item for booking ${bookingReference} and item ${item.roller_id}.\n`
             customLog(logMessage, "INFO")
 		}

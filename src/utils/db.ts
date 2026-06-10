@@ -70,7 +70,7 @@ export async function getSyncedItem(
 		.get(rollerBookingId, rollerItemId) as Booking | null;
 }
 
-export async function saveSyncedItem(booking: any, bookingItem: any) {
+export async function saveSyncedItem(booking: any, bookingItem: any, packageConfig:any, email:any, status:any) {
 	db.run(
 		`
     INSERT OR REPLACE INTO synced_items (
@@ -90,17 +90,17 @@ export async function saveSyncedItem(booking: any, bookingItem: any) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
 		[
-			booking.roller_booking_id,
-			bookingItem.roller_item_id,
-			booking.zl_booking_id,
-			booking.payment_status,
-			booking.sync_status,
-			booking.email,
-			booking.players,
+			booking.bookingReference,
+			bookingItem.bookingItemI,
+			booking.zl_booking_id || null,
+			booking.status,
+			status,
+			email,
+			bookingItem.quantity,
 			booking.start_time,
-			booking.roller_package_id,
-			booking.zl_package_id,
-			booking.package_name,
+			booking.productId,
+			packageConfig.zl_id,
+			packageConfig.package_name,
 			booking.price,
 		],
 	);
