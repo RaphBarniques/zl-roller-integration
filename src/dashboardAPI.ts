@@ -1,58 +1,55 @@
-import { db } from "./preflight";
-import { formatDate, streamLogs } from "./logger";
+import { formatDate, streamLogs } from './logger';
+import { db } from './preflight';
 
 export async function getLogs(req: Request) {
-  const url = new URL(req.url);
-  const level = url.searchParams.get("level") || "ALL";
+	const url = new URL(req.url);
+	const level = url.searchParams.get('level') || 'ALL';
 
-  const date = formatDate(new Date, false)
-  const file = Bun.file(`./logs/server-${date}.log`);
+	const date = formatDate(new Date(), false);
+	const file = Bun.file(`./logs/server-${date}.log`);
 
-  if (!(await file.exists())) {
-    return Response.json([]);
-  }
+	if (!(await file.exists())) {
+		return Response.json([]);
+	}
 
-  const text = await file.text();
+	const text = await file.text();
 
-  let lines = text
-    .split("\n")
-    .filter(Boolean)
-    .reverse();
+	let lines = text.split('\n').filter(Boolean).reverse();
 
-  if (level !== "ALL") {
-    lines = lines.filter((line) => line.includes(`(${level})`));
-  }
+	if (level !== 'ALL') {
+		lines = lines.filter((line) => line.includes(`(${level})`));
+	}
 
-  return Response.json(lines.slice(0, 500));
+	return Response.json(lines.slice(0, 500));
 }
 
 export function getLogsStream(req: Request) {
-  return streamLogs();
+	return streamLogs();
 }
 
 export function getLatestBooking() {
-  const row = db
-    .query(`
+	const row = db
+		.query(`
       SELECT *
       FROM synced_items
       ORDER BY updated_at DESC
       LIMIT 1
     `)
-    .get();
+		.get();
 
-  return Response.json(row ?? null);
+	return Response.json(row ?? null);
 }
 
 export function searchBookings(req: Request) {
-  const url = new URL(req.url);
-  const q = `%${url.searchParams.get("q") || ""}%`;
-  const status = url.searchParams.get("status") || "ALL";
+	const url = new URL(req.url);
+	const q = `%${url.searchParams.get('q') || ''}%`;
+	const status = url.searchParams.get('status') || 'ALL';
 
-  let rows:any;
+	let rows: any;
 
-  if (status === "ALL") {
-    rows = db
-      .query(`
+	if (status === 'ALL') {
+		rows = db
+			.query(`
         SELECT *
         FROM synced_items
         WHERE roller_booking_id LIKE ?
@@ -62,10 +59,10 @@ export function searchBookings(req: Request) {
         ORDER BY updated_at DESC
         LIMIT 100
       `)
-      .all(q, q, q, q);
-  } else {
-    rows = db
-      .query(`
+			.all(q, q, q, q);
+	} else {
+		rows = db
+			.query(`
         SELECT *
         FROM synced_items
         WHERE sync_status = ?
@@ -78,8 +75,8 @@ export function searchBookings(req: Request) {
         ORDER BY updated_at DESC
         LIMIT 100
       `)
-      .all(status, q, q, q, q);
-  }
+			.all(status, q, q, q, q);
+	}
 
-  return Response.json(rows) ?? null;
+	return Response.json(rows) ?? null;
 }

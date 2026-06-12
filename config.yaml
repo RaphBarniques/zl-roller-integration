@@ -12,7 +12,7 @@ roller:
 email:
   admin_email: null
   info_email: null
-  dev_email: "raph.barniques@gmail.com"
+  dev_email: null
 
 packages:
   - package_name: "Engineerium + Undead Arena"
@@ -23,9 +23,9 @@ packages:
     zl_id: 5849
   - package_name: "Undead + Sol Raiders"
     roller_id: 7158475
-    zl_id: 
+    zl_id:
   - package_name: "Sol Raiders + Sol Raiders"
-    roller_id: 
+    roller_id:
     zl_id: 1768
   - package_name: "Outbreak"
     roller_id: 7158396
@@ -49,13 +49,13 @@ packages:
     roller_id: 7158459
     zl_id: 4048
   - package_name: "Far Cry VR + Outbreak"
-    roller_id: 
+    roller_id:
     zl_id: 3128
   - package_name: "Far Cry VR + Outbreak 2"
     roller_id: 7158471
     zl_id: 7897
   - package_name: "Space Marine + Outbreak "
-    roller_id: 
+    roller_id:
     zl_id: 4047
   - package_name: "Space Marine + Outbreak 2"
     roller_id: 7158467

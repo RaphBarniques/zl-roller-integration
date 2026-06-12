@@ -2,7 +2,6 @@ import { customLog } from '../logger.ts';
 import type { Handler } from './middleware';
 
 async function logging(req: Request, next: Handler): Promise<Response> {
-
 	const start = Date.now();
 	const ip = req.headers.get('X-Forwarded-For') ?? 'unknown';
 	const ua = req.headers.get('User-Agent') ?? 'unknown';

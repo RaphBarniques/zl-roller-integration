@@ -8,31 +8,45 @@
 // Returns: New access token string or null if failed
 // Also stores it and refresh token for next calls
 
+import { jwtDecode } from 'jwt-decode';
 import { customLog } from './logger.ts';
 
+let isFirstRequest = true;
 export let ZLAuthToken: string | null = null;
 let ZLRefreshToken: string | null = null;
 let logMessage: string = 'Initializing ZL API authentication...\n';
 
-export async function getZLToken() {
+export async function getToken(): Promise<string> {
+	if (isFirstRequest === true || !ZLAuthToken) {
+		customLog('First request detected. Requesting new token.');
+		await getZLToken();
+		const token = await refreshZLToken();
+		isFirstRequest = false;
+		return token ?? '';
+	}
+
+	const decoded = jwtDecode(ZLAuthToken);
+	if (!decoded.exp) {
+		customLog('Could not get expiration (attribute "exp") from JWT Token');
+		return '';
+	}
+
+	const now = new Date();
+	const expiration = new Date(decoded.exp * 1000);
+
+	if (now > expiration) {
+		customLog('JWT expired. Requesting new token using refreshToken');
+		const token = await refreshZLToken();
+		return token ?? '';
+	}
+
+	return ZLAuthToken;
+}
+
+async function getZLToken() {
 	const retryMax = 3;
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
-		// const response = await fetch(`${config.zl.api_base_url}/auth/user/token`, {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json',
-		// 	},
-		// 	body: JSON.stringify({
-		// 		clientId: Bun.env.ZL_USERNAME,
-		// 		clientSecret: Bun.env.ZL_PASSWORD,
-		// 		otpCode: null,
-		// 		apiKey: 'string',
-		// 		scopes: [],
-		// 		isTrustedDevice: true,
-		// 	}),
-		// });
-
 		const response = await fetch(
 			'https://api.zerolatencyvr.com/api/v1/auth/user/token',
 			{
@@ -86,7 +100,7 @@ export async function getZLToken() {
 	//process.exit(1);
 }
 
-export async function refreshZLToken() {
+async function refreshZLToken() {
 	const retryMax = 3;
 	const delay = 1000;
 
@@ -179,6 +193,7 @@ export async function refreshZLToken() {
 			ZLRefreshToken = data.RefreshToken;
 			ZLAuthToken = data.AccessToken;
 			customLog(`ZL API access token refreshed successfully`, 'INFO');
+			console.log(ZLAuthToken);
 			return data.AccessToken;
 		}
 	}

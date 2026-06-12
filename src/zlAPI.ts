@@ -8,20 +8,17 @@
 // Usage: deleteZLSession(ZLSessionID, rollerBookingID)
 // Returns: true if successful, null if failed
 
-import { config } from './preflight.ts';
 import { customLog } from './logger.ts';
-import { refreshZLToken, ZLAuthToken } from './zlAuth.ts';
-import { sendEmail } from './sendMail.ts';
+import { config } from './preflight.ts';
+import { getToken } from './zlAuth.ts';
 
 export async function getSession() {
-	await refreshZLToken();
-
 	const result = await fetch(
 		'https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512',
 		{
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${ZLAuthToken}`,
+				Authorization: `Bearer ${await getToken()}`,
 			},
 		},
 	);
@@ -48,7 +45,7 @@ export async function createZLSession(
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${ZLAuthToken}`,
+					Authorization: `Bearer ${await getToken()}`,
 				},
 				body: JSON.stringify({
 					sessionID: rollerSessionID,
@@ -67,7 +64,6 @@ export async function createZLSession(
 				`Unauthorized when creating ZL session for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			await refreshZLToken();
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
 			customLog(
@@ -105,7 +101,7 @@ export async function deleteZLSession(
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${ZLAuthToken}`,
+					Authorization: `Bearer ${await getToken()}`,
 				},
 				body: JSON.stringify({}),
 			},
@@ -116,7 +112,6 @@ export async function deleteZLSession(
 				`Unauthorized when cancelling ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			await refreshZLToken();
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
 			customLog(

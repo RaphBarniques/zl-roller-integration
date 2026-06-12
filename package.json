@@ -12,9 +12,11 @@
   },
   "scripts": {
     "dev": "bun --watch src/index.ts",
-		"format": "bunx biome check --write ."
+    "format": "bunx biome check --write ."
   },
   "dependencies": {
+    "jwt-decode": "^4.0.0",
+    "luxon": "^3.7.2",
     "nodemailer": "^8.0.10",
     "yaml": "^2.9.0"
   }

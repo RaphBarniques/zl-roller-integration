@@ -25,14 +25,13 @@ export function customLog(message: string, type: LogPriority = 'INFO') {
 	message = `${timestamp} (${type})\t${message}`;
 	console.log(message);
 	appendFile(`./logs/server-${formatDate(date, false)}.log`, `${message}\n`);
-  for (const client of logClients) {
-    try {
-      client.enqueue(`data: ${JSON.stringify(message)}\n\n`);
-    } catch {
-      logClients.delete(client)
-    }
-    
-  }
+	for (const client of logClients) {
+		try {
+			client.enqueue(`data: ${JSON.stringify(message)}\n\n`);
+		} catch {
+			logClients.delete(client);
+		}
+	}
 }
 
 function padTo2Digits(num: number) {
@@ -62,37 +61,37 @@ export function formatDate(date: Date, includeHours = true) {
 }
 
 export function streamLogs() {
-  let heartbeat: Timer | undefined;
+	let heartbeat: Timer | undefined;
 
-  return new Response(
-    new ReadableStream({
-      start(controller) {
-        logClients.add(controller);
+	return new Response(
+		new ReadableStream({
+			start(controller) {
+				logClients.add(controller);
 
-        controller.enqueue(`data: ${JSON.stringify("connected")}\n\n`);
-        heartbeat = setInterval(() => {
-          try {
-            controller.enqueue(`: heartbeat\n\n`);
-          } catch {
-            logClients.delete(controller);
-            if (heartbeat) clearInterval(heartbeat);
-          }
-        }, 15000);
-      },
+				controller.enqueue(`data: ${JSON.stringify('connected')}\n\n`);
+				heartbeat = setInterval(() => {
+					try {
+						controller.enqueue(`: heartbeat\n\n`);
+					} catch {
+						logClients.delete(controller);
+						if (heartbeat) clearInterval(heartbeat);
+					}
+				}, 15000);
+			},
 
-      cancel(controller) {
-        logClients.delete(controller);
-        if (heartbeat) {
-          clearInterval(heartbeat);
-        }
-      },
-    }),
-    {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache, no-transform",
-        Connection: "keep-alive",
-      },
-    }
-  );
+			cancel(controller) {
+				logClients.delete(controller);
+				if (heartbeat) {
+					clearInterval(heartbeat);
+				}
+			},
+		}),
+		{
+			headers: {
+				'Content-Type': 'text/event-stream',
+				'Cache-Control': 'no-cache, no-transform',
+				Connection: 'keep-alive',
+			},
+		},
+	);
 }
