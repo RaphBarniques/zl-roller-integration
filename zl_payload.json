@@ -1,0 +1,981 @@
+Session POST
+https://api.zerolatencyvr.com/api/v1/sites/71/bookings
+{
+  "accessCode": null,
+  "emailAddress": "zl@zl.com",
+  "packageId": 3127,
+  "sessionName": null,
+  "slots": 2,
+  "userId": null,
+  "paymentMethodTypeId": 5,
+  "overridePrice": 100,
+  "overrideOpenTime": true,
+  "overrideStartTime": "2026-12-31T12:00:00",
+  "overrideGameSpace": 81,
+  "overrideMaxPlayers": true,
+  "overrideFreeBookingLimit": true,
+  "discountCode": null,
+  "adBlockEnabled": null,
+  "isPrivate": null,
+  "privateEventTypeId": null,
+  "priceCode": null,
+  "sessionId": null,
+  "externalBookingId": null,
+  "bookingSystemId": null,
+  "payInFull": true,
+  "rewardFlowData": null
+}
+
+Session Response
+{
+  "Charge": {
+    "Cost": 95.98,
+    "CurrencyCode": "CAD",
+    "CurrencyLocale": "en-CA",
+    "CurrencySymbol": "$",
+    "DecimalPlaces": 2,
+    "Description": "Zero Latency Montreal",
+    "Discount": -4.02,
+    "EmailAddress": "zl@zl.com",
+    "InvoiceReference": "63636776",
+    "RelatedPaymentId": 2906886,
+    "InvoiceId": 2906886,
+    "SiteCode": "RF-MO",
+    "PaymentMethodTypeId": 5,
+    "Tax": 14.38,
+    "Fee": 0,
+    "TaxInclusive": false,
+    "TaxRate": 0.1498,
+    "Total": 114.98,
+    "Quantity": 1,
+    "DepositAmount": null,
+    "DepositFee": null,
+    "DepositTotal": null,
+    "BalanceRemaining": 114.98,
+    "BalanceDueDate": null,
+    "IsDepositPayment": false,
+    "IsSplitPayment": false,
+    "SplitPaymentSlotCount": null,
+    "SplitPaymentTotalSlotCount": null,
+    "SplitPaymentPerTicketPrice": null,
+    "SplitPaymentAmount": null,
+    "SplitPaymentFee": null,
+    "SplitPaymentTotal": null,
+    "SplitPaymentDeadline": null
+  },
+  "DiscountCode": [],
+  "Product": {
+    "AccessCode": "",
+    "SignInUrl": null,
+    "AmountDue": 114.98,
+    "BookingId": 3004160,
+    "BookingSlots": [
+      {
+        "BookingId": 3004160,
+        "BookingSlotId": 10599667,
+        "IsAbsent": false,
+        "IsLocked": false,
+        "LastModified": "2026-06-12T15:25:12.4146681Z",
+        "PlayerGuid": null,
+        "Price": 47.99,
+        "SignedSiteWaiverId": null,
+        "SignedDefaultWaiverId": null,
+        "SignedWaiverDateTime": null,
+        "HasSignedWaiver": false,
+        "SuggestedTeamName": null,
+        "Player": null
+      },
+      {
+        "BookingId": 3004160,
+        "BookingSlotId": 10599668,
+        "IsAbsent": false,
+        "IsLocked": false,
+        "LastModified": "2026-06-12T15:25:12.4146695Z",
+        "PlayerGuid": null,
+        "Price": 47.99,
+        "SignedSiteWaiverId": null,
+        "SignedDefaultWaiverId": null,
+        "SignedWaiverDateTime": null,
+        "HasSignedWaiver": false,
+        "SuggestedTeamName": null,
+        "Player": null
+      }
+    ],
+    "SubBookings": [],
+    "GiftVouchers": [],
+    "CodeVouchers": [],
+    "ZendeskTickets": [],
+    "GameResults": [],
+    "EmailTasks": [],
+    "BookingAddOns": [],
+    "BookingDigitalAddOns": [],
+    "BookingStatusTypeId": 1,
+    "CreatedDateTime": "2026-06-12T15:25:12.4146581Z",
+    "CreditUsed": 0,
+    "Discount": -4.02,
+    "GameSpaceId": 81,
+    "InitialSlotCount": 2,
+    "IsFreeBooking": false,
+    "PackageId": 3127,
+    "Package": {
+      "Alias": "Outbreak",
+      "BookingDurationMinutes": 30,
+      "ExperienceDurationMinutes": 30,
+      "LanguageData": [
+        {
+          "LanguageTypeId": 4,
+          "Description": "Zombies. Sabotage. A stolen cure. Do you have what it takes to outwit – and outblast – hordes of enemies as you fight for survival? Get ready for Outbreak.",
+          "ImageUrl": null,
+          "Language": "English (American)",
+          "Locale": "en-US",
+          "Name": "Outbreak",
+          "VideoUrl": null
+        },
+        {
+          "LanguageTypeId": 17,
+          "Description": "Zombies. Sabotage. Un remède volé. Avez-vous ce qu'il faut pour déjouer les hordes d'ennemis et lutter pour votre survie ? Préparez-vous à Outbreak.\r\n\r\nUn virus mortel sème la panique, créant des hordes de zombies qui envahissent la ville. Votre équipe doit agir et vite ! Un scientifique fou a voler l'antidote, vous le pourchassez à travers la ville détruite pour le récupérer. *15 min briefing + 30 min de jeu intense...*",
+          "ImageUrl": null,
+          "Language": "French Canadian",
+          "Locale": "fr-CA",
+          "Name": "Outbreak",
+          "VideoUrl": null
+        }
+      ],
+      "MaximumPlayers": 8,
+      "MinimumPlayers": 1,
+      "MinimumAge": 0,
+      "PackageId": 3127,
+      "RootPackageId": null,
+      "VersionNumber": 1,
+      "SupersededByPackageId": null,
+      "Header": "outbreak",
+      "HeaderImage": null,
+      "VideoUrl": "https://youtu.be/-ifsUz1I4ps",
+      "SortOrder": 7,
+      "PackageTierPrices": [
+        {
+          "Price": {
+            "ListPrice": 47.99,
+            "Cost": 47.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 7.188902,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 55.178902
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#c80e0e",
+            "IsDefault": false,
+            "IsDeleted": false,
+            "Name": "Week nights",
+            "PriceTierTypeId": 308
+          }
+        },
+        {
+          "Price": {
+            "ListPrice": 44.99,
+            "Cost": 44.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 6.739502,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 51.729502
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#ea8f00",
+            "IsDefault": false,
+            "IsDeleted": false,
+            "Name": "Ligue (sol heist)",
+            "PriceTierTypeId": 417
+          }
+        },
+        {
+          "Price": {
+            "ListPrice": 59.99,
+            "Cost": 59.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 8.986502,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 68.976502
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#5b66ed",
+            "IsDefault": false,
+            "IsDeleted": false,
+            "Name": "Saturday",
+            "PriceTierTypeId": 456
+          }
+        },
+        {
+          "Price": {
+            "ListPrice": 34.99,
+            "Cost": 34.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 5.241502,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 40.231502
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#5cb200",
+            "IsDefault": false,
+            "IsDeleted": false,
+            "Name": "Kids",
+            "PriceTierTypeId": 309
+          }
+        },
+        {
+          "Price": {
+            "ListPrice": 52.99,
+            "Cost": 52.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 7.937902,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 60.927902
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#333",
+            "IsDefault": true,
+            "IsDeleted": false,
+            "Name": "Regular - peak",
+            "PriceTierTypeId": 242
+          }
+        },
+        {
+          "Price": {
+            "ListPrice": 39.99,
+            "Cost": 39.99,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 5.990502,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 45.980502
+          },
+          "PriceTierType": {
+            "AllowPromotions": true,
+            "Color": "#00a1d7",
+            "IsDefault": false,
+            "IsDeleted": false,
+            "Name": "Wednesday",
+            "PriceTierTypeId": 615
+          }
+        }
+      ],
+      "SiteId": 71,
+      "RecentTicketsSold": 0,
+      "PackageGames": [
+        {
+          "PackageGameId": 15299,
+          "PackageId": 3127,
+          "GameId": 31,
+          "GameDurationMinutes": 30
+        }
+      ],
+      "PackageExperiences": [
+        {
+          "PackageExperienceId": 5576,
+          "PackageId": 3127,
+          "ExperienceId": 8,
+          "DurationMinutes": 30,
+          "CostPercentage": 100,
+          "StartOffsetMinutes": null
+        }
+      ],
+      "AttractionTypeId": 1,
+      "PrivacyTypeId": 2,
+      "PrivacyChargePercentage": 100,
+      "PackageTypeId": 1,
+      "PlayersPerResource": 8,
+      "PerPersonPricing": true,
+      "OpenTimeStart": null,
+      "OpenTimeEnd": null
+    },
+    "Paid": 0,
+    "PaymentId": 2906886,
+    "Payment": {
+      "PaymentId": 2906886,
+      "PaymentMethodTypeId": 5,
+      "PaymentStatusTypeId": 1,
+      "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "PaymentMetadata": {},
+      "AmountDue": 114.98,
+      "Tax": 14.98,
+      "Fee": 0,
+      "DateCreated": "2026-06-12T15:25:12.4146581Z"
+    },
+    "InvoiceId": 2906886,
+    "Invoice": {
+      "InvoiceId": 2906886,
+      "EncryptedRef": "N1cfcqEvdmof5KumWF3tfA",
+      "PaymentStatusTypeId": 1,
+      "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "Price": 95.98,
+      "Discount": -4.02,
+      "OverrideDiscount": -4.02,
+      "PromoDiscount": 0,
+      "Tax": 14.98,
+      "Fee": 0,
+      "TotalCost": 114.98,
+      "VoucherCreditUsed": 0,
+      "Paid": 0,
+      "AmountDue": 114.98,
+      "BillingAmount": 0,
+      "BalanceDueDate": null,
+      "BillingDate": null,
+      "Refunded": 0,
+      "DepositAmount": 0,
+      "IsDepositPayment": false,
+      "PaymentOptionTypeId": 0,
+      "IsSplitPayment": false,
+      "SplitPaymentDeadline": null,
+      "SplitPaymentPerTicketPrice": 57.49,
+      "PromoCodeId": null,
+      "PromoCode": null,
+      "SiteId": 71,
+      "UserId": null,
+      "PaymentMethodTypeId": 5,
+      "PaymentTransactions": [],
+      "PaymentShares": []
+    },
+    "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+    "Player": {
+      "PlayerId": 0,
+      "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "DateCreated": "0001-01-01T00:00:00Z",
+      "DisplayName": null,
+      "LeftHanded": false,
+      "Gender": null,
+      "Language": null,
+      "FirstName": null,
+      "LastName": null,
+      "PhoneNumber": "",
+      "Postcode": null,
+      "Email": "zl@zl.com",
+      "ExcludeStats": true,
+      "LockDetails": true,
+      "KnownPlayer": false,
+      "LanguageTypeId": null,
+      "FullName": "Zero Latency",
+      "FallbackName": "Zero Latency",
+      "DateOfBirth": null,
+      "IsDeleted": false
+    },
+    "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+    "Customer": {
+      "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "Email": "zl@zl.com",
+      "FirstName": "Zero",
+      "LastName": "Latency",
+      "PhoneNumber": "",
+      "LanguageTypeId": 17,
+      "ExcludeStats": false,
+      "Language": null,
+      "LockDetails": false,
+      "DateCreated": "2026-02-15T22:00:11.907Z",
+      "ModifiedByUserId": null,
+      "FullName": "Zero Latency"
+    },
+    "Price": 95.98,
+    "PrivateSessionFee": 0,
+    "Tax": 14.38,
+    "TaxAfterDiscount": 14.98,
+    "TaxAfterRefund": 14.98,
+    "Fee": 0,
+    "TotalCost": 114.98,
+    "BillingAmount": 0,
+    "PromoDiscount": 0,
+    "OverrideDiscount": -4.02,
+    "BillingStatusTypeId": 1,
+    "PriceTierTypeId": 308,
+    "Refunded": 0,
+    "RequiresPayment": true,
+    "SessionId": 2448241,
+    "SiteId": 71,
+    "SlotPrice": 47.99,
+    "StartTime": "2026-12-31T12:00:00Z",
+    "StartTimeLocal": "2026-12-31T12:00:00-05:00",
+    "UserId": null,
+    "VoucherCreditUsed": 0,
+    "MasterBookingId": null,
+    "PrivateEventTypeId": null,
+    "IsPrivate": false,
+    "PromoCodeId": null,
+    "PromoCode": null,
+    "ExternalBookingId": null,
+    "BookingSystemId": null,
+    "UnderchargeStatusId": null,
+    "BalanceRemaining": 114.98,
+    "BookingNotes": []
+  },
+  "ApplyDiscountResponseType": null,
+  "AvailableDigitalAddOns": [
+    {
+      "BookingId": null,
+      "SiteId": null,
+      "Site": null,
+      "GameResultId": null,
+      "PlayerGuid": null,
+      "DigitalAddOnId": 1,
+      "DigitalAddOnOptionId": 2,
+      "Alias": "Premium Player Takeaway Video",
+      "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/addons/premium-outbreak.jpg",
+      "VideoUrlYouTube": "https://www.youtube.com/watch?v=6ukguPZHEbE",
+      "VideoUrlDash": "https://zerolatencyvr.azureedge.net/website/premium-ptv/outbreak/teaser/manifest.mpd",
+      "VideoUrlHls": "https://zerolatencyvr.azureedge.net/website/premium-ptv/outbreak/teaser/manifest.m3u8",
+      "QuantityTypeId": 1,
+      "QuantityMinimum": 0,
+      "QuantityMaximum": null,
+      "SortOrder": 1,
+      "Prices": [
+        {
+          "ListPrice": 14.9,
+          "Price": {
+            "ListPrice": 14.9,
+            "Cost": 14.9,
+            "CurrencyCode": "CAD",
+            "CurrencyLocale": "en-CA",
+            "CurrencySymbol": "$",
+            "DecimalPlaces": 2,
+            "Tax": 2.23202,
+            "TaxInclusive": false,
+            "TaxRate": 0.1498,
+            "Total": 17.13202
+          },
+          "FromQuantity": 1
+        }
+      ],
+      "Translations": [
+        {
+          "LanguageTypeId": 1,
+          "Name": "Premium POV Video",
+          "Description": "Take home your legendary full-session VR showdown - your in-game perspective captured from start to finish. Feel the adrenaline all over again, whenever you want.",
+          "Locale": "en-AU",
+          "Language": "English"
+        },
+        {
+          "LanguageTypeId": 2,
+          "Name": "プレミアム POV ビデオ",
+          "Description": "伝説のVRバトル、フルセッションをまるごと持ち帰ろう。始まりから終わりまで、あなたのゲーム内視点を完全収録。いつでも好きな時に、あの興奮をもう一度。",
+          "Locale": "ja-JP",
+          "Language": "Japanese"
+        },
+        {
+          "LanguageTypeId": 3,
+          "Name": "Vídeo POV Premium",
+          "Description": "Llévate a casa tu legendaria batalla VR completa: tu perspectiva dentro del juego capturada de principio a fin. Revive la adrenalina una y otra vez, cuando quieras.",
+          "Locale": "es-ES",
+          "Language": "Spanish"
+        },
+        {
+          "LanguageTypeId": 5,
+          "Name": "Vídeo POV Premium",
+          "Description": "Leve para casa a sua lendária batalha VR completa — a sua perspetiva no jogo captada do início ao fim. Sinta a adrenalina novamente, sempre que quiser.",
+          "Locale": "pt-PT",
+          "Language": "Portuguese"
+        },
+        {
+          "LanguageTypeId": 9,
+          "Name": "高級 POV 影片",
+          "Description": "將你的傳奇VR對決完整帶回家——從頭到尾記錄你的遊戲視角。隨時重溫那股腎上腺素飆升的快感。",
+          "Locale": "zh-TW",
+          "Language": "Chinese (Traditional)"
+        },
+        {
+          "LanguageTypeId": 10,
+          "Name": "高级 POV 视频",
+          "Description": "将你的传奇VR对决完整带回家——从头到尾记录你的游戏视角。随时重温那股肾上腺素飙升的快感。",
+          "Locale": "zh-CN",
+          "Language": "Chinese (Simplified)"
+        },
+        {
+          "LanguageTypeId": 11,
+          "Name": "วิดีโอ POV พรีเมียม",
+          "Description": "นำประสบการณ์การต่อสู้ VR ในตำนานกลับบ้าน — มุมมองในเกมของคุณถูกบันทึกตั้งแต่ต้นจนจบ รู้สึกถึงความตื่นเต้นอีกครั้ง เมื่อไหร่ก็ได้ที่คุณต้องการ",
+          "Locale": "th-TH",
+          "Language": "Thai"
+        },
+        {
+          "LanguageTypeId": 13,
+          "Name": "Premium POV Video",
+          "Description": "Nimm dein legendäres VR-Gefecht mit nach Hause – deine In-Game-Perspektive, aufgezeichnet von Anfang bis Ende. Erlebe den Adrenalinkick immer wieder, wann immer du willst.",
+          "Locale": "de-DE",
+          "Language": "German"
+        },
+        {
+          "LanguageTypeId": 14,
+          "Name": "فيديو POV بريميوم",
+          "Description": "خذ معك معركتك الأسطورية الكاملة في الواقع الافتراضي — منظورك داخل اللعبة مسجّل من البداية إلى النهاية. عِش اندفاع الأدرينالين من جديد، متى شئت.",
+          "Locale": "ar-SA",
+          "Language": "Arabic"
+        },
+        {
+          "LanguageTypeId": 15,
+          "Name": "Vidéo POV Premium",
+          "Description": "Ramenez chez vous votre légendaire affrontement VR — votre point de vue en jeu capturé du début à la fin. Revivez la montée d'adrénaline quand vous le voulez.",
+          "Locale": "fr-FR",
+          "Language": "French"
+        },
+        {
+          "LanguageTypeId": 16,
+          "Name": "Vídeo POV Premium",
+          "Description": "Emporta't a casa el teu llegendari combat VR complet — la teva perspectiva dins el joc capturada de principi a fi. Torna a sentir l'adrenalina sempre que vulguis.",
+          "Locale": "ca-ES",
+          "Language": "Catalan"
+        },
+        {
+          "LanguageTypeId": 17,
+          "Name": "Vidéo POV Premium",
+          "Description": "Rapportez chez vous votre légendaire affrontement VR au complet — votre point de vue en jeu capté du début à la fin. Revivez la montée d'adrénaline quand vous le voulez.",
+          "Locale": "fr-CA",
+          "Language": "French Canadian"
+        },
+        {
+          "LanguageTypeId": 18,
+          "Name": "Premium POV Video",
+          "Description": "Neem je legendarische VR-gevecht mee naar huis — jouw in-game perspectief vastgelegd van begin tot eind. Voel de adrenaline opnieuw, wanneer je maar wilt.",
+          "Locale": "nl-NL",
+          "Language": "Dutch"
+        },
+        {
+          "LanguageTypeId": 19,
+          "Name": "Video POV Premium",
+          "Description": "Porta a casa il tuo leggendario scontro VR completo — la tua prospettiva in-game catturata dall'inizio alla fine. Rivivi l'adrenalina ogni volta che vuoi.",
+          "Locale": "it-IT",
+          "Language": "Italian"
+        },
+        {
+          "LanguageTypeId": 20,
+          "Name": "Prémiové POV Video",
+          "Description": "Vezměte si domů svůj legendární VR souboj — váš pohled ve hře zachycený od začátku do konce. Prožijte ten adrenalin znovu, kdykoli budete chtít.",
+          "Locale": "cs-CZ",
+          "Language": "Czech"
+        }
+      ],
+      "Players": [],
+      "UnusedCredits": 0
+    }
+  ],
+  "AvailableAddOns": [],
+  "Bookings": [
+    {
+      "AccessCode": "",
+      "SignInUrl": null,
+      "AmountDue": 114.98,
+      "BookingId": 3004160,
+      "BookingSlots": [
+        {
+          "BookingId": 3004160,
+          "BookingSlotId": 10599667,
+          "IsAbsent": false,
+          "IsLocked": false,
+          "LastModified": "2026-06-12T15:25:12.4146681Z",
+          "PlayerGuid": null,
+          "Price": 47.99,
+          "SignedSiteWaiverId": null,
+          "SignedDefaultWaiverId": null,
+          "SignedWaiverDateTime": null,
+          "HasSignedWaiver": false,
+          "SuggestedTeamName": null,
+          "Player": null
+        },
+        {
+          "BookingId": 3004160,
+          "BookingSlotId": 10599668,
+          "IsAbsent": false,
+          "IsLocked": false,
+          "LastModified": "2026-06-12T15:25:12.4146695Z",
+          "PlayerGuid": null,
+          "Price": 47.99,
+          "SignedSiteWaiverId": null,
+          "SignedDefaultWaiverId": null,
+          "SignedWaiverDateTime": null,
+          "HasSignedWaiver": false,
+          "SuggestedTeamName": null,
+          "Player": null
+        }
+      ],
+      "SubBookings": [],
+      "GiftVouchers": [],
+      "CodeVouchers": [],
+      "ZendeskTickets": [],
+      "GameResults": [],
+      "EmailTasks": [],
+      "BookingAddOns": [],
+      "BookingDigitalAddOns": [],
+      "BookingStatusTypeId": 1,
+      "CreatedDateTime": "2026-06-12T15:25:12.4146581Z",
+      "CreditUsed": 0,
+      "Discount": -4.02,
+      "GameSpaceId": 81,
+      "InitialSlotCount": 2,
+      "IsFreeBooking": false,
+      "PackageId": 3127,
+      "Package": {
+        "Alias": "Outbreak",
+        "BookingDurationMinutes": 30,
+        "ExperienceDurationMinutes": 30,
+        "LanguageData": [
+          {
+            "LanguageTypeId": 4,
+            "Description": "Zombies. Sabotage. A stolen cure. Do you have what it takes to outwit – and outblast – hordes of enemies as you fight for survival? Get ready for Outbreak.",
+            "ImageUrl": null,
+            "Language": "English (American)",
+            "Locale": "en-US",
+            "Name": "Outbreak",
+            "VideoUrl": null
+          },
+          {
+            "LanguageTypeId": 17,
+            "Description": "Zombies. Sabotage. Un remède volé. Avez-vous ce qu'il faut pour déjouer les hordes d'ennemis et lutter pour votre survie ? Préparez-vous à Outbreak.\r\n\r\nUn virus mortel sème la panique, créant des hordes de zombies qui envahissent la ville. Votre équipe doit agir et vite ! Un scientifique fou a voler l'antidote, vous le pourchassez à travers la ville détruite pour le récupérer. *15 min briefing + 30 min de jeu intense...*",
+            "ImageUrl": null,
+            "Language": "French Canadian",
+            "Locale": "fr-CA",
+            "Name": "Outbreak",
+            "VideoUrl": null
+          }
+        ],
+        "MaximumPlayers": 8,
+        "MinimumPlayers": 1,
+        "MinimumAge": 0,
+        "PackageId": 3127,
+        "RootPackageId": null,
+        "VersionNumber": 1,
+        "SupersededByPackageId": null,
+        "Header": "outbreak",
+        "HeaderImage": null,
+        "VideoUrl": "https://youtu.be/-ifsUz1I4ps",
+        "SortOrder": 7,
+        "PackageTierPrices": [
+          {
+            "Price": {
+              "ListPrice": 47.99,
+              "Cost": 47.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 7.188902,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 55.178902
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#c80e0e",
+              "IsDefault": false,
+              "IsDeleted": false,
+              "Name": "Week nights",
+              "PriceTierTypeId": 308
+            }
+          },
+          {
+            "Price": {
+              "ListPrice": 44.99,
+              "Cost": 44.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 6.739502,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 51.729502
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#ea8f00",
+              "IsDefault": false,
+              "IsDeleted": false,
+              "Name": "Ligue (sol heist)",
+              "PriceTierTypeId": 417
+            }
+          },
+          {
+            "Price": {
+              "ListPrice": 59.99,
+              "Cost": 59.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 8.986502,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 68.976502
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#5b66ed",
+              "IsDefault": false,
+              "IsDeleted": false,
+              "Name": "Saturday",
+              "PriceTierTypeId": 456
+            }
+          },
+          {
+            "Price": {
+              "ListPrice": 34.99,
+              "Cost": 34.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 5.241502,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 40.231502
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#5cb200",
+              "IsDefault": false,
+              "IsDeleted": false,
+              "Name": "Kids",
+              "PriceTierTypeId": 309
+            }
+          },
+          {
+            "Price": {
+              "ListPrice": 52.99,
+              "Cost": 52.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 7.937902,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 60.927902
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#333",
+              "IsDefault": true,
+              "IsDeleted": false,
+              "Name": "Regular - peak",
+              "PriceTierTypeId": 242
+            }
+          },
+          {
+            "Price": {
+              "ListPrice": 39.99,
+              "Cost": 39.99,
+              "CurrencyCode": "CAD",
+              "CurrencyLocale": "en-CA",
+              "CurrencySymbol": "$",
+              "DecimalPlaces": 2,
+              "Tax": 5.990502,
+              "TaxInclusive": false,
+              "TaxRate": 0.1498,
+              "Total": 45.980502
+            },
+            "PriceTierType": {
+              "AllowPromotions": true,
+              "Color": "#00a1d7",
+              "IsDefault": false,
+              "IsDeleted": false,
+              "Name": "Wednesday",
+              "PriceTierTypeId": 615
+            }
+          }
+        ],
+        "SiteId": 71,
+        "RecentTicketsSold": 0,
+        "PackageGames": [
+          {
+            "PackageGameId": 15299,
+            "PackageId": 3127,
+            "GameId": 31,
+            "GameDurationMinutes": 30
+          }
+        ],
+        "PackageExperiences": [
+          {
+            "PackageExperienceId": 5576,
+            "PackageId": 3127,
+            "ExperienceId": 8,
+            "DurationMinutes": 30,
+            "CostPercentage": 100,
+            "StartOffsetMinutes": null
+          }
+        ],
+        "AttractionTypeId": 1,
+        "PrivacyTypeId": 2,
+        "PrivacyChargePercentage": 100,
+        "PackageTypeId": 1,
+        "PlayersPerResource": 8,
+        "PerPersonPricing": true,
+        "OpenTimeStart": null,
+        "OpenTimeEnd": null
+      },
+      "Paid": 0,
+      "PaymentId": 2906886,
+      "Payment": {
+        "PaymentId": 2906886,
+        "PaymentMethodTypeId": 5,
+        "PaymentStatusTypeId": 1,
+        "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+        "PaymentMetadata": {},
+        "AmountDue": 114.98,
+        "Tax": 14.98,
+        "Fee": 0,
+        "DateCreated": "2026-06-12T15:25:12.4146581Z"
+      },
+      "InvoiceId": 2906886,
+      "Invoice": {
+        "InvoiceId": 2906886,
+        "EncryptedRef": "N1cfcqEvdmof5KumWF3tfA",
+        "PaymentStatusTypeId": 1,
+        "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+        "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+        "Price": 95.98,
+        "Discount": -4.02,
+        "OverrideDiscount": -4.02,
+        "PromoDiscount": 0,
+        "Tax": 14.98,
+        "Fee": 0,
+        "TotalCost": 114.98,
+        "VoucherCreditUsed": 0,
+        "Paid": 0,
+        "AmountDue": 114.98,
+        "BillingAmount": 0,
+        "BalanceDueDate": null,
+        "BillingDate": null,
+        "Refunded": 0,
+        "DepositAmount": 0,
+        "IsDepositPayment": false,
+        "PaymentOptionTypeId": 0,
+        "IsSplitPayment": false,
+        "SplitPaymentDeadline": null,
+        "SplitPaymentPerTicketPrice": 57.49,
+        "PromoCodeId": null,
+        "PromoCode": null,
+        "SiteId": 71,
+        "UserId": null,
+        "PaymentMethodTypeId": 5,
+        "PaymentTransactions": [],
+        "PaymentShares": []
+      },
+      "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "Player": {
+        "PlayerId": 0,
+        "PlayerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+        "DateCreated": "0001-01-01T00:00:00Z",
+        "DisplayName": null,
+        "LeftHanded": false,
+        "Gender": null,
+        "Language": null,
+        "FirstName": null,
+        "LastName": null,
+        "PhoneNumber": "",
+        "Postcode": null,
+        "Email": "zl@zl.com",
+        "ExcludeStats": true,
+        "LockDetails": true,
+        "KnownPlayer": false,
+        "LanguageTypeId": null,
+        "FullName": "Zero Latency",
+        "FallbackName": "Zero Latency",
+        "DateOfBirth": null,
+        "IsDeleted": false
+      },
+      "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+      "Customer": {
+        "CustomerGuid": "93da4e2a-38bd-453d-98e7-08de6aa9ac20",
+        "Email": "zl@zl.com",
+        "FirstName": "Zero",
+        "LastName": "Latency",
+        "PhoneNumber": "",
+        "LanguageTypeId": 17,
+        "ExcludeStats": false,
+        "Language": null,
+        "LockDetails": false,
+        "DateCreated": "2026-02-15T22:00:11.907Z",
+        "ModifiedByUserId": null,
+        "FullName": "Zero Latency"
+      },
+      "Price": 95.98,
+      "PrivateSessionFee": 0,
+      "Tax": 14.38,
+      "TaxAfterDiscount": 14.98,
+      "TaxAfterRefund": 14.98,
+      "Fee": 0,
+      "TotalCost": 114.98,
+      "BillingAmount": 0,
+      "PromoDiscount": 0,
+      "OverrideDiscount": -4.02,
+      "BillingStatusTypeId": 1,
+      "PriceTierTypeId": 308,
+      "Refunded": 0,
+      "RequiresPayment": true,
+      "SessionId": 2448241,
+      "SiteId": 71,
+      "SlotPrice": 47.99,
+      "StartTime": "2026-12-31T12:00:00Z",
+      "StartTimeLocal": "2026-12-31T12:00:00-05:00",
+      "UserId": null,
+      "VoucherCreditUsed": 0,
+      "MasterBookingId": null,
+      "PrivateEventTypeId": null,
+      "IsPrivate": false,
+      "PromoCodeId": null,
+      "PromoCode": null,
+      "ExternalBookingId": null,
+      "BookingSystemId": null,
+      "UnderchargeStatusId": null,
+      "BalanceRemaining": 114.98,
+      "BookingNotes": []
+    }
+  ],
+  "GiftVouchers": [],
+  "AddOns": null,
+  "DigitalAddOns": null
+}
+
+Confirm PATCH
+https://api.zerolatencyvr.com/api/v1/sites/71/bookings/3004258/confirm
+{
+  "Amount":114.98,
+  "Fee":0,
+  "GiftVoucherAmount":null,
+  "CurrencyCode":"CAD",
+  "DateCreated":"2026-06-12T17:22:57.772Z",
+  "PaymentMethodReference":"Cash",
+  "PaymentMethodTypeId":5,
+  "SiteId":71,
+  "Tax":14.38,
+  "UserId":null,
+  "EmailAddress":"zl@zl.com",
+  "PhoneNumber":null,
+  "FullName":null,
+  "Postcode":null
+}
+
+Confirm Response
+200
