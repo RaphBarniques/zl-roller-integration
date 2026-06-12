@@ -150,7 +150,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				booking.bookingReference,
 				email,
 				zlPackageId,
-				booking.startDate,
+				isoDate,
 				item.quantity,
 				price,
 			);
