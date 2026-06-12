@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "bun --watch src/index.ts",
-    "format": "bunx biome check --write ."
+    "format": "bunx biome check --write . --max-diagnostics 99999"
   },
   "dependencies": {
     "jwt-decode": "^4.0.0",

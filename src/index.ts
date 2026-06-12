@@ -165,7 +165,7 @@ customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
 
 const debug = 1;
-if (debug == 1) {
+if (debug === 1) {
 	const file = Bun.file('./input_webhook.json');
 	const payload = await file.json();
 	handleUpdatedWebhook(payload);

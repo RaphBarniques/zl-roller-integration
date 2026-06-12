@@ -162,7 +162,7 @@ export async function initMailer() {
 	// Create a transporter using SMTP
 	transporter = nodemailer.createTransport({
 		host: process.env.MAILER_HOST,
-		port: parseInt(process.env.MAILER_PORT || '0'),
+		port: parseInt(process.env.MAILER_PORT || '0', 10),
 		secure: true, // use SSL/TLS
 		auth: {
 			user: process.env.MAILER_USER,
