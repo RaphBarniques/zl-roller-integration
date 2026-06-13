@@ -2,12 +2,7 @@ import { customLog } from '../logger.ts';
 import { allowedPackages, config } from '../preflight.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
 import { sendEmail } from '../sendMail.ts';
-import {
-	checkProcessedEvent,
-	getSyncedItem,
-	saveProcessedEvent,
-	saveSyncedItem,
-} from '../utils/db.ts';
+import { checkProcessedEvent, getSyncedItem, saveProcessedEvent, saveSyncedItem } from '../utils/db.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {

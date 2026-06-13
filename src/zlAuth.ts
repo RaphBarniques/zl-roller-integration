@@ -10,9 +10,11 @@
 
 import { jwtDecode } from 'jwt-decode';
 import { customLog } from './logger.ts';
+import { config } from './preflight.ts';
 
 let isFirstRequest = true;
 export let ZLAuthToken: string | null = null;
+export let ZLCookie: string | null = null;
 let ZLRefreshToken: string | null = null;
 let logMessage: string = 'Initializing ZL API authentication...\n';
 
@@ -27,7 +29,7 @@ export async function getToken(): Promise<string> {
 
 	const decoded = jwtDecode(ZLAuthToken);
 	if (!decoded.exp) {
-		customLog('Could not get expiration (attribute "exp") from JWT Token');
+		customLog('Could not get expiration (attribute "exp") from JWT Token', "WARN");
 		return '';
 	}
 
@@ -48,28 +50,71 @@ async function getZLToken() {
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const response = await fetch(
-			'https://api.zerolatencyvr.com/api/v1/auth/user/token',
+			`${config.zl.api_base_url}/auth/user/token`,
 			{
 				credentials: 'include',
 				headers: {
-					'User-Agent':
-						'Mozilla/5.0 (X11; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0',
 					Accept: 'application/json, text/plain, */*',
-					'Accept-Language': 'en-US,en;q=0.9',
-					'Content-Type': 'application/json',
-					'Sec-Fetch-Dest': 'empty',
-					'Sec-Fetch-Mode': 'cors',
-					'Sec-Fetch-Site': 'same-site',
-					Priority: 'u=0',
-					Host: 'api.zerolatencyvr.com',
-					Origin: 'https://auth.zerolatencyvr.com',
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
 					clientId: Bun.env.ZL_USERNAME,
 					clientSecret: Bun.env.ZL_PASSWORD,
 					otpCode: null,
 					apiKey: 'string',
-					scopes: [],
+					scopes: [
+                        "read:sites",
+                        "read:products",
+                        "read:maps",
+                        "read:gameresults",
+                        "modify:gameresults",
+                        "read:opentimes",
+                        "read:opendates",
+                        "modify:opentimes",
+                        "create:opentimes",
+                        "read:bookings",
+                        "create:bookings",
+                        "modify:bookings",
+                        "read:invoices",
+                        "modify:invoices",
+                        "read:players",
+                        "create:players",
+                        "modify:players",
+                        "read:customers",
+                        "create:customers",
+                        "modify:customers",
+                        "read:sessions",
+                        "modify:session",
+                        "read:discountcodes",
+                        "create:discountcodes",
+                        "modify:discountcodes",
+                        "read:giftvouchers",
+                        "create:giftvouchers",
+                        "modify:giftvouchers",
+                        "read:packages",
+                        "create:packages",
+                        "modify:packages",
+                        "read:packagetemplates",
+                        "read:addons",
+                        "create:addons",
+                        "modify:addons",
+                        "read:users",
+                        "create:users",
+                        "modify:users",
+                        "modify:sites",
+                        "create:sites",
+                        "read:clients",
+                        "read:games",
+                        "create:games",
+                        "modify:games",
+                        "read:attractions",
+                        "create:attractions",
+                        "modify:attractions",
+                        "read:notifications",
+                        "read:gamespaces",
+                        "read:reports",
+                        "read:brazerequest"
+                    ],
 					isTrustedDevice: true,
 				}),
 				method: 'POST',
@@ -88,6 +133,20 @@ async function getZLToken() {
 				AccessToken: string;
 				RefreshToken: string;
 			};
+
+            const setCookie = response.headers.get("set-cookie");
+
+            if (setCookie) {
+                ZLCookie = setCookie
+                    .split(/,(?=\s*[A-Za-z0-9_-]+=)/)
+                    .map(c => c.split(";")[0].trim())
+                    .filter(c => 
+                        c.startsWith("ARRAffinity=") ||
+                        c.startsWith("ARRAffinitySameSite=")
+                    )
+                    .join("; ");
+            }
+
 			ZLRefreshToken = data.RefreshToken;
 			ZLAuthToken = data.AccessToken;
 			logMessage += 'ZL API token obtained successfully';
@@ -190,10 +249,24 @@ async function refreshZLToken() {
 				AccessToken: string;
 				RefreshToken: string;
 			};
+
+            const setCookie = response.headers.get("set-cookie");
+
+            if (setCookie) {
+                ZLCookie = setCookie
+                    .split(/,(?=\s*[A-Za-z0-9_-]+=)/)
+                    .map(c => c.split(";")[0].trim())
+                    .filter(c => 
+                        c.startsWith("ARRAffinity=") ||
+                        c.startsWith("ARRAffinitySameSite=")
+                    )
+                    .join("; ");
+                console.log(ZLCookie);
+            }
+
 			ZLRefreshToken = data.RefreshToken;
 			ZLAuthToken = data.AccessToken;
 			customLog(`ZL API access token refreshed successfully`, 'INFO');
-			console.log(ZLAuthToken);
 			return data.AccessToken;
 		}
 	}
