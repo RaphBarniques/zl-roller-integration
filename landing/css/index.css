@@ -1,0 +1,298 @@
+:root{
+
+    --btn-color: #fdfdfd;/* button color*/
+    --btn-bg: #DD3A4D;/* button bg color*/
+
+    --primary-text-color: #dc4859;
+    --link-hover: #dc4859;
+    --input-hover-bd-color: #dc4859;
+}
+
+
+html {
+    scroll-behavior: smooth;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+header{
+    /* background-color: #fff;
+    color: #000; */
+}
+
+
+header > .collapsible-header{
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    background-color: inherit;
+    place-content: center;
+    overflow: hidden;
+    transition: width 0.3s ease;
+}
+
+.animated-collapse{
+    transition: width 0.3s ease;
+}
+
+.header-gradient{
+    background: rgb(212, 174, 174);
+    background: linear-gradient(83deg, #dd3a4d65 30%, #abd4e693 60%, #41c0f097 79%, #8c91e86b 100%);
+    filter: blur(100px);
+}
+
+.header-links {
+    display: flex;
+    align-items: center;
+    min-width: fit-content;
+    border-radius: 10px;
+    padding: 5px 10px;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+
+.header-links:hover {
+    color: var(--link-hover);
+}
+
+.primary-text-color{
+    color: var(--primary-text-color);
+}
+
+.opacity-0{
+    opacity: 0 !important;
+}
+
+.opacity-100{
+    opacity: 100 !important;
+}
+
+.btn{
+    padding: 10px 15px;
+    width: max-content;
+    border-radius: 24px;
+    color: var(--btn-color);
+    background-color: var(--btn-bg);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+}
+
+.btn:hover{
+
+}
+
+.icon,
+.social-icon {
+    font-size: 2rem;
+    color: var(--primary-text-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 2px solid var(--primary-text-color);
+}
+
+.btn:disabled{
+    cursor: default;
+}
+
+.input{
+    padding: 10px;
+    background-color: transparent;
+    border-radius: 25px;
+    /* outline: none; */
+    min-width: 100px;
+    border: 2px solid #818080;
+    /* transition: border 0.3s; */
+}
+
+.input:active, .input:focus, .input:focus-within{
+    border: 2px solid var(--input-hover-bd-color);
+}
+
+.input-error{
+    border-bottom: 3px solid #ff1e1e;
+}
+
+.input-error:focus-within{
+    border-bottom: 3px solid #fd0101;
+}
+
+/* Navigation dots styling */
+.dots-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-link{
+    color: #0d0d0d;
+    transition: color 0.3s;
+}
+
+.footer-link:hover{
+    color: #dc4859;
+}
+
+
+.review-container {
+    position: relative;
+    max-width: 600px;
+    margin: auto;
+}
+
+.review-card{
+    box-shadow: 0px 2px 4px #757474a0;
+    border-radius: 15px;
+    /* width: 200px; */
+    /* height: 550px; */
+    padding: 10px;
+}
+
+/* --------- collapsible div ---------- */
+.collapsible {
+    background-color: #f3f0f0;
+    color: #2b2929;
+    /* cursor: pointer; */
+    padding: 5px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    transition: 0.4s;
+}
+
+/* Style for the collapsible content */
+.content {
+    padding: 0 18px;
+    /* display: none; */
+    height: 0px;
+    overflow: hidden;
+    background-color: transparent;
+    transition: height 0.5s;
+    text-align: justify;
+    margin-top: 10px;
+}
+
+.collapsible .active,
+.collapsible:hover {
+    /* background-color: #dedddd; */
+}
+
+/* Custom button styling for header */
+.btn-header {
+    background-color: #DD3A4D;
+    color: white;
+}
+
+.btn-header .icon {
+    color: white;
+}
+
+/* Secondary button styling */
+.btn-secondary {
+    background-color: #DD3A4D25;
+    color: #DD3A4D;
+}
+
+/* Hero text styling */
+.hero-highlight {
+    color: #DD3A4D;
+}
+
+/* Hero section breathing room */
+.hero-section-content {
+    margin-top: 2rem;
+}
+
+/* Link button styling */
+.btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid #DD3A4D;
+    color: #DD3A4D;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-link:hover {
+    background-color: #DD3A4D;
+    color: white;
+}
+
+/* About section background */
+.about-section {
+    background-color: #f8f8f8;
+}
+
+/* Profile image styling */
+.profile-image {
+    height: 250px;
+    width: 250px;
+    border-radius: 50%;
+    border: 3px solid #DD3A4D;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Bio text styling */
+.bio-text {
+    color: #374151;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    margin-top: 1.5rem;
+}
+
+.bio-text p {
+    margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+    .hero-section-content {
+        margin-top: 4rem;
+    }
+}
+
+@media not all and (min-width: 1024px) {
+    header .collapsible-header {
+        position: fixed;
+        right: 0px;
+        flex-direction: column;
+        opacity: 0;
+        height: 100vh;
+        min-height: 100vh;
+        height: 100dvh;
+        width: 0vw;
+        justify-content: space-between;
+        padding: 5px;
+        padding-top: 5%;
+        padding-bottom: 5%;
+        place-items: end;
+        background-color: #ffffff;
+        color: #000000;
+        overflow-y: auto;
+        box-shadow: 2px 0px 3px #000;
+    }
+
+    .header-links{
+        color: black;
+    }
+    
+}

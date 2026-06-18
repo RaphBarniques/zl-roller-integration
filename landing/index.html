@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Roller to ZL integration</title>
+        <meta name="description" content="" />
+        <link
+            rel="shortcut icon"
+            href="./assets/logo/logo1.png"
+            type="image/x-icon"
+        />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:title" content="Roller to ZL integration />
+        <meta property="og:description" content="" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://zlintegration.com" />
+        <!--Replace with the current website url-->
+        <meta property="og:image" content="" />
+
+        <link rel="stylesheet" href="css/tailwind-build.css" />
+        <link rel="stylesheet" href="css/index.css" />
+    </head>
+    <body class="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-[#ffffff]">
+        <div class="tw-absolute tw-top-0 tw-flex tw-h-[150px] tw-w-full">
+            <div class="header-gradient tw-h-full tw-w-full"></div>
+        </div>
+
+        <header
+            class="lgtw-max-w-lg:tw-justify-around tw-max-w-lg:tw-px-4 tw-max-w-lg:tw-mr-auto tw-absolute tw-top-0 tw-z-20 tw-flex tw-h-[60px] tw-w-full tw-bg-opacity-0 tw-px-[5%] tw-text-black"
+        >
+            <a class="tw-h-[50px] tw-p-[4px]" href="">
+                <img
+                    src="./assets/logo/logo1.png"
+                    alt="logo"
+                    class="tw-object tw-h-full tw-w-full tw-p-[4px]"
+                />
+            </a>
+            <div
+                class="collapsible-header animated-collapse max-lg:tw-shadow-md"
+                id="collapsed-header-items"
+            >
+                <div
+                    class="tw-flex tw-h-full tw-w-max tw-gap-5 tw-text-base tw-text-black max-lg:tw-mt-[30px] max-lg:tw-flex-col max-lg:tw-place-items-end max-lg:tw-gap-5 lg:tw-mx-auto lg:tw-place-items-center"
+                >
+                    <a class="header-links" href="#features"> Features </a>
+                    <a class="header-links" href="#pricing"> Pricing </a>
+                    <a class="header-links" href="#about"> About me </a>
+                </div>
+                <div
+                    class="tw-mx-4 tw-flex tw-place-items-center tw-gap-[20px] tw-text-base max-md:tw-w-full max-md:tw-flex-col max-md:tw-place-content-center tw-justify-center"
+                >
+                    <a
+                        href="#contact"
+                        aria-label="signup"
+                        class="btn btn-header tw-transition-transform tw-duration-[0.3s] hover:tw-translate-x-2"
+                    >
+                        <span>Get started</span>
+                    </a>
+                </div>
+            </div>
+            <button
+                class="tw-absolute tw-right-3 tw-top-3 tw-z-50 tw-text-3xl tw-text-black lg:tw-hidden"
+                onclick="toggleHeader()"
+                aria-label="menu"
+                id="collapse-btn"
+            >☰</button>
+        </header>
+
+        <section
+            class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-max-w-[100vw] tw-flex-col tw-overflow-hidden max-lg:tw-p-4 max-md:tw-mt-[50px]"
+        >
+            <div
+                class="tw-flex tw-h-full tw-min-h-[100vh] tw-w-full tw-flex-col tw-place-content-center tw-gap-6 tw-p-[5%] max-xl:tw-place-items-center"
+            >
+                <div
+                    class="tw-flex tw-flex-col tw-place-content-center tw-items-center hero-section-content"
+                >
+                    <div
+                        class="tw-text-center tw-text-6xl tw-font-semibold tw-uppercase tw-leading-[80px] max-lg:tw-text-4xl max-md:tw-leading-snug"
+                    >
+                        <span> Automate your </span>
+                        <br />
+                        <span class="hero-highlight">Roller to ZL </span>
+                        <span> workflow </span>
+                        
+                    </div>
+                    <div
+                        class="tw-mt-10 tw-max-w-[450px] tw-p-2 tw-text-center max-lg:tw-max-w-full tw-text-gray-600"
+                    >
+                        Save your staff and yourself time and avoid mistakes with this small piece of software that integrates your Roller booking flow with the Zero Latency Portal. 
+                    </div>
+
+                    <div
+                        class="tw-mt-4 tw-flex tw-place-items-center tw-gap-4 tw-overflow-hidden tw-p-2"
+                    >
+                        <a
+                            class="btn tw-transition-transform tw-duration-[0.3s] hover:tw-scale-x-[1.03]"
+                            href="#contact"
+                        >
+                            Get started
+                        </a>
+                        <a
+                            class="btn btn-secondary tw-transition-transform tw-duration-[0.3s] hover:tw-scale-x-[1.03]"
+                            href="#learn"
+                        >
+                            <span>Learn more</span>
+                        </a>
+                    </div>
+
+                    <div
+                        class="reveal tw-mt-6 tw-flex tw-gap-4 tw-text-2xl"
+                    ></div>
+                </div>
+
+                <div
+                    class="tw-flex tw-w-full tw-place-content-center tw-place-items-center tw-overflow-hidden"
+                >
+                    <div
+                        class="tw-relative tw-flex tw-w-fit tw-place-content-center tw-place-items-center"
+                    >
+                        <div
+                            class="tw-flex tw-max-h-[550px] tw-min-w-[350px] tw-max-w-[650px] tw-overflow-hidden tw-rounded-2xl tw-shadow-xl max-lg:tw-h-fit max-lg:tw-max-h-[320px] max-lg:tw-min-h-[150px] max-lg:tw-w-[320px]"
+                        >
+                            <img
+                                src="./assets/images/home/screenshot.png"
+                                alt="dashboard"
+                                class="tw-h-full tw-w-full tw-object-cover max-lg:tw-object-contain"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section
+            class="tw-relative tw-flex tw-w-full tw-max-w-[100vw] tw-flex-col tw-place-content-center tw-place-items-center tw-overflow-hidden tw-p-6"
+         id="learn">
+            <div
+                class="tw-flex tw-max-w-[750px] tw-flex-col tw-gap-5 tw-text-center"
+            >
+                <h2
+                    class="tw-mt-10 tw-text-4xl tw-font-semibold max-lg:tw-text-3xl"
+                >
+                    Accurate.
+                    <span class="hero-highlight">Efficient.</span>
+                    Reliable.
+                </h2>
+
+                <div class="tw-text-gray-700">
+                    Built for venue operations, the integration keeps bookings synchronized, minimizes manual work, and provides dependable real-time updates your team can trust.
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="tw-relative tw-flex tw-w-full tw-max-w-[100vw] tw-flex-col tw-place-content-center tw-place-items-center tw-overflow-hidden tw-p-6"
+            id="features"
+        >
+            <div
+                class="tw-mt-8 tw-flex tw-flex-col tw-place-items-center tw-gap-5"
+            >
+                <div
+                    class="tw-mt-5 tw-flex tw-flex-col tw-gap-3 tw-text-center"
+                >
+                    <h2 class="tw-text-4xl tw-font-semibold">Core 
+                        <span class="hero-highlight">Features</span></h2>
+                </div>
+                <div
+                    class="tw-mt-6 tw-flex tw-max-w-[60%] tw-flex-wrap tw-place-content-center tw-gap-8 max-lg:tw-flex-col"
+                >
+                    <div
+                        class="tw-flex tw-h-[250px] tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4 tw-text-center"
+                    >
+                        <!-- <img src="./assets/images/home/sample.jpg" 
+                                alt="feature1"> -->
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-sync-icon lucide-calendar-sync"><path d="M11 10v4h4"/><path d="m11 14 1.535-1.605a5 5 0 0 1 8 1.5"/><path d="M16 2v4"/><path d="m21 18-1.535 1.605a5 5 0 0 1-8-1.5"/><path d="M21 22v-4h-4"/><path d="M21 8.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4.3"/><path d="M3 10h4"/><path d="M8 2v4"/></svg>
+                        </span>
+                        <h3 class="tw-text-2xl tw-font-semibold">Automatic Booking Sync</h3>
+                        <div class="tw-text-[#595959]">
+                            Reservations created in Roller are automatically created in the Zero Latency Portal with the correct game, date, time, player count and customer information.
+                        </div>
+                    </div>
+                    <div
+                        class="tw-flex tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4 tw-text-center"
+                    >
+                        <!-- <img src="./assets/images/home/sample.jpg" 
+                                alt="feature1"> -->
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock-icon lucide-calendar-clock"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v4"/><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"/><path d="M3 10h5"/><path d="M8 2v4"/><circle cx="16" cy="16" r="6"/></svg>
+                        </span>
+                        <h3 class="tw-text-2xl tw-font-semibold">Real-Time Updates</h3>
+                        <div class="tw-text-[#595959]">
+                            Changes made after booking are automaticaly reflected in the portal, including player count adjustments, game changes, schedule changes and cancellations.
+                        </div>
+                    </div>
+                    <div
+                        class="tw-flex tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4 tw-text-center"
+                    >
+                        <!-- <img src="./assets/images/home/sample.jpg" 
+                                alt="feature1"> -->
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-alert-icon lucide-search-alert"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 7v4"/><path d="M11 15h.01"/></svg>
+                        </span>
+                        <h3 class="tw-text-2xl tw-font-semibold">Integration Monitoring Dashboard</h3>
+                        <div class="tw-text-[#595959]">
+                            While everything works by itself, you can monitor every synchronization in real time, search from past bookings and review logs and alerts from a simple web dashboard.
+                        </div>
+                    </div>
+                    <div
+                        class="tw-flex tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4 tw-text-center"
+                    >
+                        <!-- <img src="./assets/images/home/sample.jpg" 
+                                alt="feature1"> -->
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-icon lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                        </span>
+                        <h3 class="tw-text-2xl tw-font-semibold">Email Alerts</h3>
+                        <div class="tw-text-[#595959]">
+                            Receive email alerts for you and your staff if a booking needs to be booked manually in the event of the ZL servers being down, or if a booking was flagged and needs a "discount too high" justification.
+                        </div>
+                    </div>
+                    <div
+                        class="tw-flex tw-w-[350px] tw-flex-col tw-gap-2 tw-p-4 tw-text-center"
+                    >
+                        <!-- <img src="./assets/images/home/sample.jpg" 
+                                alt="feature1"> -->
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-pen-line-icon lucide-file-pen-line"><path d="M14.364 13.634a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506l4.013-4.009a1 1 0 0 0-3.004-3.004z"/><path d="M14.487 7.858A1 1 0 0 1 14 7V2"/><path d="M20 19.645V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l2.516 2.516"/><path d="M8 18h1"/></svg>
+                        </span>
+                        <h3 class="tw-text-2xl tw-font-semibold">Link Waivers to Tablet <br>Sign-in</h3>
+                        <h3 class="tw-text-2xl tw-font-semibold">(Coming soon)</h3>
+                        <div class="tw-text-[#595959]">
+                            Send your Roller waivers to your customers and have them already signed in the ZL system when they arrive.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="tw-mt-5 tw-flex tw-w-full tw-flex-col tw-place-items-center tw-p-[2%]"
+         style="display:none">
+            <h3
+                class="tw-text-3xl tw-font-medium tw-text-primary max-md:tw-text-2xl"
+            >
+                What our clients say
+            </h3>
+            <!-- Testimonials -->
+            <div
+                class="tw-mt-8 tw-gap-10 tw-space-y-8 max-md:tw-columns-1 lg:tw-columns-2 xl:tw-columns-3"
+            >
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/women.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="women"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">Trich B</div>
+                            <div class="tw-text-[#4b4b4b]">AMI, ceo</div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor sit amet consectetur, adipisicing
+                        elit. Beatae, vero.
+                    </p>
+                </div>
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/man.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="man"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">John B</div>
+                            <div class="tw-text-[#4b4b4b]">ABC, cto</div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Inventore deserunt delectus consectetur enim cupiditate
+                        ab nemo voluptas repellendus qui quas..
+                    </p>
+                </div>
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/man2.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="man"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">Mante</div>
+                            <div class="tw-text-[#4b4b4b]">xyz, cto</div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Quidem, numquam.
+                    </p>
+                </div>
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/women.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="man"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">Lara</div>
+                            <div class="tw-text-[#4b4b4b]">xz, cto</div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing
+                        elit. Soluta, saepe illum. Dicta quisquam praesentium
+                        quod!
+                    </p>
+                </div>
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/man.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="man"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">James</div>
+                            <div class="tw-text-[#4b4b4b]">app, cto</div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Fuga accusamus non enim debitis rem neque beatae
+                        explicabo corrupti porro ullam?
+                    </p>
+                </div>
+                <div
+                    class="tw-flex tw-h-fit tw-w-[350px] tw-break-inside-avoid tw-flex-col tw-rounded-lg tw-p-4 tw-shadow-lg max-lg:tw-w-[320px]"
+                >
+                    <div class="tw-flex tw-place-items-center tw-gap-3">
+                        <div
+                            class="tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                        >
+                            <img
+                                src="./assets/images/people/man2.jpg"
+                                class="tw-h-full tw-w-full tw-object-cover"
+                                alt="man"
+                            />
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-font-semibold">Ron</div>
+                            <div class="tw-text-[#4b4b4b]">
+                                marketplace, cto
+                            </div>
+                        </div>
+                    </div>
+                    <p class="tw-mt-4 tw-italic tw-text-gray-600">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Fuga accusamus non enim debitis rem neque beatae
+                        explicabo corrupti porro ullam?
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section
+            class="tw-mt-5 tw-flex tw-w-full tw-flex-col tw-place-items-center tw-p-[2%]"
+            id="pricing"
+        >
+            <h2 class="tw-text-4xl tw-font-semibold hero-highlight">Pricing</h2>
+            <!-- pricing -->
+            <div
+                class="tw-mt-10 tw-flex tw-flex-wrap tw-place-content-center tw-gap-8 max-lg:tw-flex-col"
+            >
+                <div
+                    class="tw-flex tw-w-[380px] tw-flex-col tw-place-items-center tw-gap-2 tw-rounded-lg tw-p-8 tw-shadow-xl max-lg:tw-w-[320px]"
+                >
+                    <h3 class="">
+                        <span class="tw-text-2xl tw-font-semibold">Reach out for price</span>
+                    </h3>
+                    <p class="tw-mt-3 tw-text-center tw-text-gray-600">
+                        One-time payment or per month for your convenience
+                    </p>
+                    <hr />
+                    <ul
+                        class="tw-mt-4 tw-flex tw-flex-col tw-gap-2 tw-text-center tw-text-lg tw-text-gray-600"
+                    >
+                        <li>Includes:</li>
+                        <li>Integration software</li>
+                        <li>Installation and configuration</li>
+                        <li>After sale support</li>
+                        <li>Hosting (per year)</li>
+                    </ul>
+                    <a
+                        href="#contact"
+                        class="btn tw-mt-8 !tw-w-full tw-transition-transform tw-duration-[0.3s] hover:tw-scale-x-[1.02]"
+                    >
+                        Reach out
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        
+
+        
+
+        <!-- Contact Section -->
+        <section
+            class="tw-relative tw-flex tw-w-full tw-max-w-[100vw] tw-flex-col tw-place-content-center tw-place-items-center tw-overflow-hidden tw-p-6"
+            id="contact"
+        >
+            <div
+                class="tw-flex tw-max-w-[750px] tw-flex-col tw-gap-5 tw-text-center"
+            >
+                <h2
+                    class="tw-mt-10 tw-text-4xl tw-font-semibold max-lg:tw-text-3xl"
+                >
+                    Get in
+                    <span class="hero-highlight">Touch</span>
+                </h2>
+
+                <div class="tw-text-gray-700">
+                    Interested? Let me know and it will be my pleasure to setup a call with you to discuss it!
+                </div>
+            </div>
+
+            <form
+                action="https://formspree.io/f/xgobbpdz"
+                method="POST"
+                class="tw-mt-8 tw-w-full tw-max-w-[750px] tw-flex tw-flex-col tw-gap-4 tw-place-content-center"
+            >
+                <div class="tw-flex tw-flex-col tw-gap-2 tw-w-full tw-max-w-[750px]">
+                    <label for="name" class="tw-text-left tw-font-semibold">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        class="input tw-px-4 tw-py-2"
+                        placeholder="Your name"
+                    />
+                </div>
+
+                <div class="tw-flex tw-flex-col tw-gap-2">
+                    <label for="email" class="tw-text-left tw-font-semibold">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        class="input tw-px-4 tw-py-2"
+                        placeholder="your@email.com"
+                    />
+                </div>
+
+                <div class="tw-flex tw-flex-col tw-gap-2">
+                    <label for="message" class="tw-text-left tw-font-semibold">Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows="5"
+                        class="input tw-px-4 tw-py-2"
+                        placeholder="Your message here..."
+                    ></textarea>
+                </div>
+                <div class="tw-flex tw-max-w-[750px] tw-flex-col tw-gap-5 tw-text-center tw-place-content-center" style="align-items:center">
+                    <button
+                    type="submit"
+                    class="btn btn-header tw-mt-4 tw-transition-transform tw-duration-[0.3s] hover:tw-scale-x-[1.03]"
+                >
+                    Send Message
+                </button>
+                </div>
+                
+            </form>
+        </section>
+
+        <!-- About Me Section -->
+        <section
+            class="tw-relative tw-flex tw-w-full tw-max-w-[100vw] tw-flex-col tw-place-content-center tw-place-items-center tw-overflow-hidden tw-p-6 about-section"
+            id="about"
+        >
+            <div
+                class="tw-flex tw-max-w-[800px] tw-flex-col tw-gap-8 tw-text-center max-lg:tw-place-items-center"
+            >
+                <div
+                    class="tw-flex tw-flex-col tw-place-items-center"
+                >
+                    <h2
+                        class="tw-text-4xl tw-font-semibold max-lg:tw-text-3xl"
+                    >
+                        About
+                        <span class="hero-highlight">Me</span>
+                    </h2>
+
+                    <div class="bio-text tw-max-w-[750px]">
+                        <p>
+                            Hey! My name is Raphaël and I'm the dev for this project. I have been a Game Master and Service Tech for Zero Latency for nearly 5 years and a big fan of efficient systems and processes that make sense since forever. Recently our venue did the switch to Roller and my jaw dropped when we figured that everything required manual data-entry across two systems for it to work with our system. There had to be a better way. So I made it and I would be more than happy to share it with you!
+                        </p>
+                        <p>
+                            Don't hesitate to check out my projects and to reach out!
+                        </p>
+                    </div>
+
+                    <div class="tw-mt-6 tw-flex tw-gap-4 tw-flex-wrap tw-place-content-center">
+                        <a
+                            href="#contact"
+                            class="btn-link"
+                        >
+                            <span>Contact</span>
+                            <span>→</span>
+                        </a>
+                        <a
+                            href="https://github.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn-link"
+                        >
+                            <span>GitHub</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    class="tw-flex tw-place-content-center tw-place-items-center"
+                >
+                    <div class="profile-image">
+                        <img
+                            src="./assets/images/people/me2.jpeg"
+                            alt="profile picture"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer
+            class="tw-mt-auto tw-flex tw-w-full tw-place-content-around tw-gap-3 tw-p-[5%] tw-px-[10%] tw-text-black max-md:tw-flex-col"
+        >
+            <div
+                class="tw-flex tw-h-full tw-w-[250px] tw-flex-col tw-place-items-center tw-gap-6 max-md:tw-w-full"
+            >
+                <img
+                    src="./assets/logo/logo1.png"
+                    alt="logo"
+                    srcset=""
+                    class="tw-max-w-[120px]"
+                />
+                <p class="tw-mt-3 tw-text-md tw-font-semibold">Copyright Raphaël Dumont 2026</p>
+            </div>
+        </footer>
+    </body>
+
+    <script src="./index.js"></script>
+</html>

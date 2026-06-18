@@ -70,6 +70,21 @@ export async function getSyncedItem(
 		.get(rollerBookingId, rollerItemId) as Booking | null;
 }
 
+export async function getSyncedItems(
+	bookingReference: string
+) {
+	return db
+		.query(
+			`
+			SELECT *
+			FROM synced_items
+			WHERE roller_booking_id = ?
+				AND sync_status IN ('synced', 'matched', 'error')
+			`,
+		)
+		.all(bookingReference) as any[];
+}
+
 export async function saveSyncedItem(
 	booking: any,
 	bookingItem: any,
@@ -112,6 +127,27 @@ export async function saveSyncedItem(
 			price,
 		],
 	);
+}
+
+export async function updateSyncedItemStatus(
+	bookingReference: any,
+	rollerItemId: any,
+	status: any,
+) {
+	db.run(
+        `
+        UPDATE synced_items
+        SET sync_status = ?,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE roller_booking_id = ?
+          AND roller_item_id = ?
+        `,
+        [
+          status,
+          bookingReference,
+          rollerItemId,
+        ]
+      );
 }
 
 export async function deleteSyncedItem(

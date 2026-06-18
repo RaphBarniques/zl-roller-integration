@@ -2,7 +2,7 @@ import { customLog } from '../logger.ts';
 import { allowedPackages, config } from '../preflight.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
 import { sendEmail } from '../sendMail.ts';
-import { checkProcessedEvent, getSyncedItem, saveProcessedEvent, saveSyncedItem } from '../utils/db.ts';
+import { checkProcessedEvent, getSyncedItem, getSyncedItems, saveProcessedEvent, saveSyncedItem, updateSyncedItemStatus } from '../utils/db.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {
@@ -19,11 +19,12 @@ export async function handleUpdatedWebhook(payload: any) {
 		);
 		return;
 	}
+
 	// Save the event as processed
 	await saveProcessedEvent(eventId, eventType, bookingReference);
 
 	// Checker le paiment et continuer seulement si le paiment est complété
-	if (booking.status !== 'Paid') {
+	if (booking.status !== 'Paid' || booking.status !== 'NoPaymentRequired') {
 		customLog(
 			`Booking ${bookingReference} has been skipped because it is not fully paid`,
 			'WARN',
@@ -33,11 +34,13 @@ export async function handleUpdatedWebhook(payload: any) {
 
 	// Loop through remaining items and process each booking if they are in the allowedPackages list
 	const bookingItems = booking.items;
+    const currentRollerItemIds = new Set<string>();
 
 	for (const item of bookingItems) {
 		let sync_status = 'Matched';
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
-		const packageConfig = allowedPackages.get(item.productId);
+		currentRollerItemIds.add(item.bookingItemId);
+        const packageConfig = allowedPackages.get(item.productId);
 		if (!packageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
@@ -198,4 +201,58 @@ export async function handleUpdatedWebhook(payload: any) {
 			customLog(logMessage, 'INFO');
 		}
 	}
+    await cancelDeletedItems(
+        booking.bookingReference,
+        currentRollerItemIds
+    );
+}
+
+async function cancelDeletedItems(
+  bookingReference: string,
+  currentRollerItemIds: Set<string>
+) {
+  const existingRows = await getSyncedItems(bookingReference);
+
+  for (const row of existingRows) {
+    const rollerItemId = String(row.roller_item_id);
+
+    if (currentRollerItemIds.has(rollerItemId)) {
+      continue;
+    }
+
+    if (!row.zl_booking_id) {
+      customLog(
+        `Item ${rollerItemId} no longer exists in ROLLER, but has no ZL booking ID to cancel.`,
+        "WARN"
+      );
+
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled");
+
+      continue;
+    }
+
+    try {
+      customLog(
+        `Item ${rollerItemId} was removed from ROLLER booking ${bookingReference}. Cancelling ZL booking ${row.zl_booking_id}...`,
+        "WARN"
+      );
+
+      await deleteZLSession(row.zl_booking_id, bookingReference);
+
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled")
+
+      customLog(
+        `Cancelled ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}`,
+        "INFO"
+      );
+    } catch (err) {
+      
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Error")
+
+      customLog(
+        `Failed to cancel ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}: ${String(err)}`,
+        "ERROR"
+      );
+    }
+  }
 }
