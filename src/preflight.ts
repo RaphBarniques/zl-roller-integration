@@ -31,7 +31,7 @@ type AppConfig = {
 
 type PackageConfig = {
 	package_name: string;
-	roller_id: [];
+	roller_ids: [];
 	zl_id: number;
 };
 
@@ -177,7 +177,7 @@ export async function initMailer() {
 	transporter = nodemailer.createTransport({
 		host: Bun.env.MAILER_HOST,
 		port: parseInt(Bun.env.MAILER_PORT || '0', 10),
-		secure: true, // use SSL/TLS
+		secure: false, // use SSL/TLS
 		auth: {
 			user: Bun.env.MAILER_USER,
 			pass: Bun.env.MAILER_PASS,
