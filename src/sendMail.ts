@@ -35,7 +35,7 @@ export async function sendEmail(
 	}
 
 	await transporter.sendMail({
-		from: 'integration@integration.zerolatencyvr.ca',
+		from: 'alerts@zlintegration.com',
 		to: email,
 		subject: subject,
 		text: text,
