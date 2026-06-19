@@ -37,6 +37,7 @@ export async function handleDeletedWebhook(payload: any) {
 		} else if (session && session.sync_status === 'Skipped') {
 			await deleteSyncedItem(bookingReference, item.bookingItemId);
 			logMessage = `Item was skipped. Deleted record ${item.bookingItemId} for booking ${bookingReference}...\n`;
+			customLog(logMessage, 'WARN');
 		} else {
 			logMessage = `Unable to find item ${item.bookingItemId} for booking ${bookingReference}\n`;
 			customLog(logMessage, 'ERROR');

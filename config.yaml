@@ -10,70 +10,79 @@ roller:
   api_base_url: "https://api.play.roller.app"
 
 email:
-  admin_email: null
-  info_email: null
-  dev_email: null
+  admin_email: "admin@zerolatencyvr.ca"
+  info_email: "info@zerolatencyvr.ca"
+  dev_email: "contact@raphaeldumont.ca"
 
 vr_packages:
   - package_name: "Engineerium + Undead Arena"
-    roller_id: 1917194
+    roller_id: [1917194, 1917195, 1951025, 1951026]
     zl_id: 1766
   - package_name: "Haunted + Undead Arena"
-    roller_id: 1917206
+    roller_id: [1917206, 1917207, 1958759, 1958760]
     zl_id: 5849
   - package_name: "Undead + Sol Raiders"
-    roller_id: 1954666
+    roller_id: [1954666, 1954667, 1954668, 1954669]
     zl_id:
   - package_name: "Sol Raiders + Sol Raiders"
-    roller_id:
+    roller_id: []
     zl_id: 1768
   - package_name: "Outbreak"
-    roller_id: 1896367
+    roller_id: [1896367, 1896368, 1958769, 1958770]
     zl_id: 3127
   - package_name: "Outbreak 2 : Mall Mayhem"
-    roller_id: 1917094
+    roller_id: [1917094, 1917095, 1962006, 1962007]
     zl_id: 6496
   - package_name: "Space Marine Avarax"
-    roller_id: 1917139
+    roller_id: [1917139, 1917140, 1962016, 1962017]
     zl_id: 3913
   - package_name: "Far Cry VR"
-    roller_id: 1917071
+    roller_id: [1917071, 1917072, 1960883, 1960884]
     zl_id: 1764
   - package_name: "Singularity"
-    roller_id: 1917112
+    roller_id: [1917112, 1917113, 1962008, 1962009]
     zl_id: 1769
   - package_name: "Far Cry VR + Singularity"
-    roller_id: 1947188
+    roller_id: [1947188, 1947189, 1959803, 1959804]
     zl_id: 1999
   - package_name: "Far Cry VR + Space Marine"
-    roller_id: 1947197
+    roller_id: [1947197, 1947198, 1960055, 1960056]
     zl_id: 4048
   - package_name: "Far Cry VR + Outbreak"
-    roller_id:
+    roller_id: []
     zl_id: 3128
   - package_name: "Far Cry VR + Outbreak 2"
-    roller_id: 1954663
+    roller_id: [1954663, 1954664, 1961878, 1961880]
     zl_id: 7897
   - package_name: "Space Marine + Outbreak"
-    roller_id:
+    roller_id: []
     zl_id: 4047
   - package_name: "Space Marine + Outbreak 2"
-    roller_id: 1947218
+    roller_id: [1947218, 1947219, 1962004, 1962005]
     zl_id: 7752
   - package_name: "Outbreak + Outbreak 2"
-    roller_id: 1947215
+    roller_id: [1947215, 1947216, 1961700, 1961701]
     zl_id: 6670
+  - package_name: "Staff 15 minutes"
+    roller_id: [1988278, 1988279]
+    zl_id: 
+  - package_name: "Staff 30 minutes"
+    roller_id: [1988267, 1988268]
+    zl_id: 3127
 
 other_packages:
   - package_name: "Lancer de haches 30 min"
-    roller_id: 1917395
+    roller_id: [1917395]
     zl_id: 5538
   - package_name: "Addon Lancer de haches 30 min"
-    roller_id: 1942213
+    roller_id: [1942213]
     zl_id: 5538
   - package_name: "Lancer de haches 60 min"
-    roller_id: 1942211
+    roller_id: [1942211]
     zl_id: 5545
-  - package_name: "Gaming Lounge 30 min"
-    roller_id: 1924252
+  - package_name: "Addon Gaming Lounge 30 min"
+    roller_id: [1924252]
+    zl_id: 7698
+  - package_name: "Gaming Lounge Passe Journalière"
+    roller_id: [1988279, 1902877]
     zl_id: 7698

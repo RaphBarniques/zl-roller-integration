@@ -31,7 +31,7 @@ type AppConfig = {
 
 type PackageConfig = {
 	package_name: string;
-	roller_id: number;
+	roller_id: [];
 	zl_id: number;
 };
 
@@ -133,12 +133,17 @@ export async function initConfig() {
 
 	if (config != null) {
 		logMessage += 'Config loaded successfully';
-		allowedVRPackages = new Map(
-			config.vr_packages.map((pkg) => [pkg.roller_id, pkg]),
-		);
-		allowedOtherPackages = new Map(
-			config.other_packages.map((pkg) => [pkg.roller_id, pkg]),
-		);
+		allowedVRPackages = new Map;
+		for (const pkg of config.vr_packages) {
+			for (const rollerId of pkg.roller_ids){
+				allowedVRPackages.set(rollerId, pkg)
+			}
+		}
+		for (const pkg of config.other_packages) {
+			for (const rollerId of pkg.roller_ids){
+				allowedOtherPackages.set(rollerId, pkg)
+			}
+		}
 		customLog(logMessage);
 	} else {
 		customLog('Config file is empty', 'ERROR');
