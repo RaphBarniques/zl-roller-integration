@@ -123,21 +123,21 @@ const server = Bun.serve({
 					case 1:
 						reqType = 'CREATED';
 						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`,
+							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
 						);
 						await handleUpdatedWebhook(payload);
 						break;
 					case 2:
 						reqType = 'UPDATED';
 						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`,
+							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
 						);
 						await handleUpdatedWebhook(payload);
 						break;
 					case 3:
 						reqType = 'DELETED';
 						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`,
+							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
 						);
 						await handleDeletedWebhook(payload);
 						break;
