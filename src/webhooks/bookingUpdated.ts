@@ -48,7 +48,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		if (!VRPackageConfig && !VRPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
-			await saveSyncedItem(booking, item, {}, null, null, null, sync_status);
+			await saveSyncedItem(booking, item, {}, attraction, null, null, null, sync_status);
 			customLog(logMessage, 'WARN');
 			continue;
 		}
@@ -123,6 +123,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					booking,
 					item,
 					packageConfig,
+					attraction,
 					dbItem.email,
 					isoDate,
 					price,
@@ -145,6 +146,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					booking,
 					item,
 					packageConfig,
+					attraction,
 					dbItem.email,
 					isoDate,
 					price,
@@ -197,6 +199,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				booking,
 				item,
 				packageConfig,
+				attraction,
 				email,
 				isoDate,
 				price,

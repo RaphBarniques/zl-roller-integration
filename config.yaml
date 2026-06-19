@@ -7,7 +7,7 @@ zl:
   site_id: 71
 
 roller:
-  api_base_url: "https://api.play.roller.app"
+  api_base_url: "https://api.roller.app"
 
 email:
   admin_email: "admin@zerolatencyvr.ca"

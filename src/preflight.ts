@@ -175,12 +175,12 @@ export async function initMailer() {
 
 	// Create a transporter using SMTP
 	transporter = nodemailer.createTransport({
-		host: process.env.MAILER_HOST,
-		port: parseInt(process.env.MAILER_PORT || '0', 10),
+		host: Bun.env.MAILER_HOST,
+		port: parseInt(Bun.env.MAILER_PORT || '0', 10),
 		secure: true, // use SSL/TLS
 		auth: {
-			user: process.env.MAILER_USER,
-			pass: process.env.MAILER_PASS,
+			user: Bun.env.MAILER_USER,
+			pass: Bun.env.MAILER_PASS,
 		},
 	});
 
