@@ -9,6 +9,7 @@
 // Technically the Roller API doesnt have a refresh protocol. We just get a new token
 
 import { customLog } from './logger.ts';
+import { config } from './preflight.ts';
 
 export let RollerAuthToken: string | null = null;
 let logMessage: string = 'Initializing ROLLER API authentication...\n';
@@ -17,7 +18,7 @@ export async function getRollerToken() {
 	const retryMax = 3;
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
-		const response = await fetch('https://api.play.roller.app/token', {
+		const response = await fetch(`${config.roller.api_base_url}/token`, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

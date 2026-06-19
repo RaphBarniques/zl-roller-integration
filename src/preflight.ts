@@ -5,7 +5,8 @@ import { customLog } from './logger.ts';
 const DB_PATH = 'sync.db';
 const dbExists = await Bun.file(DB_PATH).exists();
 export const db = new Database(DB_PATH);
-export let allowedPackages: Map<number, PackageConfig> = new Map();
+export let allowedVRPackages: Map<number, PackageConfig> = new Map();
+export let allowedOtherPackages: Map<number, PackageConfig> = new Map();
 
 type AppConfig = {
 	server: {
@@ -16,12 +17,16 @@ type AppConfig = {
 		api_base_url: string;
 		site_id: number;
 	};
+	roller: {
+		api_base_url: string;
+	};
 	email: {
 		admin_email: any;
 		info_email: any;
 		dev_email: any;
 	};
-	packages: PackageConfig[];
+	vr_packages: PackageConfig[];
+	other_packages: PackageConfig[];
 };
 
 type PackageConfig = {
@@ -63,6 +68,7 @@ export async function initDb() {
       roller_booking_id TEXT NOT NULL,
       roller_item_id TEXT NOT NULL,
       zl_booking_id TEXT,
+	  attraction TEXT,
       payment_status TEXT,
       sync_status TEXT NOT NULL,
 
@@ -127,8 +133,11 @@ export async function initConfig() {
 
 	if (config != null) {
 		logMessage += 'Config loaded successfully';
-		allowedPackages = new Map(
-			config.packages.map((pkg) => [pkg.roller_id, pkg]),
+		allowedVRPackages = new Map(
+			config.vr_packages.map((pkg) => [pkg.roller_id, pkg]),
+		);
+		allowedOtherPackages = new Map(
+			config.other_packages.map((pkg) => [pkg.roller_id, pkg]),
 		);
 		customLog(logMessage);
 	} else {

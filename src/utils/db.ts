@@ -6,6 +6,7 @@ export type Booking = {
 	zl_booking_id: string;
 	payment_status: string;
 	sync_status: string;
+	attraction: string;
 	email: string;
 	players: number;
 	start_time: string;
@@ -89,6 +90,7 @@ export async function saveSyncedItem(
 	booking: any,
 	bookingItem: any,
 	packageConfig: any,
+	attraction: any,
 	email: any,
 	isoDate: any,
 	price: any,
@@ -102,6 +104,7 @@ export async function saveSyncedItem(
       zl_booking_id,
       payment_status,
       sync_status,
+	  attraction,
       email,
       players,
       start_time,
@@ -110,7 +113,7 @@ export async function saveSyncedItem(
       package_name,
       price
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
 		[
 			booking.bookingReference,
@@ -118,6 +121,7 @@ export async function saveSyncedItem(
 			bookingItem.bookingItemId,
 			booking.status,
 			status,
+			attraction,
 			email,
 			bookingItem.quantity,
 			isoDate,

@@ -1,5 +1,5 @@
 import { customLog } from '../logger.ts';
-import { allowedPackages, config } from '../preflight.ts';
+import { allowedVRPackages, allowedOtherPackages, config } from '../preflight.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
 import { sendEmail } from '../sendMail.ts';
 import { checkProcessedEvent, getSyncedItem, getSyncedItems, saveProcessedEvent, saveSyncedItem, updateSyncedItemStatus } from '../utils/db.ts';
@@ -24,7 +24,7 @@ export async function handleUpdatedWebhook(payload: any) {
 	await saveProcessedEvent(eventId, eventType, bookingReference);
 
 	// Checker le paiment et continuer seulement si le paiment est complété
-	if (booking.status !== 'Paid' || booking.status !== 'NoPaymentRequired') {
+	if (booking.status !== 'Paid' && booking.status !== 'NoPaymentRequired') {
 		customLog(
 			`Booking ${bookingReference} has been skipped because it is not fully paid`,
 			'WARN',
@@ -38,15 +38,29 @@ export async function handleUpdatedWebhook(payload: any) {
 
 	for (const item of bookingItems) {
 		let sync_status = 'Matched';
+		let attraction = 'None';
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		currentRollerItemIds.add(item.bookingItemId);
-        const packageConfig = allowedPackages.get(item.productId);
-		if (!packageConfig) {
+        const VRPackageConfig = allowedVRPackages.get(item.productId);
+		const otherPackageConfig = allowedOtherPackages.get(item.productId);
+		let packageConfig : any;
+
+		if (!VRPackageConfig && !VRPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
 			await saveSyncedItem(booking, item, {}, null, null, null, sync_status);
 			customLog(logMessage, 'WARN');
 			continue;
+		}
+
+		if (VRPackageConfig) {
+			attraction = "ZLVR";
+			packageConfig = VRPackageConfig;
+		}
+
+		if (otherPackageConfig) {
+			attraction = "Other";
+			packageConfig = otherPackageConfig;
 		}
 
 		const packageName = packageConfig.package_name;

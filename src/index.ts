@@ -103,7 +103,7 @@ const server = Bun.serve({
 		'/webhooks/roller': {
 			POST: chain([logging], async (req) => {
 				const url = new URL(req.url);
-				const secret = url.searchParams.get('apiKey');
+				const secret = req.headers.get('X-Roller-Apikey');
 
 				if (secret !== Bun.env.ROLLER_WEBHOOK_SECRET) {
 					customLog(`Unauthorized webhook access attempt`, 'WARN');
@@ -163,10 +163,3 @@ const server = Bun.serve({
 
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
-
-const debug = 1;
-if (debug === 1) {
-	const file = Bun.file('./input_webhook.json');
-	const payload = await file.json();
-	handleUpdatedWebhook(payload);
-}
