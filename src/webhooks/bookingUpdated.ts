@@ -277,10 +277,5 @@ async function cancelDeletedItems(
 }
 
 function convertToISO(date: string, time: string) {
-	return DateTime.fromFormat(`${date} ${time}`, 
-		"yyyy-MM-dd hh:mm", {
-			zone: config.venue.timezone
-		})
-		.toUTC()
-		.toISO()
+	return `${date}T${time}.00.000`
 }
