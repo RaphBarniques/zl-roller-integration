@@ -2,13 +2,14 @@
 
 import { customLog } from './logger.ts';
 import { RollerAuthToken, refreshRollerToken } from './rollerAuth.ts';
+import { config } from './preflight.ts';
 
 export async function getCustomerEmail(customerID: string) {
 	const retryMax = 3;
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const response = await fetch(
-			`https://api.play.roller.app/guests/${customerID}`,
+			`${config.roller.api_base_url}/guests/${customerID}`,
 			{
 				headers: {
 					Accept: 'application/json',

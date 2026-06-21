@@ -2,6 +2,10 @@ server:
   host: "localhost"
   port: 3000
 
+venue:
+  location: "Montreal"
+  timezone: "America/Toronto"
+
 zl:
   api_base_url: "https://api.zerolatencyvr.com/api/v1"
   site_id: 71

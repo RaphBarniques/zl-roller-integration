@@ -13,6 +13,10 @@ type AppConfig = {
 		host: string;
 		port: number;
 	};
+	venue: {
+		location: string;
+		timezone: string;
+	}
 	zl: {
 		api_base_url: string;
 		site_id: number;

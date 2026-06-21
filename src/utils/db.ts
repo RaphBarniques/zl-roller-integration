@@ -89,6 +89,7 @@ export async function getSyncedItems(
 export async function saveSyncedItem(
 	booking: any,
 	bookingItem: any,
+	zlbookingID: any,
 	packageConfig: any,
 	attraction: any,
 	email: any,
@@ -118,7 +119,7 @@ export async function saveSyncedItem(
 		[
 			booking.bookingReference,
 			bookingItem.bookingItemId,
-			bookingItem.bookingItemId,
+			zlbookingID,
 			booking.status,
 			status,
 			attraction,

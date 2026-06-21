@@ -4,6 +4,7 @@ import { getCustomerEmail } from '../rollerAPI.ts';
 import { sendEmail } from '../sendMail.ts';
 import { checkProcessedEvent, getSyncedItem, getSyncedItems, saveProcessedEvent, saveSyncedItem, updateSyncedItemStatus } from '../utils/db.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
+import { DateTime } from "luxon";
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -48,7 +49,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		if (!VRPackageConfig && !VRPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
-			await saveSyncedItem(booking, item, {}, attraction, null, null, null, sync_status);
+			await saveSyncedItem(booking, item, null, {}, attraction, null, null, null, sync_status);
 			customLog(logMessage, 'WARN');
 			continue;
 		}
@@ -65,9 +66,7 @@ export async function handleUpdatedWebhook(payload: any) {
 
 		const packageName = packageConfig.package_name;
 		const zlPackageId = packageConfig.zl_id;
-		const isoDate = new Date(
-			`${item.bookingDate} ${item.sessionStartTime}`,
-		).toISOString();
+		const isoDate = convertToISO(item.bookingDate, item.sessionStartTime);
 		const price =
 			Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
 		const isPriceTooLow = item.discount / item.quantity > item.cost / 2;
@@ -122,6 +121,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				await saveSyncedItem(
 					booking,
 					item,
+					created,
 					packageConfig,
 					attraction,
 					dbItem.email,
@@ -145,6 +145,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				await saveSyncedItem(
 					booking,
 					item,
+					dbItem.zl_booking_id,
 					packageConfig,
 					attraction,
 					dbItem.email,
@@ -198,6 +199,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			await saveSyncedItem(
 				booking,
 				item,
+				created,
 				packageConfig,
 				attraction,
 				email,
@@ -272,4 +274,10 @@ async function cancelDeletedItems(
       );
     }
   }
+}
+
+function convertToISO(date: string, time: string) {
+	return DateTime.fromFormat(`${date} ${time}`, "yyyy-MM-hh:mm", {zone: `${config.venue.timezone}`})
+		.toUtc()
+		.toISO()
 }
