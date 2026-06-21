@@ -76,16 +76,16 @@ vr_packages:
 
 other_packages:
   - package_name: "Lancer de haches 30 min"
-    roller_ids: [1917395]
+    roller_ids: [1917395, 1917396]
     zl_id: 5538
   - package_name: "Addon Lancer de haches 30 min"
-    roller_ids: [1942213]
+    roller_ids: [1942213, 1942214]
     zl_id: 5538
   - package_name: "Lancer de haches 60 min"
-    roller_ids: [1942211]
+    roller_ids: [1942211, 1942212]
     zl_id: 5545
   - package_name: "Addon Gaming Lounge 30 min"
-    roller_ids: [1924252]
+    roller_ids: [1924252, 1924253]
     zl_id: 7698
   - package_name: "Gaming Lounge Passe Journalière"
     roller_ids: [1988279, 1902877]

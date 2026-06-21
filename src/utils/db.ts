@@ -161,11 +161,9 @@ export async function deleteSyncedItem(
 ) {
 	db.run(
 		`
-    DELETE *
-        FROM synced_items
+    DELETE FROM synced_items
         WHERE roller_booking_id = ?
         AND roller_item_id = ?
-    VALUES (?, ?)
     `,
 		[rollerBookingID, rollerItemID],
 	);
