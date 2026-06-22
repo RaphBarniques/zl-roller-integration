@@ -75,7 +75,7 @@ export async function initDb() {
 	  attraction TEXT,
       payment_status TEXT,
       sync_status TEXT NOT NULL,
-	  zl_booked BOOLEAN
+	  zl_booked BOOLEAN,
       email TEXT,
       players INTEGER,
       start_time TEXT,
