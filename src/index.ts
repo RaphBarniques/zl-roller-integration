@@ -3,6 +3,9 @@ import {
 	getLogs,
 	getLogsStream,
 	searchBookings,
+	getQueueStatus,
+	getQueueItems,
+	manageQueueAction,
 } from './dashboardAPI';
 import {
 	dashboardLogin,
@@ -20,8 +23,7 @@ import {
 	initMailer,
 } from './preflight.ts';
 import { getRollerToken } from './rollerAuth.ts';
-import { handleDeletedWebhook } from './webhooks/bookingDeleted.ts';
-import { handleUpdatedWebhook } from './webhooks/bookingUpdated.ts';
+import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
 import { getSession } from './zlAPI.ts';
 
 customLog('-------------------------------------------------');
@@ -38,7 +40,7 @@ const server = Bun.serve({
 	hostname: config.server.host,
 	port: config.server.port,
 	routes: {
-		'/status': chain([logging], async (req) => {
+		'/status': chain([logging], async (_req) => {
 			await getSession();
 			return new Response('OK', { status: 200 });
 		}),
@@ -100,9 +102,30 @@ const server = Bun.serve({
 				return searchBookings(req);
 			},
 		},
+		'/api/dashboard/queue/status': {
+			GET: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return getQueueStatus();
+			},
+		},
+		'/api/dashboard/queue': {
+			GET: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return getQueueItems();
+			},
+			POST: async (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return manageQueueAction(req);
+			},
+		},
 		'/webhooks/roller': {
 			POST: chain([logging], async (req) => {
-				const url = new URL(req.url);
 				const secret = req.headers.get('X-Roller-Apikey');
 
 				if (secret !== Bun.env.ROLLER_WEBHOOK_SECRET) {
@@ -118,36 +141,7 @@ const server = Bun.serve({
 					return new Response('Bad Request', { status: 400 });
 				}
 
-				let reqType = '';
-				switch (payload.eventType) {
-					case 1:
-						reqType = 'CREATED';
-						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
-						);
-						await handleUpdatedWebhook(payload);
-						break;
-					case 2:
-						reqType = 'UPDATED';
-						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
-						);
-						await handleUpdatedWebhook(payload);
-						break;
-					case 3:
-						reqType = 'DELETED';
-						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.data.booking.bookingReference} and type: ${reqType}`,
-						);
-						await handleDeletedWebhook(payload);
-						break;
-					default:
-						reqType = 'UNKNOWN';
-						customLog(
-							`Received webhook from ROLLER with Booking ID: ${payload.bookingId} and type: ${reqType}`,
-							'WARN',
-						);
-				}
+				await queueWebhook(payload);
 
 				return new Response('OK', { status: 200 });
 			}),
@@ -160,6 +154,8 @@ const server = Bun.serve({
 		return new Response('Not Found', { status: 404 });
 	},
 });
+
+await processQueuedWebhooks();
 
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);

@@ -103,6 +103,31 @@ export async function initDb() {
   )
 `);
 
+	db.run(`
+  CREATE TABLE IF NOT EXISTS app_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  )
+`);
+
+	db.run(`
+  INSERT OR IGNORE INTO app_settings (key, value)
+  VALUES ('queue_paused', '0')
+`);
+
+	db.run(`
+  CREATE TABLE IF NOT EXISTS webhook_queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id TEXT NOT NULL UNIQUE,
+    event_type TEXT NOT NULL,
+    booking_reference TEXT,
+    payload TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
 	if (itemTableExists) {
 		logMessage += 'Found table: synced_items\n';
 	} else {

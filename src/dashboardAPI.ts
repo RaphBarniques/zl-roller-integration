@@ -1,5 +1,16 @@
 import { formatDate, streamLogs } from './logger';
 import { db } from './preflight';
+import {
+	getWebhookQueueItems,
+	deleteQueuedWebhook,
+	getQueuedWebhookById,
+} from './utils/db.ts';
+import {
+	pauseQueue,
+	resumeQueue,
+	processQueueItemById,
+	getQueueState,
+} from './webhooks/queue.ts';
 
 export async function getLogs(req: Request) {
 	const url = new URL(req.url);
@@ -23,7 +34,7 @@ export async function getLogs(req: Request) {
 	return Response.json(lines.slice(0, 500));
 }
 
-export function getLogsStream(req: Request) {
+export function getLogsStream(_req: Request) {
 	return streamLogs();
 }
 
@@ -79,4 +90,53 @@ export function searchBookings(req: Request) {
 	}
 
 	return Response.json(rows) ?? null;
+}
+export async function getQueueStatus() {
+	const state = await getQueueState();
+	return Response.json(state);
+}
+
+export async function getQueueItems() {
+	const items = await getWebhookQueueItems();
+	return Response.json(items);
+}
+
+export async function manageQueueAction(req: Request) {
+	const body = await req.json();
+
+	if (!body.action) {
+		return new Response(JSON.stringify({ error: 'Missing action.' }), { status: 400 });
+	}
+
+	switch (body.action) {
+		case 'pause':
+			return Response.json(await pauseQueue());
+		case 'resume':
+			return Response.json(await resumeQueue());
+		case 'delete':
+			if (!body.id) {
+				return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+			}
+			await deleteQueuedWebhook(body.id);
+			return Response.json({ ok: true });
+		case 'bypass':
+			if (!body.id) {
+				return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+			}
+			await processQueueItemById(body.id);
+			return Response.json({ ok: true });
+		default:
+			return new Response(JSON.stringify({ error: 'Unknown action.' }), { status: 400 });
+	}
+}
+
+export async function getQueueItem(req: Request) {
+	const url = new URL(req.url);
+	const id = Number(url.searchParams.get('id'));
+	if (!id) {
+		return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+	}
+
+	const item = await getQueuedWebhookById(id);
+	return Response.json(item);
 }

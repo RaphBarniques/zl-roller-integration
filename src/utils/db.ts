@@ -24,6 +24,17 @@ type ProcessedEvent = {
 	received_at: string;
 };
 
+export type WebhookQueueItem = {
+	id: number;
+	event_id: string;
+	event_type: string;
+	booking_reference: string | null;
+	status: string;
+	created_at: string;
+	updated_at: string;
+	payload: string;
+};
+
 export async function checkProcessedEvent(eventId: string) {
 	return (
 		db
@@ -56,24 +67,95 @@ export async function saveProcessedEvent(
 	);
 }
 
+export async function enqueueWebhookItem(
+	eventId: string,
+	eventType: string,
+	bookingReference: string | null,
+	payload: string,
+) {
+	db.run(
+		`INSERT OR IGNORE INTO webhook_queue (
+			event_id, 
+			event_type, 
+			booking_reference,
+			payload
+		) VALUES (?, ?, ?, ?)`,
+		[eventId, eventType, bookingReference, payload],
+	);
+}
+
+export async function getQueuedWebhooks() {
+	return db
+		.query('SELECT id, event_id, event_type, booking_reference, status, created_at, updated_at, payload FROM webhook_queue WHERE status = ? ORDER BY created_at ASC', 'queued')
+		.all() as WebhookQueueItem[];
+}
+
+export async function getQueuedWebhook(id: number) {
+	return db
+		.query('SELECT * FROM webhook_queue WHERE id = ?')
+		.get(id) as WebhookQueueItem | null;
+}
+
+export async function deleteQueuedWebhook(id: number) {
+	db.run('DELETE FROM webhook_queue WHERE id = ?', [id]);
+}
+
+export async function updateQueuedWebhookStatus(id: number, status: string) {
+	db.run('UPDATE webhook_queue SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', [status, id]);
+}
+
+export async function getQueuePaused() {
+	const row = db
+		.query('SELECT value FROM app_settings WHERE key = ?')
+		.get('queue_paused') as { value: string } | null;
+
+	return row?.value === '1';
+}
+
+export async function setQueuePaused(paused: boolean) {
+	db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', ['queue_paused', paused ? '1' : '0']);
+}
+
+export async function getWebhookQueueItems() {
+	return db
+		.query('SELECT id, event_type, booking_reference, status, created_at, updated_at FROM webhook_queue ORDER BY created_at ASC')
+		.all() as Array<{ id: number; event_type: string; booking_reference: string | null; status: string; created_at: string; updated_at: string }>;
+}
+
+export async function deleteWebhookQueueItem(id: number) {
+	db.run('DELETE FROM webhook_queue WHERE id = ?', [id]);
+}
+
+export async function getQueuedWebhookById(id: number) {
+	return getQueuedWebhook(id);
+}
+
+export async function getAllWebhookQueueItems() {
+	return db
+		.query('SELECT id, event_type, booking_reference, status, created_at, updated_at FROM webhook_queue ORDER BY created_at ASC')
+		.all();
+}
+
+export async function getQueuedWebhookByEventId(eventId: string) {
+	return db
+		.query('SELECT * FROM webhook_queue WHERE event_id = ?')
+		.get(eventId);
+}
+
 export async function getSyncedItem(
 	rollerBookingId: string,
 	rollerItemId: string,
 ) {
 	return db
-		.query(
-			`
-        SELECT *
-        FROM synced_items
-        WHERE roller_booking_id = ?
-        AND roller_item_id = ?
-        `,
-		)
+		.query(`SELECT * 
+			FROM synced_items 
+			WHERE roller_booking_id = ? 
+			AND roller_item_id = ?`)
 		.get(rollerBookingId, rollerItemId) as Booking | null;
 }
 
 export async function getSyncedItems(
-	bookingReference: string
+	bookingReference: string,
 ) {
 	return db
 		.query(
@@ -139,10 +221,10 @@ export async function saveSyncedItem(
 }
 
 export async function updateSyncedItemStatus(
-	bookingReference: any,
-	rollerItemId: any,
-	status: any,
-	zl_booked: any,
+	bookingReference: string,
+	rollerItemId: string,
+	status: string,
+	zl_booked: boolean | string,
 ) {
 	db.run(
         `
@@ -163,8 +245,8 @@ export async function updateSyncedItemStatus(
 }
 
 export async function deleteSyncedItem(
-	rollerBookingID: any,
-	rollerItemID: any,
+	rollerBookingID: string,
+	rollerItemID: string,
 ) {
 	db.run(
 		`

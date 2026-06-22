@@ -181,6 +181,7 @@
 
   <nav>
     <button id="bookingsButton" onclick="showTab('bookings')" class="navButton active">Bookings</button>
+    <button id="queueButton" onclick="showTab('queue')" class="navButton">Requests</button>
     <button id="logsButton" onclick="showTab('logs')" class="navButton">Logs</button>
   </nav>
 
@@ -241,6 +242,31 @@
         </table>
       </div>
     </section>
+
+    <section id="queue" class="tab">
+      <div class="panel">
+        <h3>Webhook request queue</h3>
+        <div class="toolbar">
+          <button onclick="refreshQueue()">Refresh queue</button>
+          <button onclick="toggleQueue()" id="queueToggleButton">Pause queue</button>
+        </div>
+        <div id="queueStatus" class="field" style="margin-bottom: 14px;"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Booking</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="queueRows"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <script>
@@ -260,6 +286,10 @@
       if (name === "bookings") {
         loadLatestBooking();
         searchBookings();
+      }
+
+      if (name === "queue") {
+        refreshQueue();
       }
     }
 
@@ -387,6 +417,68 @@
           </tr>
         `;
       }).join("");
+    }
+
+    async function refreshQueue() {
+      const res = await fetch('/api/dashboard/queue');
+      const rows = await res.json();
+      const statusRes = await fetch('/api/dashboard/queue/status');
+      const state = await statusRes.json();
+
+      document.getElementById('queueStatus').textContent = state.paused ? 'Queue is paused' : 'Queue is running';
+      document.getElementById('queueToggleButton').textContent = state.paused ? 'Resume queue' : 'Pause queue';
+
+      if (!rows.length) {
+        document.getElementById('queueRows').innerHTML = '<tr><td colspan="7">No pending requests in the queue.</td></tr>';
+        return;
+      }
+
+      document.getElementById('queueRows').innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.id}</td>
+          <td>${row.event_type}</td>
+          <td>${row.booking_reference ?? ''}</td>
+          <td>${row.status}</td>
+          <td>${row.created_at}</td>
+          <td>${row.updated_at}</td>
+          <td>
+            <button onclick="deleteQueueItem(${row.id})">Delete</button>
+            <button onclick="bypassQueueItem(${row.id})">Bypass</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function toggleQueue() {
+      const statusRes = await fetch('/api/dashboard/queue/status');
+      const state = await statusRes.json();
+      const action = state.paused ? 'resume' : 'pause';
+
+      await fetch('/api/dashboard/queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      });
+
+      await refreshQueue();
+    }
+
+    async function deleteQueueItem(id) {
+      await fetch('/api/dashboard/queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id }),
+      });
+      await refreshQueue();
+    }
+
+    async function bypassQueueItem(id) {
+      await fetch('/api/dashboard/queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'bypass', id }),
+      });
+      await refreshQueue();
     }
 
     document.getElementById("logLevel").addEventListener("change", loadLogs);
