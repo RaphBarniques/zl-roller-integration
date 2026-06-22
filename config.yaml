@@ -14,8 +14,8 @@ roller:
   api_base_url: "https://api.roller.app"
 
 email:
-  admin_email: "admin@zerolatencyvr.ca"
-  info_email: "info@zerolatencyvr.ca"
+  admin_email: "contact@raphaeldumont.ca"
+  info_email: null
   dev_email: "contact@raphaeldumont.ca"
 
 vr_packages:
