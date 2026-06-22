@@ -47,7 +47,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		const otherPackageConfig = allowedOtherPackages.get(item.productId);
 		let packageConfig : any;
 
-		if (!VRPackageConfig && !VRPackageConfig) {
+		if (!VRPackageConfig && !otherPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
 			await saveSyncedItem(booking, item, null, false, {}, attraction, null, null, null, sync_status);
