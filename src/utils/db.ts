@@ -6,6 +6,7 @@ export type Booking = {
 	zl_booking_id: string;
 	payment_status: string;
 	sync_status: string;
+	zl_booked: boolean;
 	attraction: string;
 	email: string;
 	players: number;
@@ -92,6 +93,7 @@ export async function saveSyncedItem(
 	zlbookingID: any,
 	packageConfig: any,
 	attraction: any,
+	zl_booked:any,
 	email: any,
 	isoDate: any,
 	price: any,
@@ -106,6 +108,7 @@ export async function saveSyncedItem(
       payment_status,
       sync_status,
 	  attraction,
+	  zl_booked,
       email,
       players,
       start_time,
@@ -114,7 +117,7 @@ export async function saveSyncedItem(
       package_name,
       price
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
 		[
 			booking.bookingReference,
@@ -123,6 +126,7 @@ export async function saveSyncedItem(
 			booking.status,
 			status,
 			attraction,
+			zl_booked,
 			email,
 			bookingItem.quantity,
 			isoDate,
@@ -138,17 +142,20 @@ export async function updateSyncedItemStatus(
 	bookingReference: any,
 	rollerItemId: any,
 	status: any,
+	zl_booked: any,
 ) {
 	db.run(
         `
         UPDATE synced_items
         SET sync_status = ?,
+			zl_booked = ?,
             updated_at = CURRENT_TIMESTAMP
         WHERE roller_booking_id = ?
           AND roller_item_id = ?
         `,
         [
           status,
+		  zl_booked,
           bookingReference,
           rollerItemId,
         ]

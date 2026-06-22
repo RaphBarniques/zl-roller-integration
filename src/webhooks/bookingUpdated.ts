@@ -40,6 +40,7 @@ export async function handleUpdatedWebhook(payload: any) {
 	for (const item of bookingItems) {
 		let sync_status = 'Matched';
 		let attraction = 'None';
+		let booked_status = false;
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		currentRollerItemIds.add(item.bookingItemId);
         const VRPackageConfig = allowedVRPackages.get(item.productId);
@@ -49,7 +50,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		if (!VRPackageConfig && !VRPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
-			await saveSyncedItem(booking, item, null, {}, attraction, null, null, null, sync_status);
+			await saveSyncedItem(booking, item, null, false, {}, attraction, null, null, null, sync_status);
 			customLog(logMessage, 'WARN');
 			continue;
 		}
@@ -76,13 +77,17 @@ export async function handleUpdatedWebhook(payload: any) {
 		if (dbItem) {
 			logMessage += `Found existing synced item for booking ${bookingReference} and item ${item.bookingItemId}. Updating the record and ZL session if necessary...\n`;
 
+			booked_status = dbItem.zl_booked;
 			// Si le booking existe déjà, vérifier si les détails ont changé (ex: nombre de joueurs, date, etc.) et mettre à jour la session ZL en conséquence
 			if (
 				dbItem.players !== item.quantity ||
 				dbItem.start_time !== isoDate ||
 				dbItem.roller_package_id !== item.roller_id
 			) {
-				await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
+				if (booked_status) {
+					await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
+				}
+				
 				const created = await createZLSession(
 					item.bookingItemId,
 					booking.bookingReference,
@@ -94,11 +99,13 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				if (created) {
 					logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
+					booked_status = true;	
 				} else {
 					logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 					customLog(logMessage, 'ERROR');
 					logMessage = '';
 					sync_status = 'Error';
+
 					sendEmail(config.email.dev_email, 2, {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
@@ -124,6 +131,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					created,
 					packageConfig,
 					attraction,
+					booked_status,
 					dbItem.email,
 					isoDate,
 					price,
@@ -148,6 +156,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					dbItem.zl_booking_id,
 					packageConfig,
 					attraction,
+					booked_status,
 					dbItem.email,
 					isoDate,
 					price,
@@ -172,11 +181,13 @@ export async function handleUpdatedWebhook(payload: any) {
 
 			if (created) {
 				logMessage += `Created ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
+				booked_status = true;
 			} else {
 				logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 				customLog(logMessage, 'ERROR');
 				logMessage = '';
 				sync_status = 'Error';
+
 				sendEmail(config.email.dev_email, 2, {
 					bookingReference: bookingReference,
 					startDate: item.bookingDate,
@@ -202,6 +213,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				created,
 				packageConfig,
 				attraction,
+				booked_status,
 				email,
 				isoDate,
 				price,
@@ -239,13 +251,13 @@ async function cancelDeletedItems(
       continue;
     }
 
-    if (!row.zl_booking_id) {
+    if (!row.zl_booked) {
       customLog(
         `Item ${rollerItemId} no longer exists in ROLLER, but has no ZL booking ID to cancel.`,
         "WARN"
       );
 
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled");
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
 
       continue;
     }
@@ -258,7 +270,7 @@ async function cancelDeletedItems(
 
       await deleteZLSession(row.zl_booking_id, bookingReference);
 
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled")
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false)
 
       customLog(
         `Cancelled ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}`,
@@ -266,7 +278,7 @@ async function cancelDeletedItems(
       );
     } catch (err) {
       
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Error")
+      updateSyncedItemStatus(bookingReference, rollerItemId, "Error", false)
 
       customLog(
         `Failed to cancel ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}: ${String(err)}`,
