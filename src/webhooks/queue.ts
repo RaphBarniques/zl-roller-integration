@@ -1,4 +1,4 @@
-import { customLog } from '../logger.ts';
+import { customLog, logWebhookPayload } from '../logger.ts';
 import { handleDeletedWebhook } from './bookingDeleted.ts';
 import { handleUpdatedWebhook } from './bookingUpdated.ts';
 import {
@@ -76,12 +76,13 @@ async function processQueueItem(item: {
 	customLog(`Processing queued webhook ${item.id} (${item.event_type}) for booking ${item.booking_reference ?? 'unknown'}`);
 
 	try {
-		const payload = JSON.parse(item.payload);
+		const payload = JSON.parse(item.payload) as Record<string, unknown>;
+		await logWebhookPayload(item.id, item.event_type, item.booking_reference, payload, 'processed');
 
 		switch (payload.eventType) {
 			case 1:
 			case '1':
-            case 2 :
+			case 2:
 			case '2':
 			case 'UPDATED':
 			case 'CREATED':
@@ -100,6 +101,8 @@ async function processQueueItem(item: {
 		customLog(`Queued webhook item ${item.id} processed and removed from queue.`, 'INFO');
 	} catch (error) {
 		await updateQueuedWebhookStatus(item.id, 'failed');
+		const payload = JSON.parse(item.payload) as Record<string, unknown>;
+		await logWebhookPayload(item.id, item.event_type, item.booking_reference, payload, 'failed');
 		customLog(`Failed to process queued webhook ${item.id}: ${String(error)}`, 'ERROR');
 	}
 }

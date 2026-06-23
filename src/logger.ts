@@ -18,6 +18,29 @@ const logClients = new Set<ReadableStreamDefaultController>();
 
 type LogPriority = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'CRITICAL';
 
+export async function logWebhookPayload(
+	id: number,
+	eventType: string,
+	bookingReference: string | null,
+	payload: Record<string, unknown>,
+	status: 'queued' | 'processed' | 'failed',
+) {
+	const date = new Date();
+	const timestamp = formatDate(date);
+	const logEntry = {
+		timestamp,
+		queue_item_id: id,
+		event_type: eventType,
+		booking_reference: bookingReference,
+		status,
+		payload,
+	};
+	await appendFile(
+		`./logs/webhook-payloads.log`,
+		`${JSON.stringify(logEntry)}\n`,
+	);
+}
+
 export function customLog(message: string, type: LogPriority = 'INFO') {
 	const date = new Date();
 	const timestamp = formatDate(date);
