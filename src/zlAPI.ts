@@ -110,8 +110,9 @@ export async function createZLSession(
 			);
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
+			const text = await response.text();
 			customLog(
-				`Failed to create ZL session: ${response.status} ${response.statusText}`,
+				`Failed to create ZL session: ${response.status} ${response.statusText}. ${text || "No response body"}`,
 				'ERROR',
 			);
 			setTimeout(() => {}, delay);
@@ -183,8 +184,9 @@ export async function confirmZLSession(
 			);
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
+			const text = await response.text();
 			customLog(
-				`Failed to confirm ZL session: ${response.status} ${response.statusText}`,
+				`Failed to confirm ZL session: ${response.status} ${response.statusText}. ${text || "No response body"}`,
 				'ERROR',
 			);
 			setTimeout(() => {}, delay);
@@ -232,8 +234,9 @@ export async function deleteZLSession(
 			);
 			setTimeout(() => {}, delay);
 		} else if (!response.ok) {
+			const text = await response.text();
 			customLog(
-				`Failed to cancel ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}: ${response.status} ${response.statusText}`,
+				`Failed to cancel ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}: ${response.status} ${response.statusText}. ${text || "No response body"}`,
 				'ERROR',
 			);
 			setTimeout(() => {}, delay);
