@@ -68,8 +68,10 @@ export async function handleUpdatedWebhook(payload: any) {
 		const packageName = packageConfig.package_name;
 		const zlPackageId = packageConfig.zl_id;
 		const isoDate = convertToISO(item.bookingDate, item.sessionStartTime);
-		const price =
-			Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
+		let price = 0;
+		if (booking.status !== 'NoPaymentRequired') {
+			price = Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
+		}
 		const isPriceTooLow = item.discount / item.quantity > item.cost / 2;
 
 		// Vérifier si le booking existe déjà dans la base de données (Create or update)
@@ -139,7 +141,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
-				if (isPriceTooLow) {
+				if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
 					logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`;
 					sendEmail(config.email.admin_email, 1, {
 						bookingReference: bookingReference,
@@ -221,7 +223,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 			logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`;
 
-			if (isPriceTooLow) {
+			if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
 				logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`;
 				sendEmail(config.email.admin_email, 1, {
 					bookingReference: bookingReference,
