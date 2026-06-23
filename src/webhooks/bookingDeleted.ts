@@ -1,7 +1,7 @@
 import { customLog } from '../logger.ts';
 import {
 	checkProcessedEvent,
-	deleteSyncedItem,
+	updateSyncedItemStatus,
 	getSyncedItem,
 	saveProcessedEvent,
 } from '../utils/db.ts';
@@ -29,13 +29,13 @@ export async function handleDeletedWebhook(payload: any) {
 	for (const item of booking.items) {
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		const session = await getSyncedItem(bookingReference, item.bookingItemId);
-		if (session && session.sync_status === 'Matched') {
-			await deleteZLSession(bookingReference, item.bookingItemId);
-			await deleteSyncedItem(bookingReference, item.bookingItemId);
+		if (session && session.booked_zl) {
+			await deleteZLSession(bookingReference, session.zl_booking_id);
+			await updateSyncedItemStatus(bookingReference, item.bookingItemId, "Cancelled", false)
 			logMessage = `Deleted record and ZL session ${item.bookingItemId} for booking ${bookingReference}...\n`;
 			customLog(logMessage, 'INFO');
 		} else if (session && session.sync_status === 'Skipped') {
-			await deleteSyncedItem(bookingReference, item.bookingItemId);
+			await updateSyncedItemStatus(bookingReference, item.bookingItemId, "Cancelled", false)
 			logMessage = `Item was skipped. Deleted record ${item.bookingItemId} for booking ${bookingReference}...\n`;
 			customLog(logMessage, 'WARN');
 		} else {
