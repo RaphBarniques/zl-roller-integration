@@ -289,5 +289,5 @@ async function cancelDeletedItems(
 }
 
 function convertToISO(date: string, time: string) {
-	return `${date}T${time}.00.000`
+	return `${date}T${time}:00.000`
 }
