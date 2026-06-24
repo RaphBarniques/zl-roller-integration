@@ -40,29 +40,44 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 		JSON.stringify(payload),
 	);
 
+	customLog(
+		`Enqueued webhook ${eventId} (${eventType}) for booking ${bookingReference ?? 'unknown'}`,
+		'DEBUG',
+	);
+
 	await processQueuedWebhooks();
 }
 
 export async function processQueuedWebhooks() {
+	customLog(
+		`processQueuedWebhooks called; isProcessingQueue=${isProcessingQueue}`,
+		'DEBUG',
+	);
+
 	if (isProcessingQueue) {
+		customLog('Queue is already being processed; skipping new run', 'DEBUG');
 		return;
 	}
 
 	if (await getQueuePaused()) {
+		customLog('Queue is paused; not processing queued webhooks', 'DEBUG');
 		return;
 	}
 
 	isProcessingQueue = true;
 	try {
 		const items = await getQueuedWebhooks();
+		customLog(`Found ${items.length} queued webhook(s)`, 'DEBUG');
 		for (const item of items) {
 			if (await getQueuePaused()) {
+				customLog('Queue was paused during processing; stopping loop', 'INFO');
 				break;
 			}
 			await processQueueItem(item);
 		}
 	} finally {
 		isProcessingQueue = false;
+		customLog('Finished processing queued webhooks', 'DEBUG');
 	}
 }
 
