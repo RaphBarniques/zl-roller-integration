@@ -1,10 +1,21 @@
 import { customLog } from '../logger.ts';
-import { allowedVRPackages, allowedOtherPackages, config } from '../preflight.ts';
+import {
+	allowedVRPackages,
+	allowedOtherPackages,
+	config,
+} from '../preflight.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
 import { sendEmail } from '../sendMail.ts';
-import { checkProcessedEvent, getSyncedItem, getSyncedItems, saveProcessedEvent, saveSyncedItem, updateSyncedItemStatus } from '../utils/db.ts';
+import {
+	checkProcessedEvent,
+	getSyncedItem,
+	getSyncedItems,
+	saveProcessedEvent,
+	saveSyncedItem,
+	updateSyncedItemStatus,
+} from '../utils/db.ts';
 import { createZLSession, deleteZLSession } from '../zlAPI.ts';
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -35,7 +46,7 @@ export async function handleUpdatedWebhook(payload: any) {
 
 	// Loop through remaining items and process each booking if they are in the allowedPackages list
 	const bookingItems = booking.items;
-    const currentRollerItemIds = new Set<string>();
+	const currentRollerItemIds = new Set<string>();
 
 	for (const item of bookingItems) {
 		let sync_status = 'Matched';
@@ -43,25 +54,36 @@ export async function handleUpdatedWebhook(payload: any) {
 		let booked_status = false;
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		currentRollerItemIds.add(item.bookingItemId);
-        const VRPackageConfig = allowedVRPackages.get(item.productId);
+		const VRPackageConfig = allowedVRPackages.get(item.productId);
 		const otherPackageConfig = allowedOtherPackages.get(item.productId);
-		let packageConfig : any;
+		let packageConfig: any;
 
 		if (!VRPackageConfig && !otherPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
 			sync_status = 'Skipped';
-			await saveSyncedItem(booking, item, null, false, {}, attraction, null, null, null, sync_status);
+			await saveSyncedItem(
+				booking,
+				item,
+				null,
+				false,
+				{},
+				attraction,
+				null,
+				null,
+				null,
+				sync_status,
+			);
 			customLog(logMessage, 'WARN');
 			continue;
 		}
 
 		if (VRPackageConfig) {
-			attraction = "ZLVR";
+			attraction = 'ZLVR';
 			packageConfig = VRPackageConfig;
 		}
 
 		if (otherPackageConfig) {
-			attraction = "Other";
+			attraction = 'Other';
 			packageConfig = otherPackageConfig;
 		}
 
@@ -70,7 +92,8 @@ export async function handleUpdatedWebhook(payload: any) {
 		const isoDate = convertToISO(item.bookingDate, item.sessionStartTime);
 		let price = 0;
 		if (booking.status !== 'NoPaymentRequired') {
-			price = Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
+			price =
+				Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
 		}
 		const isPriceTooLow = item.discount / item.quantity > item.cost / 2;
 
@@ -89,7 +112,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				if (booked_status) {
 					await deleteZLSession(dbItem.zl_booking_id, booking.bookingReference);
 				}
-				
+
 				const created = await createZLSession(
 					item.bookingItemId,
 					booking.bookingReference,
@@ -101,7 +124,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				if (created) {
 					logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
-					booked_status = true;	
+					booked_status = true;
 				} else {
 					logMessage += `Unable to create ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 					customLog(logMessage, 'ERROR');
@@ -234,62 +257,74 @@ export async function handleUpdatedWebhook(payload: any) {
 			customLog(logMessage, 'INFO');
 		}
 	}
-    await cancelDeletedItems(
-        booking.bookingReference,
-        currentRollerItemIds
-    );
+	await cancelDeletedItems(booking.bookingReference, currentRollerItemIds);
 }
 
 async function cancelDeletedItems(
-  bookingReference: string,
-  currentRollerItemIds: Set<string>
+	bookingReference: string,
+	currentRollerItemIds: Set<string>,
 ) {
-  const existingRows = await getSyncedItems(bookingReference);
+	custom.log("Processing missing items", "WARN")
+	const existingRows = await getSyncedItems(bookingReference);
 
-  for (const row of existingRows) {
-    const rollerItemId = String(row.roller_item_id);
+	for (const row of existingRows) {
+		const rollerItemId = String(row.roller_item_id);
 
-    if (currentRollerItemIds.has(rollerItemId)) {
-      continue;
-    }
+		if (currentRollerItemIds.has(rollerItemId)) {
+			continue;
+		}
 
-    if (!row.zl_booked) {
-      customLog(
-        `Item ${rollerItemId} no longer exists in ROLLER, but has no ZL booking ID to cancel.`,
-        "WARN"
-      );
+		if (!row.zl_booked) {
+			customLog(
+				`Item ${rollerItemId} no longer exists in ROLLER, but has no ZL booking ID to cancel.`,
+				'WARN',
+			);
 
-      await updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
+			await updateSyncedItemStatus(
+				bookingReference,
+				rollerItemId,
+				'Cancelled',
+				false,
+			);
 
-      continue;
-    }
+			continue;
+		}
 
-    try {
-      customLog(
-        `Item ${rollerItemId} was removed from ROLLER booking ${bookingReference}. Cancelling ZL booking ${row.zl_booking_id}...`,
-        "WARN"
-      );
+		try {
+			customLog(
+				`Item ${rollerItemId} was removed from ROLLER booking ${bookingReference}. Cancelling ZL booking ${row.zl_booking_id}...`,
+				'WARN',
+			);
 
-      await deleteZLSession(row.zl_booking_id, bookingReference);
+			await deleteZLSession(row.zl_booking_id, bookingReference);
 
-      await updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
+			await updateSyncedItemStatus(
+				bookingReference,
+				rollerItemId,
+				'Cancelled',
+				false,
+			);
 
-      customLog(
-        `Cancelled ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}`,
-        "INFO"
-      );
-    } catch (err) {
-      
-      await updateSyncedItemStatus(bookingReference, rollerItemId, "Error", false);
+			customLog(
+				`Cancelled ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}`,
+				'INFO',
+			);
+		} catch (err) {
+			await updateSyncedItemStatus(
+				bookingReference,
+				rollerItemId,
+				'Error',
+				false,
+			);
 
-      customLog(
-        `Failed to cancel ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}: ${String(err)}`,
-        "ERROR"
-      );
-    }
-  }
+			customLog(
+				`Failed to cancel ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}: ${String(err)}`,
+				'ERROR',
+			);
+		}
+	}
 }
 
 function convertToISO(date: string, time: string) {
-	return `${date}T${time}:00.000`
+	return `${date}T${time}:00.000`;
 }
