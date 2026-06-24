@@ -157,5 +157,11 @@ const server = Bun.serve({
 
 await processQueuedWebhooks();
 
+// Start a periodic background worker to ensure queued webhooks are processed
+// even if resumptions or enqueues race with current processing state.
+setInterval(() => {
+	void processQueuedWebhooks();
+}, 3000);
+
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
