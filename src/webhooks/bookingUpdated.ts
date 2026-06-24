@@ -53,7 +53,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		let attraction = 'None';
 		let booked_status = false;
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
-		currentRollerItemIds.add(item.bookingItemId);
+		currentRollerItemIds.add(String(item.bookingItemId));
 		const VRPackageConfig = allowedVRPackages.get(item.productId);
 		const otherPackageConfig = allowedOtherPackages.get(item.productId);
 		let packageConfig: any;
@@ -273,6 +273,10 @@ async function cancelDeletedItems(
 		const rollerItemId = String(row.roller_item_id);
 
 		if (currentRollerItemIds.has(rollerItemId)) {
+			customLog(
+				`Item ${rollerItemId} still exists`,
+				'WARN',
+			);
 			continue;
 		}
 
