@@ -265,6 +265,8 @@ async function cancelDeletedItems(
 	currentRollerItemIds: Set<string>,
 ) {
 	customLog('Processing missing items.', 'WARN');
+	const str = [...currentRollerItemIds].join(", ");
+	customLog(str, 'WARN');
 	const existingRows = await getSyncedItems(bookingReference);
 
 	for (const row of existingRows) {
