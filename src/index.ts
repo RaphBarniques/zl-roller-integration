@@ -30,7 +30,7 @@ import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
 import { getSession } from './zlAPI.ts';
 
 customLog('-------------------------------------------------');
-customLog('ZL-ROLLER-INTEGRATION v1.0.0 - Starting server...');
+customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
 
 await initDb();
 await initConfig();

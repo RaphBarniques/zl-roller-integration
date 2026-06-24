@@ -129,12 +129,16 @@ export async function manageAdminAction(req: Request) {
 
 	if (body.action === 'update') {
 		customLog('Admin requested update + restart', 'WARN');
+		const repoDir = process.cwd().replaceAll('\\', '/');
 
-		const pull = Bun.spawnSync(['git', 'pull', '--ff-only'], {
-			cwd: process.cwd(),
-			stdout: 'pipe',
-			stderr: 'pipe',
-		});
+		const pull = Bun.spawnSync(
+			['git', '-c', `safe.directory=${repoDir}`, 'pull', '--ff-only'],
+			{
+				cwd: process.cwd(),
+				stdout: 'pipe',
+				stderr: 'pipe',
+			},
+		);
 
 		if (pull.exitCode !== 0) {
 			const stderr = new TextDecoder().decode(pull.stderr).trim();
