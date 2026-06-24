@@ -163,7 +163,7 @@ export async function getSyncedItems(
 			SELECT *
 			FROM synced_items
 			WHERE roller_booking_id = ?
-				AND sync_status IN ('synced', 'matched', 'error')
+				AND sync_status NOT IN ('Cancelled', 'Deleted')
 			`,
 		)
 		.all(bookingReference) as any[];
