@@ -88,9 +88,8 @@ export async function getQueuedWebhooks() {
 	return db
 		.query(
 			'SELECT id, event_id, event_type, booking_reference, status, created_at, updated_at, payload FROM webhook_queue WHERE status = ? ORDER BY created_at ASC',
-			'queued',
 		)
-		.all() as WebhookQueueItem[];
+		.all('queued') as WebhookQueueItem[];
 }
 
 export async function getQueuedWebhook(id: number) {
