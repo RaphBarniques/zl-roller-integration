@@ -53,12 +53,12 @@ export function getLatestBooking() {
 
 export function searchBookings(req: Request) {
 	const url = new URL(req.url);
-	const q = `%${url.searchParams.get('q') || ''}%`;
-	const status = url.searchParams.get('status') || 'ALL';
+	const q = `%${(url.searchParams.get('q') || '').trim()}%`;
+	const status = (url.searchParams.get('status') || 'ALL').trim();
 
-	let rows: any;
+	let rows: Record<string, unknown>[];
 
-	if (status === 'ALL') {
+	if (status.toUpperCase() === 'ALL') {
 		rows = db
 			.query(`
         SELECT *
@@ -66,27 +66,34 @@ export function searchBookings(req: Request) {
         WHERE roller_booking_id LIKE ?
            OR roller_item_id LIKE ?
            OR zl_booking_id LIKE ?
+					 OR email LIKE ?
+					 OR package_name LIKE ?
+					 OR start_time LIKE ?
            OR sync_status LIKE ?
         ORDER BY updated_at DESC
         LIMIT 100
       `)
-			.all(q, q, q, q);
+			.all(q, q, q, q, q, q, q);
 	} else {
 		rows = db
 			.query(`
         SELECT *
         FROM synced_items
-        WHERE sync_status = ?
+				WHERE LOWER(sync_status) = LOWER(?)
           AND (
             roller_booking_id LIKE ?
             OR roller_item_id LIKE ?
             OR zl_booking_id LIKE ?
+			OR email LIKE ?
+			OR attraction LIKE ?
+			OR package_name LIKE ?
+			OR start_time LIKE ?
             OR sync_status LIKE ?
           )
         ORDER BY updated_at DESC
         LIMIT 100
       `)
-			.all(status, q, q, q, q);
+			.all(status, q, q, q, q, q, q, q, q);
 	}
 
 	return Response.json(rows) ?? null;
@@ -105,7 +112,9 @@ export async function manageQueueAction(req: Request) {
 	const body = await req.json();
 
 	if (!body.action) {
-		return new Response(JSON.stringify({ error: 'Missing action.' }), { status: 400 });
+		return new Response(JSON.stringify({ error: 'Missing action.' }), {
+			status: 400,
+		});
 	}
 
 	switch (body.action) {
@@ -115,18 +124,24 @@ export async function manageQueueAction(req: Request) {
 			return Response.json(await resumeQueue());
 		case 'delete':
 			if (!body.id) {
-				return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+				return new Response(JSON.stringify({ error: 'Missing id.' }), {
+					status: 400,
+				});
 			}
 			await deleteQueuedWebhook(body.id);
 			return Response.json({ ok: true });
 		case 'bypass':
 			if (!body.id) {
-				return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+				return new Response(JSON.stringify({ error: 'Missing id.' }), {
+					status: 400,
+				});
 			}
 			await processQueueItemById(body.id);
 			return Response.json({ ok: true });
 		default:
-			return new Response(JSON.stringify({ error: 'Unknown action.' }), { status: 400 });
+			return new Response(JSON.stringify({ error: 'Unknown action.' }), {
+				status: 400,
+			});
 	}
 }
 
@@ -134,7 +149,9 @@ export async function getQueueItem(req: Request) {
 	const url = new URL(req.url);
 	const id = Number(url.searchParams.get('id'));
 	if (!id) {
-		return new Response(JSON.stringify({ error: 'Missing id.' }), { status: 400 });
+		return new Response(JSON.stringify({ error: 'Missing id.' }), {
+			status: 400,
+		});
 	}
 
 	const item = await getQueuedWebhookById(id);
