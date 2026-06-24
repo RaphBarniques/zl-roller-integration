@@ -84,10 +84,10 @@ export async function handleUpdatedWebhook(payload: any) {
 			if (
 				dbItem.players !== item.quantity ||
 				dbItem.start_time !== isoDate ||
-				dbItem.roller_package_id !== item.roller_id
+				dbItem.roller_package_id !== item.productId
 			) {
 				if (booked_status) {
-					await deleteZLSession(dbItem.zl_booking_id, booking.roller_booking_id);
+					await deleteZLSession(dbItem.zl_booking_id, booking.bookingReference);
 				}
 				
 				const created = await createZLSession(

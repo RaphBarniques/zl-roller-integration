@@ -24,9 +24,21 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 	const pl = payload as Record<string, unknown>;
 	const eventId = String((pl['id'] ?? pl['eventId'] ?? '') as string);
 	const eventType = mapEventType(pl['eventType']);
-	const bookingReference = ((pl['data'] as Record<string, unknown> | undefined)?.['booking'] as Record<string, unknown> | undefined)?.['bookingReference'] ?? pl['bookingId'] ?? null;
+	const bookingReference =
+		(
+			(pl['data'] as Record<string, unknown> | undefined)?.['booking'] as
+				| Record<string, unknown>
+				| undefined
+		)?.['bookingReference'] ??
+		pl['bookingId'] ??
+		null;
 
-	await enqueueWebhookItem(eventId, eventType, bookingReference, JSON.stringify(payload));
+	await enqueueWebhookItem(
+		eventId,
+		eventType,
+		bookingReference,
+		JSON.stringify(payload),
+	);
 
 	await processQueuedWebhooks();
 }
@@ -73,11 +85,19 @@ async function processQueueItem(item: {
 	updated_at: string;
 	payload: string;
 }) {
-	customLog(`Processing queued webhook ${item.id} (${item.event_type}) for booking ${item.booking_reference ?? 'unknown'}`);
+	customLog(
+		`Processing queued webhook ${item.id} (${item.event_type}) for booking ${item.booking_reference ?? 'unknown'}`,
+	);
 
 	try {
 		const payload = JSON.parse(item.payload) as Record<string, unknown>;
-		await logWebhookPayload(item.id, item.event_type, item.booking_reference, payload, 'processed');
+		await logWebhookPayload(
+			item.id,
+			item.event_type,
+			item.booking_reference,
+			payload,
+			'processed',
+		);
 
 		switch (payload.eventType) {
 			case 1:
@@ -94,16 +114,31 @@ async function processQueueItem(item: {
 				await handleDeletedWebhook(payload);
 				break;
 			default:
-				customLog(`Unknown queued webhook event type: ${payload.eventType}`, 'WARN');
+				customLog(
+					`Unknown queued webhook event type: ${payload.eventType}`,
+					'WARN',
+				);
 		}
 
 		await deleteQueuedWebhook(item.id);
-		customLog(`Queued webhook item ${item.id} processed and removed from queue.`, 'INFO');
+		customLog(
+			`Queued webhook item ${item.id} processed and removed from queue.`,
+			'INFO',
+		);
 	} catch (error) {
 		await updateQueuedWebhookStatus(item.id, 'failed');
 		const payload = JSON.parse(item.payload) as Record<string, unknown>;
-		await logWebhookPayload(item.id, item.event_type, item.booking_reference, payload, 'failed');
-		customLog(`Failed to process queued webhook ${item.id}: ${String(error)}`, 'ERROR');
+		await logWebhookPayload(
+			item.id,
+			item.event_type,
+			item.booking_reference,
+			payload,
+			'failed',
+		);
+		customLog(
+			`Failed to process queued webhook ${item.id}: ${String(error)}`,
+			'ERROR',
+		);
 	}
 }
 
