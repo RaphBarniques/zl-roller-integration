@@ -229,6 +229,7 @@
           <thead>
             <tr>
               <th>ROLLER Booking</th>
+              <th>ZL Booking</th>
               <th>Date</th>
               <th>Email</th>
               <th>Attraction</th>
@@ -407,6 +408,7 @@
         return `
           <tr>
             <td>${row.roller_booking_id ?? ""}</td>
+            <td>${row.zl_booking_id ?? ""}</td>
             <td>${row.start_time ?? ""}</td>
             <td>${row.email ?? ""}</td>
             <td>${row.attraction ?? ""}</td>
