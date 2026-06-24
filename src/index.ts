@@ -6,6 +6,7 @@ import {
 	getQueueStatus,
 	getQueueItems,
 	manageQueueAction,
+	manageAdminAction,
 } from './dashboardAPI';
 import {
 	dashboardLogin,
@@ -143,6 +144,16 @@ const server = Bun.serve({
 				if (adminResponse) return adminResponse;
 
 				return getQueueStatus();
+			},
+		},
+		'/api/dashboard/admin/actions': {
+			POST: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return manageAdminAction(req);
 			},
 		},
 		'/webhooks/roller': {
