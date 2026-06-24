@@ -151,7 +151,14 @@ export async function pauseQueue() {
 export async function resumeQueue() {
 	await setQueuePaused(false);
 	customLog('Webhook queue resumed', 'INFO');
-	await processQueuedWebhooks();
+	// trigger processing asynchronously to avoid potential race
+	// where `isProcessingQueue` may still be toggled by a concurrent run
+	if (!isProcessingQueue) {
+		setTimeout(() => {
+			void processQueuedWebhooks();
+		}, 0);
+	}
+
 	return { paused: false };
 }
 
