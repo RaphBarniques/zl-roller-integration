@@ -1,376 +1,430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <title>ROLLER → ZL Dashboard</title>
-  <style>
-    body {
-      margin: 0;
-      background: #DDE9EF;
-      color: #eee;
-      font-family: Arial, sans-serif;
-    }
+	<head>
+		<meta charset="UTF-8" />
+		<title>ROLLER → ZL Dashboard</title>
+		<style>
+			body {
+				margin: 0;
+				background: #dde9ef;
+				color: #eee;
+				font-family: Arial, sans-serif;
+			}
 
-    header {
-      padding: 0px 22px;
-      background: #3994BC;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+			header {
+				padding: 0px 22px;
+				background: #3994bc;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
 
-    nav {
-      display: flex;
-      padding-left: 20px;
-      background: #2A3640;
+			nav {
+				display: flex;
+				padding-left: 20px;
+				background: #2a3640;
+			}
 
-    }
+			button,
+			select,
+			input {
+				background: #ececec;
+				color: 101014;
+				border: 1px solid #d0d0d0;
+				border-radius: 3px;
+				padding: 9px;
+			}
 
-    button, select, input {
-      background: #ececec;
-      color: 101014;
-      border: 1px solid #d0d0d0;
-      border-radius: 3px;
-      padding: 9px;
-    }
+			nav button {
+				cursor: pointer;
+				width: 100px;
+				background: #2a3640;
+				color: white;
+				border: none;
+				border-radius: 0;
+				padding: 15px;
+			}
 
-    nav button {
-      cursor: pointer;
-      width: 100px;
-      background: #2A3640;
-      color: white;
-      border:none;
-      border-radius: 0;
-      padding: 15px;
-    }
+			nav button.active {
+				background-color: #2d4351;
+				border-bottom: 4px solid #3994bc;
+			}
 
-    nav button.active {
-        background-color: #2D4351;
-        border-bottom: 4px solid #3994BC;
-    }
+			.tab {
+				display: none;
+				padding: 20px;
+			}
 
-    .tab {
-      display: none;
-      padding: 20px;
-    }
+			.tab.active {
+				display: block;
+			}
 
-    .tab.active {
-      display: block;
-    }
+			.panel {
+				color: #101014;
+				background: #ffffff;
+				border: 1px solid #c9c9c9;
+				border-radius: 5px;
+				padding: 16px;
+				margin-bottom: 18px;
+				box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px;
+			}
 
-    .panel {
-      color: #101014;
-      background: #FFFFFF;
-      border: 1px solid #c9c9c9;
-      border-radius: 5px;
-      padding: 16px;
-      margin-bottom: 18px;
-      box-shadow: rgba(0, 0, 0, 0.2) 0 1px 3px;
-    }
+			pre {
+				background: #050507;
+				border-radius: 8px;
+				padding: 12px;
+				height: 70vh;
+				overflow: auto;
+				white-space: pre-wrap;
+				font-size: 13px;
+			}
 
-    pre {
-      background: #050507;
-      border-radius: 8px;
-      padding: 12px;
-      height: 70vh;
-      overflow: auto;
-      white-space: pre-wrap;
-      font-size: 13px;
-    }
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 14px;
+			}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
+			th,
+			td {
+				border-bottom: 1px solid #c5c5c5;
+				padding: 9px;
+				text-align: left;
+				vertical-align: top;
+			}
 
-    th, td {
-      border-bottom: 1px solid #c5c5c5;
-      padding: 9px;
-      text-align: left;
-      vertical-align: top;
-    }
+			#logOutput {
+				background: #050507;
+				border-radius: 8px;
+				padding: 12px;
+				height: 70vh;
+				overflow: auto;
+				font-family: Consolas, monospace;
+				font-size: 13px;
+				white-space: normal;
+			}
 
-    #logOutput {
-        background: #050507;
-        border-radius: 8px;
-        padding: 12px;
-        height: 70vh;
-        overflow: auto;
-        font-family: Consolas, monospace;
-        font-size: 13px;
-        white-space: normal;
-        }
+			.log-line {
+				display: grid;
+				grid-template-columns: 170px 80px 1fr;
+				gap: 12px;
+				align-items: start;
+				line-height: 1.35;
+			}
 
-        .log-line {
-        display: grid;
-        grid-template-columns: 170px 80px 1fr;
-        gap: 12px;
-        align-items: start;
-        line-height: 1.35;
-        }
+			.log-time {
+				color: #9ad1ff;
+				white-space: nowrap;
+			}
 
-        .log-time {
-        color: #9ad1ff;
-        white-space: nowrap;
-        }
+			.log-level {
+				white-space: nowrap;
+				font-weight: bold;
+			}
 
-        .log-level {
-        white-space: nowrap;
-        font-weight: bold;
-        }
+			.log-message {
+				white-space: pre-wrap;
+				color: #dffaff;
+			}
 
-        .log-message {
-        white-space: pre-wrap;
-        color: #dffaff;
-        }
+			.INFO {
+				color: #9ad1ff;
+			}
 
-        .INFO {
-        color: #9ad1ff;
-        }
+			.WARN {
+				color: #ffd166;
+			}
 
-        .WARN {
-        color: #ffd166;
-        }
+			.ERROR {
+				color: #ff6b6b;
+			}
 
-        .ERROR {
-        color: #ff6b6b;
-        }
+			.status-matched {
+				color: #8fff9d;
+			}
+			.status-error {
+				color: #ff6b6b;
+			}
+			.status-skipped {
+				color: #ffd166;
+			}
 
-    .status-matched { color: #8fff9d; }
-    .status-error { color: #ff6b6b; }
-    .status-skipped { color: #ffd166; }
+			.toolbar {
+				display: flex;
+				gap: 10px;
+				margin-bottom: 14px;
+				flex-wrap: wrap;
+			}
 
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
+			.latest {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 8px;
+			}
 
-    .latest {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
+			.field {
+				background: #ececec;
+				padding: 10px;
+				border-radius: 3px;
+			}
 
-    .field {
-      background: #ececec;
-      padding: 10px;
-      border-radius: 3px;
-    }
+			.field strong {
+				display: block;
+				color: #aaa;
+				font-size: 12px;
+				margin-bottom: 4px;
+			}
 
-    .field strong {
-      display: block;
-      color: #aaa;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
+			a {
+				color: #9ad1ff;
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h2>Dashboard - Intégration ROLLER > ZL</h2>
+			<a href="/dashboard/logout"><button>Logout</button></a>
+		</header>
 
-    a {
-      color: #9ad1ff;
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h2>Dashboard - Intégration ROLLER > ZL</h2>
-    <a href="/dashboard/logout"><button>Logout</button></a>
-  </header>
+		<nav>
+			<button
+				id="bookingsButton"
+				onclick="showTab('bookings')"
+				class="navButton active"
+			>
+				Bookings
+			</button>
+			<button id="queueButton" onclick="showTab('queue')" class="navButton">
+				Requests
+			</button>
+			<button id="logsButton" onclick="showTab('logs')" class="navButton">
+				Logs
+			</button>
+		</nav>
 
-  <nav>
-    <button id="bookingsButton" onclick="showTab('bookings')" class="navButton active">Bookings</button>
-    <button id="queueButton" onclick="showTab('queue')" class="navButton">Requests</button>
-    <button id="logsButton" onclick="showTab('logs')" class="navButton">Logs</button>
-  </nav>
+		<main>
+			<section id="logs" class="tab">
+				<div class="panel">
+					<div class="toolbar">
+						<select id="logLevel">
+							<option value="ALL">All logs</option>
+							<option value="INFO">Info</option>
+							<option value="WARN">Warnings</option>
+							<option value="ERROR">Errors</option>
+						</select>
 
-  <main>
-    <section id="logs" class="tab">
-      <div class="panel">
-        <div class="toolbar">
-          <select id="logLevel">
-            <option value="ALL">All logs</option>
-            <option value="INFO">Info</option>
-            <option value="WARN">Warnings</option>
-            <option value="ERROR">Errors</option>
-          </select>
+						<button onclick="loadLogs()">Refresh</button>
+						<button onclick="clearVisibleLogs()">Clear visible</button>
+					</div>
 
-          <button onclick="loadLogs()">Refresh</button>
-          <button onclick="clearVisibleLogs()">Clear visible</button>
-        </div>
+					<pre id="logOutput"></pre>
+				</div>
+			</section>
 
-        <pre id="logOutput"></pre>
-      </div>
-    </section>
+			<section id="bookings" class="tab active">
+				<div class="panel">
+					<h3>Last booking processed</h3>
+					<div id="latestBooking" class="latest"></div>
+				</div>
 
-    <section id="bookings" class="tab active">
-      <div class="panel">
-        <h3>Last booking processed</h3>
-        <div id="latestBooking" class="latest"></div>
-      </div>
+				<div class="panel">
+					<h3>Search bookings</h3>
 
-      <div class="panel">
-        <h3>Search bookings</h3>
+					<div class="toolbar">
+						<input
+							id="bookingSearch"
+							style="width: 250px"
+							placeholder="Search booking, ID, email, date..."
+						/>
+						<select id="bookingStatus">
+							<option value="ALL">All statuses</option>
+							<option value="Matched">Matched</option>
+							<option value="Skipped">Skipped</option>
+							<option value="Error">Error</option>
+							<option value="Cancelled">Cancelled</option>
+						</select>
+						<button onclick="searchBookings()">Search</button>
+					</div>
 
-        <div class="toolbar">
-          <input id="bookingSearch" style="width: 250px;" placeholder="Search booking, ID, email, date..." />
-          <select id="bookingStatus">
-            <option value="ALL">All statuses</option>
-            <option value="Matched">Matched</option>
-            <option value="Skipped">Skipped</option>
-            <option value="Error">Error</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-          <button onclick="searchBookings()">Search</button>
-        </div>
+					<table>
+						<thead>
+							<tr>
+								<th>ROLLER Booking</th>
+								<th>ZL Booking</th>
+								<th>Date</th>
+								<th>Email</th>
+								<th>Attraction</th>
+								<th>Package</th>
+								<th>Players</th>
+								<th>Status</th>
+								<th>Updated</th>
+							</tr>
+						</thead>
+						<tbody id="bookingRows"></tbody>
+					</table>
+				</div>
+			</section>
 
-        <table>
-          <thead>
-            <tr>
-              <th>ROLLER Booking</th>
-              <th>ZL Booking</th>
-              <th>Date</th>
-              <th>Email</th>
-              <th>Attraction</th>
-              <th>Package</th>
-              <th>Players</th>
-              <th>Status</th>
-              <th>Updated</th>
-            </tr>
-          </thead>
-          <tbody id="bookingRows"></tbody>
-        </table>
-      </div>
-    </section>
+			<section id="queue" class="tab">
+				<div class="panel">
+					<h3>Webhook request queue</h3>
+					<div class="toolbar">
+						<button onclick="refreshQueue()">Refresh queue</button>
+						<button onclick="toggleQueue()" id="queueToggleButton">
+							Pause queue
+						</button>
+					</div>
+					<div id="queueStatus" class="field" style="margin-bottom: 14px"></div>
+					<table>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Type</th>
+								<th>Booking</th>
+								<th>Status</th>
+								<th>Created</th>
+								<th>Updated</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody id="queueRows"></tbody>
+					</table>
+				</div>
+			</section>
+		</main>
 
-    <section id="queue" class="tab">
-      <div class="panel">
-        <h3>Webhook request queue</h3>
-        <div class="toolbar">
-          <button onclick="refreshQueue()">Refresh queue</button>
-          <button onclick="toggleQueue()" id="queueToggleButton">Pause queue</button>
-        </div>
-        <div id="queueStatus" class="field" style="margin-bottom: 14px;"></div>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Type</th>
-              <th>Booking</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th>Updated</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="queueRows"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+		<script>
+			let dashboardRole = "user";
+			let isAdmin = false;
+			let eventSource = null;
 
-  <script>
-    function showTab(name) {
-      document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.remove("active");
-      });
+			async function initDashboardRole() {
+				const res = await fetch("/api/dashboard/me");
+				if (!res.ok) {
+					window.location.href = "/dashboard/login";
+					return;
+				}
 
-      document.querySelectorAll(".navButton").forEach(tab => {
-        tab.classList.remove("active");
-      });
+				const me = await res.json();
+				dashboardRole = me.role;
+				isAdmin = me.isAdmin;
 
-      
-      document.getElementById(name+"Button").classList.add("active");
-      document.getElementById(name).classList.add("active");
+				if (!isAdmin) {
+					document.getElementById("queueButton").style.display = "none";
+					document.getElementById("logsButton").style.display = "none";
+					document.getElementById("queue").remove();
+					document.getElementById("logs").remove();
+					showTab("bookings");
+				}
+			}
 
-      if (name === "bookings") {
-        loadLatestBooking();
-        searchBookings();
-      }
+			function showTab(name) {
+				document.querySelectorAll(".tab").forEach((tab) => {
+					tab.classList.remove("active");
+				});
 
-      if (name === "queue") {
-        refreshQueue();
-      }
-    }
+				document.querySelectorAll(".navButton").forEach((tab) => {
+					tab.classList.remove("active");
+				});
 
-    function classForLog(line) {
-      if (line.includes("(ERROR)")) return "ERROR";
-      if (line.includes("(WARN)")) return "WARN";
-      return "INFO";
-    }
+				document.getElementById(name + "Button").classList.add("active");
+				document.getElementById(name).classList.add("active");
 
-    function renderLogLine(line) {
-        const div = document.createElement("div");
-        div.className = "log-line";
+				if (name === "bookings") {
+					loadLatestBooking();
+					searchBookings();
+				}
 
-        const match = line.match(/^(.+?)\s+\((INFO|WARN|ERROR)\)\s+([\s\S]*)$/);
+				if (name === "queue") {
+					if (!isAdmin) return;
+					refreshQueue();
+				}
+			}
 
-        if (!match) {
-            div.textContent = line;
-            return div;
-        }
+			function classForLog(line) {
+				if (line.includes("(ERROR)")) return "ERROR";
+				if (line.includes("(WARN)")) return "WARN";
+				return "INFO";
+			}
 
-        const [, timestamp, level, message] = match;
+			function renderLogLine(line) {
+				const div = document.createElement("div");
+				div.className = "log-line";
 
-        div.innerHTML = `
+				const match = line.match(/^(.+?)\s+\((INFO|WARN|ERROR)\)\s+([\s\S]*)$/);
+
+				if (!match) {
+					div.textContent = line;
+					return div;
+				}
+
+				const [, timestamp, level, message] = match;
+
+				div.innerHTML = `
             <span class="log-time">${timestamp}</span>
             <span class="log-level ${level}">(${level})</span>
             <span class="log-message">${message}</span>
         `;
 
-        return div;
-        }
+				return div;
+			}
 
-    async function loadLogs() {
-      const level = document.getElementById("logLevel").value;
-      const res = await fetch(`/api/dashboard/logs?level=${encodeURIComponent(level)}`);
-      const lines = await res.json();
+			async function loadLogs() {
+				const level = document.getElementById("logLevel").value;
+				const res = await fetch(
+					`/api/dashboard/logs?level=${encodeURIComponent(level)}`,
+				);
+				const lines = await res.json();
 
-      const output = document.getElementById("logOutput");
-      output.innerHTML = "";
+				const output = document.getElementById("logOutput");
+				output.innerHTML = "";
 
-      for (const line of lines) {
-        output.appendChild(renderLogLine(line));
-      }
-    }
+				for (const line of lines) {
+					output.appendChild(renderLogLine(line));
+				}
+			}
 
-    function clearVisibleLogs() {
-      document.getElementById("logOutput").innerHTML = "";
-    }
+			function clearVisibleLogs() {
+				document.getElementById("logOutput").innerHTML = "";
+			}
 
-    const eventSource = new EventSource("/api/dashboard/logs/stream");
+			function initLogStream() {
+				if (!isAdmin || eventSource) return;
 
-    eventSource.onmessage = (event) => {
-      const line = JSON.parse(event.data);
+				eventSource = new EventSource("/api/dashboard/logs/stream");
 
-      if (line === "connected") return;
+				eventSource.onmessage = (event) => {
+					const line = JSON.parse(event.data);
 
-      const level = document.getElementById("logLevel").value;
+					if (line === "connected") return;
 
-      if (level !== "ALL" && !line.includes(`(${level})`)) {
-        return;
-      }
+					const level = document.getElementById("logLevel").value;
 
-      const output = document.getElementById("logOutput");
-      output.prepend(renderLogLine(line));
-    };
+					if (level !== "ALL" && !line.includes(`(${level})`)) {
+						return;
+					}
 
-    async function loadLatestBooking() {
-      const res = await fetch("/api/dashboard/bookings/latest");
-      const booking = await res.json();
+					const output = document.getElementById("logOutput");
+					output.prepend(renderLogLine(line));
+				};
+			}
 
-      const container = document.getElementById("latestBooking");
+			async function loadLatestBooking() {
+				const res = await fetch("/api/dashboard/bookings/latest");
+				const booking = await res.json();
 
-      if (!booking) {
-        container.innerHTML = "<p>No booking processed yet.</p>";
-        return;
-      }
+				const container = document.getElementById("latestBooking");
 
-      const date = new Date(booking.start_time);
-      const formattedDate = formatDate(date);
+				if (!booking) {
+					container.innerHTML = "<p>No booking processed yet.</p>";
+					return;
+				}
 
-      container.innerHTML = `
+				const date = new Date(booking.start_time);
+				const formattedDate = formatDate(date);
+
+				container.innerHTML = `
         <div class="field"><strong>ROLLER Booking</strong>${booking.roller_booking_reference ?? booking.roller_booking_id ?? ""}</div>
         <div class="field"><strong>Email</strong>${booking.email ?? ""}</div>
         <div class="field"><strong>ROLLER Item</strong>${booking.roller_booking_item_id ?? booking.roller_item_id ?? ""}</div>
@@ -382,30 +436,32 @@
         <div class="field"><strong>Created</strong>${booking.created_at ?? ""}</div>
         <div class="field"><strong>Updated</strong>${booking.updated_at ?? ""}</div>
       `;
-    }
+			}
 
-    async function searchBookings() {
-      const q = document.getElementById("bookingSearch").value;
-      const status = document.getElementById("bookingStatus").value;
+			async function searchBookings() {
+				const q = document.getElementById("bookingSearch").value;
+				const status = document.getElementById("bookingStatus").value;
 
-      const res = await fetch(
-        `/api/dashboard/bookings/search?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`
-      );
+				const res = await fetch(
+					`/api/dashboard/bookings/search?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`,
+				);
 
-      const rows = await res.json();
+				const rows = await res.json();
 
-      console.log(rows)
+				console.log(rows);
 
-      if (rows.length == 0) {
-        document.getElementById("bookingRows").innerHTML = "<tr><td>No booking that fits that search.</td></tr>";
-        console.log("empty")
-        return;
-      }
+				if (rows.length == 0) {
+					document.getElementById("bookingRows").innerHTML =
+						"<tr><td>No booking that fits that search.</td></tr>";
+					console.log("empty");
+					return;
+				}
 
-      document.getElementById("bookingRows").innerHTML = rows.map(row => {
-        const statusClass = `status-${row.sync_status}`;
+				document.getElementById("bookingRows").innerHTML = rows
+					.map((row) => {
+						const statusClass = `status-${row.sync_status}`;
 
-        return `
+						return `
           <tr>
             <td>${row.roller_booking_id ?? ""}</td>
             <td>${row.zl_booking_id ?? ""}</td>
@@ -418,28 +474,36 @@
             <td>${row.updated_at ?? ""}</td>
           </tr>
         `;
-      }).join("");
-    }
+					})
+					.join("");
+			}
 
-    async function refreshQueue() {
-      const res = await fetch('/api/dashboard/queue');
-      const rows = await res.json();
-      const statusRes = await fetch('/api/dashboard/queue/status');
-      const state = await statusRes.json();
+			async function refreshQueue() {
+				const res = await fetch("/api/dashboard/queue");
+				const rows = await res.json();
+				const statusRes = await fetch("/api/dashboard/queue/status");
+				const state = await statusRes.json();
 
-      document.getElementById('queueStatus').textContent = state.paused ? 'Queue is paused' : 'Queue is running';
-      document.getElementById('queueToggleButton').textContent = state.paused ? 'Resume queue' : 'Pause queue';
+				document.getElementById("queueStatus").textContent = state.paused
+					? "Queue is paused"
+					: "Queue is running";
+				document.getElementById("queueToggleButton").textContent = state.paused
+					? "Resume queue"
+					: "Pause queue";
 
-      if (!rows.length) {
-        document.getElementById('queueRows').innerHTML = '<tr><td colspan="7">No pending requests in the queue.</td></tr>';
-        return;
-      }
+				if (!rows.length) {
+					document.getElementById("queueRows").innerHTML =
+						'<tr><td colspan="7">No pending requests in the queue.</td></tr>';
+					return;
+				}
 
-      document.getElementById('queueRows').innerHTML = rows.map(row => `
+				document.getElementById("queueRows").innerHTML = rows
+					.map(
+						(row) => `
         <tr>
           <td>${row.id}</td>
           <td>${row.event_type}</td>
-          <td>${row.booking_reference ?? ''}</td>
+          <td>${row.booking_reference ?? ""}</td>
           <td>${row.status}</td>
           <td>${row.created_at}</td>
           <td>${row.updated_at}</td>
@@ -448,77 +512,91 @@
             <button onclick="bypassQueueItem(${row.id})">Bypass</button>
           </td>
         </tr>
-      `).join('');
-    }
+      `,
+					)
+					.join("");
+			}
 
-    async function toggleQueue() {
-      const statusRes = await fetch('/api/dashboard/queue/status');
-      const state = await statusRes.json();
-      const action = state.paused ? 'resume' : 'pause';
+			async function toggleQueue() {
+				const statusRes = await fetch("/api/dashboard/queue/status");
+				const state = await statusRes.json();
+				const action = state.paused ? "resume" : "pause";
 
-      await fetch('/api/dashboard/queue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
-      });
+				await fetch("/api/dashboard/queue", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ action }),
+				});
 
-      await refreshQueue();
-    }
+				await refreshQueue();
+			}
 
-    async function deleteQueueItem(id) {
-      await fetch('/api/dashboard/queue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'delete', id }),
-      });
-      await refreshQueue();
-    }
+			async function deleteQueueItem(id) {
+				await fetch("/api/dashboard/queue", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ action: "delete", id }),
+				});
+				await refreshQueue();
+			}
 
-    async function bypassQueueItem(id) {
-      await fetch('/api/dashboard/queue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'bypass', id }),
-      });
-      await refreshQueue();
-    }
+			async function bypassQueueItem(id) {
+				await fetch("/api/dashboard/queue", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ action: "bypass", id }),
+				});
+				await refreshQueue();
+			}
 
-    document.getElementById("logLevel").addEventListener("change", loadLogs);
-    document.getElementById("bookingSearch").addEventListener("input", () => {
-      clearTimeout(window.searchTimer);
-      window.searchTimer = setTimeout(searchBookings, 250);
-    });
-    document.getElementById("bookingStatus").addEventListener("change", searchBookings);
+			document.getElementById("logLevel").addEventListener("change", () => {
+				if (isAdmin) loadLogs();
+			});
+			document.getElementById("bookingSearch").addEventListener("input", () => {
+				clearTimeout(window.searchTimer);
+				window.searchTimer = setTimeout(searchBookings, 250);
+			});
+			document
+				.getElementById("bookingStatus")
+				.addEventListener("change", searchBookings);
 
-    loadLogs();
-    loadLatestBooking();
-    searchBookings();
+			async function initDashboard() {
+				await initDashboardRole();
+				if (isAdmin) {
+					loadLogs();
+					initLogStream();
+				}
+				loadLatestBooking();
+				searchBookings();
+			}
 
-    function padTo2Digits(num) {
-        return num.toString().padStart(2, '0');
-    }
+			initDashboard();
 
-    function formatDate(date, includeHours = true) {
-        const dateOnly = [
-            date.getFullYear(),
-            padTo2Digits(date.getMonth() + 1),
-            padTo2Digits(date.getDate()),
-        ].join('-');
+			function padTo2Digits(num) {
+				return num.toString().padStart(2, "0");
+			}
 
-        if (!includeHours) {
-            return dateOnly;
-        }
+			function formatDate(date, includeHours = true) {
+				const dateOnly = [
+					date.getFullYear(),
+					padTo2Digits(date.getMonth() + 1),
+					padTo2Digits(date.getDate()),
+				].join("-");
 
-        return (
-            dateOnly +
-            ' ' +
-            [
-                padTo2Digits(date.getHours()),
-                padTo2Digits(date.getMinutes()),
-                padTo2Digits(date.getSeconds()),
-            ].join(':')
-        );
-    }
-  </script>
-</body>
+				if (!includeHours) {
+					return dateOnly;
+				}
+
+				return (
+					dateOnly +
+					" " +
+					[
+						padTo2Digits(date.getHours()),
+						padTo2Digits(date.getMinutes()),
+						padTo2Digits(date.getSeconds()),
+					].join(":")
+				);
+			}
+		</script>
+	</body>
 </html>

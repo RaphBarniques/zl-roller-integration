@@ -11,6 +11,8 @@ import {
 	dashboardLogin,
 	dashboardLogout,
 	requireDashboardAuth,
+	requireDashboardAdmin,
+	getDashboardSessionInfo,
 } from './dashboardAuth';
 import { customLog } from './logger.ts';
 import chain from './middleware/middleware.ts';
@@ -71,6 +73,8 @@ const server = Bun.serve({
 			GET: async (req) => {
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
 
 				return getLogs(req);
 			},
@@ -80,8 +84,19 @@ const server = Bun.serve({
 			GET: (req) => {
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
 
 				return getLogsStream(req);
+			},
+		},
+
+		'/api/dashboard/me': {
+			GET: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return Response.json(getDashboardSessionInfo(req));
 			},
 		},
 
@@ -102,26 +117,32 @@ const server = Bun.serve({
 				return searchBookings(req);
 			},
 		},
-		'/api/dashboard/queue/status': {
-			GET: (req) => {
-				const authResponse = requireDashboardAuth(req);
-				if (authResponse) return authResponse;
-
-				return getQueueStatus();
-			},
-		},
 		'/api/dashboard/queue': {
 			GET: (req) => {
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
 
 				return getQueueItems();
 			},
 			POST: async (req) => {
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
 
 				return manageQueueAction(req);
+			},
+		},
+		'/api/dashboard/queue/status': {
+			GET: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return getQueueStatus();
 			},
 		},
 		'/webhooks/roller': {
@@ -133,7 +154,7 @@ const server = Bun.serve({
 					return new Response('Unauthorized', { status: 401 });
 				}
 
-				let payload: any;
+				let payload: unknown;
 				try {
 					payload = await req.json();
 				} catch {
