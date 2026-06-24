@@ -40,34 +40,29 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 		JSON.stringify(payload),
 	);
 
-	customLog(
-		`Enqueued webhook ${eventId} (${eventType}) for booking ${bookingReference ?? 'unknown'}`,
-		'DEBUG',
-	);
+	// enqueue is silent to avoid noisy logs
 
 	await processQueuedWebhooks();
 }
 
 export async function processQueuedWebhooks() {
-	customLog(
-		`processQueuedWebhooks called; isProcessingQueue=${isProcessingQueue}`,
-		'DEBUG',
-	);
-
 	if (isProcessingQueue) {
-		customLog('Queue is already being processed; skipping new run', 'DEBUG');
 		return;
 	}
 
 	if (await getQueuePaused()) {
-		customLog('Queue is paused; not processing queued webhooks', 'DEBUG');
 		return;
 	}
 
 	isProcessingQueue = true;
+	let processedAnything = false;
 	try {
 		const items = await getQueuedWebhooks();
-		customLog(`Found ${items.length} queued webhook(s)`, 'DEBUG');
+		if (items.length > 0) {
+			customLog(`Found ${items.length} queued webhook(s)`, 'INFO');
+			processedAnything = true;
+		}
+
 		for (const item of items) {
 			if (await getQueuePaused()) {
 				customLog('Queue was paused during processing; stopping loop', 'INFO');
@@ -77,7 +72,8 @@ export async function processQueuedWebhooks() {
 		}
 	} finally {
 		isProcessingQueue = false;
-		customLog('Finished processing queued webhooks', 'DEBUG');
+		if (processedAnything)
+			customLog('Finished processing queued webhooks', 'INFO');
 	}
 }
 

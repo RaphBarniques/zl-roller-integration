@@ -69,7 +69,7 @@ vr_packages:
     zl_id: 6670
   - package_name: "Staff 15 minutes"
     roller_ids: [1988278, 1988279]
-    zl_id: 
+    zl_id: 1372
   - package_name: "Staff 30 minutes"
     roller_ids: [1988267, 1988268]
     zl_id: 3127
