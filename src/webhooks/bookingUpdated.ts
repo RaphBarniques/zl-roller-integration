@@ -264,19 +264,12 @@ async function cancelDeletedItems(
 	bookingReference: string,
 	currentRollerItemIds: Set<string>,
 ) {
-	customLog('Processing missing items.', 'WARN');
-	const str = [...currentRollerItemIds].join(", ");
-	customLog(str, 'WARN');
 	const existingRows = await getSyncedItems(bookingReference);
 
 	for (const row of existingRows) {
 		const rollerItemId = String(row.roller_item_id);
 
 		if (currentRollerItemIds.has(rollerItemId)) {
-			customLog(
-				`Item ${rollerItemId} still exists`,
-				'WARN',
-			);
 			continue;
 		}
 

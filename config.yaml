@@ -27,7 +27,7 @@ vr_packages:
     zl_id: 5849
   - package_name: "Undead + Sol Raiders"
     roller_ids: [1954666, 1954667, 1954668, 1954669]
-    zl_id:
+    zl_id: 1768
   - package_name: "Sol Raiders + Sol Raiders"
     roller_ids: []
     zl_id: 1768
