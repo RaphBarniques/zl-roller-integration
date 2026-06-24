@@ -16,7 +16,8 @@ type AppConfig = {
 	venue: {
 		location: string;
 		timezone: string;
-	}
+		integration_start_date?: string;
+	};
 	zl: {
 		api_base_url: string;
 		site_id: number;
@@ -162,15 +163,15 @@ export async function initConfig() {
 
 	if (config != null) {
 		logMessage += 'Config loaded successfully';
-		allowedVRPackages = new Map;
+		allowedVRPackages = new Map();
 		for (const pkg of config.vr_packages) {
-			for (const rollerId of pkg.roller_ids){
-				allowedVRPackages.set(rollerId, pkg)
+			for (const rollerId of pkg.roller_ids) {
+				allowedVRPackages.set(rollerId, pkg);
 			}
 		}
 		for (const pkg of config.other_packages) {
-			for (const rollerId of pkg.roller_ids){
-				allowedOtherPackages.set(rollerId, pkg)
+			for (const rollerId of pkg.roller_ids) {
+				allowedOtherPackages.set(rollerId, pkg);
 			}
 		}
 		customLog(logMessage);

@@ -5,6 +5,7 @@ server:
 venue:
   location: "Montreal"
   timezone: "America/Toronto"
+  integration_start_date: "2024-06-01"
 
 zl:
   api_base_url: "https://api.zerolatencyvr.com/api/v1"

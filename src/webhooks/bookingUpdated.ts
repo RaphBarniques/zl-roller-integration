@@ -35,6 +35,23 @@ export async function handleUpdatedWebhook(payload: any) {
 	// Save the event as processed
 	await saveProcessedEvent(eventId, eventType, bookingReference);
 
+	const integrationStartDate = config.venue.integration_start_date;
+	const bookingCreatedAt = Date.parse(String(booking.createdDate ?? ''));
+	const integrationStartAt = Date.parse(String(integrationStartDate ?? ''));
+
+	if (
+		integrationStartDate &&
+		!Number.isNaN(bookingCreatedAt) &&
+		!Number.isNaN(integrationStartAt) &&
+		bookingCreatedAt < integrationStartAt
+	) {
+		customLog(
+			`Booking ${bookingReference} has been skipped because it was created before integration start date ${integrationStartDate}`,
+			'INFO',
+		);
+		return;
+	}
+
 	// Checker le paiment et continuer seulement si le paiment est complété
 	if (booking.status !== 'Paid' && booking.status !== 'NoPaymentRequired') {
 		customLog(

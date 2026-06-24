@@ -1,4 +1,5 @@
 import { customLog } from '../logger.ts';
+import { config } from '../preflight.ts';
 import {
 	checkProcessedEvent,
 	updateSyncedItemStatus,
@@ -23,6 +24,23 @@ export async function handleDeletedWebhook(payload: any) {
 	}
 	// Save the event as processed
 	await saveProcessedEvent(eventId, eventType, bookingReference);
+
+	const integrationStartDate = config.venue.integration_start_date;
+	const bookingCreatedAt = Date.parse(String(booking.createdDate ?? ''));
+	const integrationStartAt = Date.parse(String(integrationStartDate ?? ''));
+
+	if (
+		integrationStartDate &&
+		!Number.isNaN(bookingCreatedAt) &&
+		!Number.isNaN(integrationStartAt) &&
+		bookingCreatedAt < integrationStartAt
+	) {
+		customLog(
+			`Booking ${bookingReference} delete event has been skipped because it was created before integration start date ${integrationStartDate}`,
+			'INFO',
+		);
+		return;
+	}
 
 	// Todo : Update la DB
 	// Todo : Supprimer la session ZL
