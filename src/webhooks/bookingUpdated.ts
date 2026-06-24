@@ -259,7 +259,7 @@ async function cancelDeletedItems(
         "WARN"
       );
 
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
+      await updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
 
       continue;
     }
@@ -272,7 +272,7 @@ async function cancelDeletedItems(
 
       await deleteZLSession(row.zl_booking_id, bookingReference);
 
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false)
+      await updateSyncedItemStatus(bookingReference, rollerItemId, "Cancelled", false);
 
       customLog(
         `Cancelled ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}`,
@@ -280,7 +280,7 @@ async function cancelDeletedItems(
       );
     } catch (err) {
       
-      updateSyncedItemStatus(bookingReference, rollerItemId, "Error", false)
+      await updateSyncedItemStatus(bookingReference, rollerItemId, "Error", false);
 
       customLog(
         `Failed to cancel ZL booking ${row.zl_booking_id} for removed ROLLER item ${rollerItemId}: ${String(err)}`,
