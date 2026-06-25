@@ -1,4 +1,4 @@
-import { customLog } from './logger';
+import { customLog } from '../utils/logger.ts';
 
 const COOKIE_NAME = 'dashboard_session';
 type DashboardRole = 'user' | 'admin';

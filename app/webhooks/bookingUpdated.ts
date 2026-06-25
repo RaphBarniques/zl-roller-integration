@@ -1,11 +1,11 @@
-import { customLog } from '../logger.ts';
+import { customLog } from '../utils/logger.ts';
 import {
 	allowedVRPackages,
 	allowedOtherPackages,
 	config,
 } from '../preflight.ts';
 import { getCustomerEmail } from '../rollerAPI.ts';
-import { sendEmail } from '../sendMail.ts';
+import { sendEmail } from '../utils/sendMail.ts';
 import {
 	checkProcessedEvent,
 	getSyncedItem,

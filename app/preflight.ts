@@ -1,6 +1,6 @@
 import { Database } from 'bun:sqlite';
 import { parse } from 'yaml';
-import { customLog } from './logger.ts';
+import { customLog } from './utils/logger.ts';
 
 const DB_PATH = 'sync.db';
 const dbExists = await Bun.file(DB_PATH).exists();

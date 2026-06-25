@@ -9,8 +9,8 @@
 // Also stores it and refresh token for next calls
 
 import { jwtDecode } from 'jwt-decode';
-import { customLog } from './logger.ts';
-import { config } from './preflight.ts';
+import { customLog } from '../utils/logger.ts';
+import { config } from '../preflight.ts';
 
 let isFirstRequest = true;
 export let ZLAuthToken: string | null = null;

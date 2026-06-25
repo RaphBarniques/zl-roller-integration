@@ -7,15 +7,15 @@ import {
 	getQueueItems,
 	manageQueueAction,
 	manageAdminAction,
-} from './dashboardAPI';
+} from './api/dashboardAPI.ts';
 import {
 	dashboardLogin,
 	dashboardLogout,
 	requireDashboardAuth,
 	requireDashboardAdmin,
 	getDashboardSessionInfo,
-} from './dashboardAuth';
-import { customLog } from './logger.ts';
+} from './api/dashboardAuth.ts';
+import { customLog } from './utils/logger.ts';
 import chain from './middleware/middleware.ts';
 import logging from './middleware/req_logging.ts';
 import {
@@ -25,12 +25,12 @@ import {
 	initEnv,
 	initMailer,
 } from './preflight.ts';
-import { getRollerToken } from './rollerAuth.ts';
+import { getRollerToken } from './api/rollerAuth.ts';
 import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
-import { getSession } from './zlAPI.ts';
+import { getSession } from './api/zlAPI.ts';
 
 customLog('-------------------------------------------------');
-customLog('ZL-ROLLER-INTEGRATION v1.0.0 - Starting server...');
+customLog('ZL-ROLLER-INTEGRATION v1.1.0 - Starting server...');
 
 await initDb();
 await initConfig();

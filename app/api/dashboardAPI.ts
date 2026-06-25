@@ -1,17 +1,17 @@
-import { formatDate, streamLogs } from './logger';
-import { db } from './preflight';
-import { customLog } from './logger.ts';
+import { formatDate, streamLogs } from '../utils/logger.ts';
+import { db } from '../preflight.ts';
+import { customLog } from '../utils/logger.ts';
 import {
 	getWebhookQueueItems,
 	deleteQueuedWebhook,
 	getQueuedWebhookById,
-} from './utils/db.ts';
+} from '../utils/db.ts';
 import {
 	pauseQueue,
 	resumeQueue,
 	processQueueItemById,
 	getQueueState,
-} from './webhooks/queue.ts';
+} from '../webhooks/queue.ts';
 
 export async function getLogs(req: Request) {
 	const url = new URL(req.url);
@@ -164,6 +164,42 @@ export async function manageAdminAction(req: Request) {
 		return Response.json({
 			ok: true,
 			message: 'Updated and restarting service...',
+		});
+	}
+
+	if (body.action === 'backup') {
+		customLog('Admin requested manual backup', 'WARN');
+		const scriptPath = './scripts/manualbackup.ps1';
+		const repoDir = process.cwd().replaceAll('\\', '/');
+
+		const backup = Bun.spawnSync(['powershell', '-File', scriptPath], {
+			cwd: process.cwd(),
+			stdout: 'pipe',
+			stderr: 'pipe',
+		});
+
+		if (backup.exitCode !== 0) {
+			const stderr = new TextDecoder().decode(backup.stderr).trim();
+			const stdout = new TextDecoder().decode(backup.stdout).trim();
+			const details = stderr || stdout || 'Unknown backup script error';
+			customLog(`Backup failed: ${details}`, 'ERROR');
+			return new Response(
+				JSON.stringify({ error: `Backup failed: ${details}` }),
+				{
+					status: 500,
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				},
+			);
+		}
+
+		const output = new TextDecoder().decode(backup.stdout).trim();
+		customLog(`Backup completed: ${output}`, 'INFO');
+
+		return Response.json({
+			ok: true,
+			message: 'Manual backup completed successfully.',
 		});
 	}
 
