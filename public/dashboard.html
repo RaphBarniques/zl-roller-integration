@@ -19,6 +19,12 @@
 				align-items: center;
 			}
 
+			.header-actions {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+			}
+
 			nav {
 				display: flex;
 				padding-left: 20px;
@@ -184,7 +190,23 @@
 	<body>
 		<header>
 			<h2>Dashboard - Intégration ROLLER > ZL</h2>
-			<a href="/dashboard/logout"><button>Logout</button></a>
+			<div class="header-actions">
+				<button
+					id="restartButton"
+					onclick="restartService()"
+					style="display: none"
+				>
+					Restart
+				</button>
+				<button
+					id="updateButton"
+					onclick="updateAndRestart()"
+					style="display: none"
+				>
+					Update
+				</button>
+				<a href="/dashboard/logout"><button>Logout</button></a>
+			</div>
 		</header>
 
 		<nav>
@@ -316,7 +338,46 @@
 					document.getElementById("queue").remove();
 					document.getElementById("logs").remove();
 					showTab("bookings");
+				} else {
+					document.getElementById("restartButton").style.display =
+						"inline-block";
+					document.getElementById("updateButton").style.display =
+						"inline-block";
 				}
+			}
+
+			async function callAdminAction(action) {
+				const res = await fetch("/api/dashboard/admin/actions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ action }),
+				});
+
+				let payload = {};
+				try {
+					payload = await res.json();
+				} catch {
+					payload = {};
+				}
+
+				if (!res.ok) {
+					const message = payload.error || `Request failed (${res.status})`;
+					alert(message);
+					return;
+				}
+
+				alert(payload.message || "Action sent successfully.");
+			}
+
+			async function restartService() {
+				if (!confirm("Restart service now?")) return;
+				await callAdminAction("restart");
+			}
+
+			async function updateAndRestart() {
+				if (!confirm("Pull latest changes from GitHub and restart service?"))
+					return;
+				await callAdminAction("update");
 			}
 
 			function showTab(name) {

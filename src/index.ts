@@ -6,6 +6,7 @@ import {
 	getQueueStatus,
 	getQueueItems,
 	manageQueueAction,
+	manageAdminAction,
 } from './dashboardAPI';
 import {
 	dashboardLogin,
@@ -29,7 +30,7 @@ import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
 import { getSession } from './zlAPI.ts';
 
 customLog('-------------------------------------------------');
-customLog('ZL-ROLLER-INTEGRATION v0.1.0 - Starting server...');
+customLog('ZL-ROLLER-INTEGRATION v1.0.0 - Starting server...');
 
 await initDb();
 await initConfig();
@@ -143,6 +144,16 @@ const server = Bun.serve({
 				if (adminResponse) return adminResponse;
 
 				return getQueueStatus();
+			},
+		},
+		'/api/dashboard/admin/actions': {
+			POST: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return manageAdminAction(req);
 			},
 		},
 		'/webhooks/roller': {
