@@ -52,11 +52,11 @@ const server = Bun.serve({
 			const authResponse = requireDashboardAuth(req);
 			if (authResponse) return authResponse;
 
-			return new Response(Bun.file('./public/dashboard.html'));
+			return new Response(Bun.file('./app/public/dashboard.html'));
 		},
 
 		'/dashboard/login': {
-			GET: () => new Response(Bun.file('./public/dashboard-login.html')),
+			GET: () => new Response(Bun.file('./app/public/dashboard-login.html')),
 
 			POST: async (req) => dashboardLogin(req),
 		},
@@ -67,7 +67,7 @@ const server = Bun.serve({
 			const authResponse = requireDashboardAuth(req);
 			if (authResponse) return authResponse;
 
-			return new Response(Bun.file('./public/dashboard.html'));
+			return new Response(Bun.file('./app/public/dashboard.html'));
 		},
 
 		'/api/dashboard/logs': {
