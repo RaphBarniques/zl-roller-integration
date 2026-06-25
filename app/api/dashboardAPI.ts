@@ -172,7 +172,7 @@ export async function manageAdminAction(req: Request) {
 		const scriptPath = './scripts/manualbackup.ps1';
 		const repoDir = process.cwd().replaceAll('\\', '/');
 
-		const backup = Bun.spawnSync(['powershell', '-File', scriptPath], {
+		const backup = Bun.spawnSync(['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath], {
 			cwd: process.cwd(),
 			stdout: 'pipe',
 			stderr: 'pipe',
