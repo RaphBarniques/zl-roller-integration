@@ -1,4 +1,4 @@
-import { customLog, logWebhookPayload } from '../logger.ts';
+import { customLog, logWebhookPayload } from '../utils/logger.ts';
 import { handleDeletedWebhook } from './bookingDeleted.ts';
 import { handleUpdatedWebhook } from './bookingUpdated.ts';
 import {

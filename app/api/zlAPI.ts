@@ -8,8 +8,8 @@
 // Usage: deleteZLSession(ZLSessionID, rollerBookingID)
 // Returns: true if successful, null if failed
 
-import { customLog } from './logger.ts';
-import { config } from './preflight.ts';
+import { customLog } from '../utils/logger.ts';
+import { config } from '../preflight.ts';
 import { getToken, ZLCookie } from './zlAuth.ts';
 
 export async function getSession() {

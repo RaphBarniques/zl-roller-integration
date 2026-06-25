@@ -192,6 +192,13 @@
 			<h2>Dashboard - Intégration ROLLER > ZL</h2>
 			<div class="header-actions">
 				<button
+					id="backupButton"
+					onclick="manualBackup()"
+					style="display: none"
+				>
+					Manual Backup
+				</button>
+				<button
 					id="restartButton"
 					onclick="restartService()"
 					style="display: none"
@@ -339,6 +346,8 @@
 					document.getElementById("logs").remove();
 					showTab("bookings");
 				} else {
+					document.getElementById("backupButton").style.display =
+						"inline-block";
 					document.getElementById("restartButton").style.display =
 						"inline-block";
 					document.getElementById("updateButton").style.display =
@@ -378,6 +387,11 @@
 				if (!confirm("Pull latest changes from GitHub and restart service?"))
 					return;
 				await callAdminAction("update");
+			}
+
+			async function manualBackup() {
+				if (!confirm("Trigger manual backup now?")) return;
+				await callAdminAction("backup");
 			}
 
 			function showTab(name) {

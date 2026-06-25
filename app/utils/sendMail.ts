@@ -1,4 +1,4 @@
-import { transporter } from './preflight.ts';
+import { transporter } from '../preflight.ts';
 // Todo : Envoyer des mails d'alertes pour les cas où une action manuelle est requise (prix à 0, échec de booking, etc.)
 export async function sendEmail(
 	email: string,
