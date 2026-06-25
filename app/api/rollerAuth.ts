@@ -8,8 +8,8 @@
 // Returns: New access token string or null if failed
 // Technically the Roller API doesnt have a refresh protocol. We just get a new token
 
-import { customLog } from './logger.ts';
-import { config } from './preflight.ts';
+import { customLog } from '../utils/logger.ts';
+import { config } from '../preflight.ts';
 
 export let RollerAuthToken: string | null = null;
 let logMessage: string = 'Initializing ROLLER API authentication...\n';

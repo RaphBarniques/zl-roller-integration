@@ -42,3 +42,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Config
 config.yaml
+
+# Reference
+referenceJson/
+
+# Backup
+backups/

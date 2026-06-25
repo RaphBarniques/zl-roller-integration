@@ -1,8 +1,8 @@
 //Todo: Implement retry and refresh logic (see ZL API)
 
-import { customLog } from './logger.ts';
+import { customLog } from '../utils/logger.ts';
 import { RollerAuthToken, refreshRollerToken } from './rollerAuth.ts';
-import { config } from './preflight.ts';
+import { config } from '../preflight.ts';
 
 export async function getCustomerEmail(customerID: string) {
 	const retryMax = 3;

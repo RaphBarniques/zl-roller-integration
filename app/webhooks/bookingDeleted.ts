@@ -1,4 +1,4 @@
-import { customLog } from '../logger.ts';
+import { customLog } from '../utils/logger.ts';
 import { config } from '../preflight.ts';
 import {
 	checkProcessedEvent,
