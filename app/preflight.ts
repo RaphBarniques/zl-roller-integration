@@ -186,15 +186,27 @@ export async function initConfig() {
 export async function initEnv() {
 	let logMessage: string = 'Loading environment variables...\n';
 
-	const envFileExists = await Bun.file('./config/.env').exists();
+	const envFile = Bun.file('./config/.env');
+	const envFileExists = await envFile.exists();
 
-	if (envFileExists) {
-		logMessage += 'Environment file loaded successfully';
-		customLog(logMessage);
-	} else {
+	if (!envFileExists) {
 		customLog('Environment file not found', 'ERROR');
 		process.exit(1);
 	}
+
+	const envText = await envFile.text();
+	for (const line of envText.split('\n')) {
+		const trimmed = line.trim();
+		if (!trimmed || trimmed.startsWith('#')) continue;
+		const eq = trimmed.indexOf('=');
+		if (eq === -1) continue;
+		const key = trimmed.slice(0, eq).trim();
+		const value = trimmed.slice(eq + 1).trim();
+		process.env[key] = value;
+	}
+
+	logMessage += 'Environment file loaded successfully';
+	customLog(logMessage);
 }
 
 const nodemailer = require('nodemailer');
