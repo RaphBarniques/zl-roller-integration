@@ -2,7 +2,7 @@ import { Database } from 'bun:sqlite';
 import { parse } from 'yaml';
 import { customLog } from './utils/logger.ts';
 
-const DB_PATH = 'sync.db';
+const DB_PATH = './db/sync.db';
 const dbExists = await Bun.file(DB_PATH).exists();
 export const db = new Database(DB_PATH);
 export let allowedVRPackages: Map<number, PackageConfig> = new Map();
@@ -153,7 +153,7 @@ export async function initConfig() {
 	let logMessage: string = 'Loading config...\n';
 
 	try {
-		const configFile = Bun.file('config.yaml');
+		const configFile = Bun.file('./config/config.yaml');
 		const configContent = await configFile.text();
 		config = parse(configContent) as AppConfig;
 	} catch (error) {
@@ -186,7 +186,7 @@ export async function initConfig() {
 export async function initEnv() {
 	let logMessage: string = 'Loading environment variables...\n';
 
-	const envFileExists = await Bun.file('.env').exists();
+	const envFileExists = await Bun.file('./config/.env').exists();
 
 	if (envFileExists) {
 		logMessage += 'Environment file loaded successfully';

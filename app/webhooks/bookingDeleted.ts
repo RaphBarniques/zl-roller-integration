@@ -6,7 +6,7 @@ import {
 	getSyncedItem,
 	saveProcessedEvent,
 } from '../utils/db.ts';
-import { deleteZLSession } from '../zlAPI.ts';
+import { deleteZLSession } from '../api/zlAPI.ts';
 
 export async function handleDeletedWebhook(payload: any) {
 	const eventId = payload.id;

@@ -4,7 +4,7 @@ import {
 	allowedOtherPackages,
 	config,
 } from '../preflight.ts';
-import { getCustomerEmail } from '../rollerAPI.ts';
+import { getCustomerEmail } from '../api/rollerAPI.ts';
 import { sendEmail } from '../utils/sendMail.ts';
 import {
 	checkProcessedEvent,
@@ -14,8 +14,8 @@ import {
 	saveSyncedItem,
 	updateSyncedItemStatus,
 } from '../utils/db.ts';
-import { createZLSession, deleteZLSession } from '../zlAPI.ts';
-import { DateTime } from 'luxon';
+import { createZLSession, deleteZLSession } from '../api/zlAPI.ts';
+
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
