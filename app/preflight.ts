@@ -18,6 +18,7 @@ type AppConfig = {
 		location: string;
 		timezone: string;
 		integration_start_date?: string;
+		attractions: AttractionConfig[];
 	};
 	zl: {
 		api_base_url: string;
@@ -35,10 +36,17 @@ type AppConfig = {
 	other_packages: PackageConfig[];
 };
 
-type PackageConfig = {
+export type PackageConfig = {
 	package_name: string;
-	roller_ids: [];
+	roller_ids: number[];
 	zl_id: number;
+	attraction?: string;
+	private?: boolean;
+};
+
+export type AttractionConfig = {
+	name: string;
+	gamespace: number;
 };
 
 // --DATABASE INITIALIZATION--
