@@ -28,12 +28,10 @@ import {
 import { getRollerToken } from './api/rollerAuth.ts';
 import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
 import { getSession } from './api/zlAPI.ts';
-import { parse } from 'yaml';
-
 
 customLog('-------------------------------------------------');
-const startupVersion = await getStartupVersion();
-customLog(`ZL-ROLLER-INTEGRATION v${startupVersion} - Starting server...`);
+const appVersion = await getAppVersion();
+customLog(`ZL-ROLLER-INTEGRATION v${appVersion} - Starting server...`);
 
 await initDb();
 await initConfig();
@@ -109,7 +107,7 @@ const server = Bun.serve({
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
 
-				return Response.json({ version: config.server.version || 'dev' });
+				return Response.json({ version: appVersion });
 			},
 		},
 
@@ -215,16 +213,11 @@ setInterval(() => {
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
 
-
-async function getStartupVersion() {
+async function getAppVersion() {
 	try {
-		const configContent = await Bun.file('./config/config.yaml').text();
-		const parsed = parse(configContent) as {
-			server?: {
-				version?: string;
-			};
-		};
-		return parsed.server?.version || 'dev';
+		const rawVersion = await Bun.file('./config/version.txt').text();
+		const version = rawVersion.trim();
+		return version || 'dev';
 	} catch {
 		return 'dev';
 	}
