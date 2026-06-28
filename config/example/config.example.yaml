@@ -6,6 +6,11 @@ venue:
   location: ""
   timezone: ""
   integration_start_date: ""
+  attractions:
+    - name: "ZLVR"
+      gamespace: 123
+    - name: ""
+      gamespace: 
 
 zl:
   api_base_url: "https://api.zerolatencyvr.com/api/v1"
@@ -23,8 +28,11 @@ vr_packages:
   - package_name: ""
     roller_ids: []
     zl_id: 
+    private: false
 
 other_packages:
   - package_name: ""
     roller_ids: []
     zl_id: 
+    attraction: ""
+    private: false

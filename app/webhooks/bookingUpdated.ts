@@ -3,6 +3,7 @@ import {
 	allowedVRPackages,
 	allowedOtherPackages,
 	config,
+	type PackageConfig,
 } from '../preflight.ts';
 import { getCustomerEmail } from '../api/rollerAPI.ts';
 import { sendEmail } from '../utils/sendMail.ts';
@@ -15,7 +16,6 @@ import {
 	updateSyncedItemStatus,
 } from '../utils/db.ts';
 import { createZLSession, deleteZLSession } from '../api/zlAPI.ts';
-
 
 export async function handleUpdatedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -73,7 +73,7 @@ export async function handleUpdatedWebhook(payload: any) {
 		currentRollerItemIds.add(String(item.bookingItemId));
 		const VRPackageConfig = allowedVRPackages.get(item.productId);
 		const otherPackageConfig = allowedOtherPackages.get(item.productId);
-		let packageConfig: any;
+		let packageConfig: PackageConfig | null = null;
 
 		if (!VRPackageConfig && !otherPackageConfig) {
 			logMessage += `Item ${item.bookingItemId} with package ${item.productId} is not in the allowed packages list. Skipping this item.`;
@@ -100,9 +100,20 @@ export async function handleUpdatedWebhook(payload: any) {
 		}
 
 		if (otherPackageConfig) {
-			attraction = 'Other';
+			attraction = otherPackageConfig.attraction ?? 'Unknown';
 			packageConfig = otherPackageConfig;
 		}
+
+		if (!packageConfig) {
+			customLog(
+				`Item ${item.bookingItemId} with package ${item.productId} could not resolve package config. Skipping this item.`,
+				'WARN',
+			);
+			continue;
+		}
+
+		const overrideGameSpace = getPackageGameSpace(packageConfig, attraction);
+		const isPrivate = packageConfig.private === true;
 
 		const packageName = packageConfig.package_name;
 		const zlPackageId = packageConfig.zl_id;
@@ -138,6 +149,8 @@ export async function handleUpdatedWebhook(payload: any) {
 					isoDate,
 					item.quantity,
 					price,
+					overrideGameSpace,
+					isPrivate,
 				);
 				if (created) {
 					logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
@@ -219,6 +232,8 @@ export async function handleUpdatedWebhook(payload: any) {
 				isoDate,
 				item.quantity,
 				price,
+				overrideGameSpace,
+				isPrivate,
 			);
 
 			if (created) {
@@ -339,6 +354,30 @@ async function cancelDeletedItems(
 			);
 		}
 	}
+}
+
+function getPackageGameSpace(
+	packageConfig: PackageConfig,
+	resolvedAttraction: string,
+) {
+	if (resolvedAttraction === 'ZLVR') {
+		return 81;
+	}
+
+	const attractionName = packageConfig.attraction;
+	const configuredAttraction = config.venue.attractions.find(
+		(attraction) => attraction.name === attractionName,
+	);
+
+	if (!configuredAttraction) {
+		customLog(
+			`Attraction ${String(attractionName)} is not configured in venue.attractions. Falling back to ZLVR gamespace 81.`,
+			'WARN',
+		);
+		return 81;
+	}
+
+	return configuredAttraction.gamespace;
 }
 
 function convertToISO(date: string, time: string) {

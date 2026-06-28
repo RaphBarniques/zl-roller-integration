@@ -12,6 +12,19 @@ import { customLog } from '../utils/logger.ts';
 import { config } from '../preflight.ts';
 import { getToken, ZLCookie } from './zlAuth.ts';
 
+async function buildZLHeaders() {
+	const headers: Record<string, string> = {
+		'Content-Type': 'application/json',
+		Authorization: `Bearer ${await getToken()}`,
+	};
+
+	if (ZLCookie) {
+		headers.Cookie = ZLCookie;
+	}
+
+	return headers;
+}
+
 export async function getSession() {
 	const result = await fetch(
 		'https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512',
@@ -33,17 +46,15 @@ export async function createZLSession(
 	packageId: number,
 	bookingDate: string,
 	slots: number,
-	price: number, 
+	price: number,
+	overrideGameSpace: number,
+	isPrivate: boolean,
 ) {
 	const retryMax = 3;
 	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
-        const headers = {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${await getToken()}`,
-                    Cookie: ZLCookie,
-				}
+		const headers = await buildZLHeaders();
         const body = {
                     accessCode: null,
                     emailAddress: email,
@@ -55,41 +66,16 @@ export async function createZLSession(
                     overridePrice: price,
                     overrideOpenTime: true,
                     overrideStartTime: bookingDate,
-                    overrideGameSpace: 81,
+		            overrideGameSpace: overrideGameSpace,
                     overrideMaxPlayers: true,
                     overrideFreeBookingLimit: true,
                     discountCode: null,
                     adBlockEnabled: null,
-                    isPrivate: null,
-                    privateEventTypeId: null,
+		            isPrivate: isPrivate,
+		            privateEventTypeId: isPrivate ? 3 : null,
                     priceCode: null,
                     sessionId: null,
                     externalBookingId: rollerBookingID,
-                    bookingSystemId: null,
-                    payInFull: true,
-                    rewardFlowData: null
-                }
-        const bodyTest = {
-                    accessCode: null,
-                    emailAddress: "zl@zl.com",
-                    packageId: 1999,
-                    sessionName: null,
-                    slots: 2,
-                    userId: null,
-                    paymentMethodTypeId: 5,
-                    overridePrice: 150,
-                    overrideOpenTime: true,
-                    overrideStartTime: "2026-12-31T16:00:00.000Z",
-                    overrideGameSpace: 81,
-                    overrideMaxPlayers: true,
-                    overrideFreeBookingLimit: true,
-                    discountCode: null,
-                    adBlockEnabled: null,
-                    isPrivate: null,
-                    privateEventTypeId: null,
-                    priceCode: null,
-                    sessionId: null,
-                    externalBookingId: 112233,
                     bookingSystemId: null,
                     payInFull: true,
                     rewardFlowData: null
@@ -117,7 +103,16 @@ export async function createZLSession(
 			);
 			setTimeout(() => {}, delay);
 		} else {
-			const data : any = (await response.json());
+			const data = (await response.json()) as {
+				Product: {
+					BookingId: number;
+					AmountDue: number;
+					CreatedDateTime: string;
+				};
+				Charge: {
+					Tax: number;
+				};
+			};
 			customLog(
 				`ZL session created successfully for Roller booking ${rollerBookingID} with ZL session ID: ${data.Product.BookingId}`,
 				'INFO',
@@ -136,7 +131,7 @@ export async function createZLSession(
 
 export async function confirmZLSession(
 	rollerBookingID: number,
-    rollerSessionID: number,
+	_rollerSessionID: number,
     zlBookingID: number,
     amount: number,
 	tax: number,
@@ -147,11 +142,7 @@ export async function confirmZLSession(
 	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
-		const headers = {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${await getToken()}`,
-                    Cookie: ZLCookie,
-				}
+		const headers = await buildZLHeaders();
         const body = {
                     Amount:amount,
                     Fee:0,
@@ -213,11 +204,7 @@ export async function deleteZLSession(
 	const delay = 1000;
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
-		const headers = {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${await getToken()}`,
-                    Cookie: ZLCookie,
-				}
+		const headers = await buildZLHeaders();
         const response = await fetch(
 			`${config.zl.api_base_url}/sites/${config.zl.site_id}/bookings/${ZLSessionID}/cancel`,
 			{
