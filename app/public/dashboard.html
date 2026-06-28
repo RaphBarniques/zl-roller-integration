@@ -19,6 +19,18 @@
 				align-items: center;
 			}
 
+			.header-title {
+				display: flex;
+				align-items: baseline;
+				gap: 8px;
+			}
+
+			#dashboardVersion {
+				font-size: 0.75rem;
+				opacity: 0.9;
+				font-weight: 600;
+			}
+
 			.header-actions {
 				display: flex;
 				gap: 8px;
@@ -189,7 +201,10 @@
 	</head>
 	<body>
 		<header>
-			<h2>Dashboard - Intégration ROLLER > ZL</h2>
+			<div class="header-title">
+				<h2>Dashboard - Intégration ROLLER &gt; ZL</h2>
+				<span id="dashboardVersion"></span>
+			</div>
 			<div class="header-actions">
 				<button
 					id="backupButton"
@@ -327,6 +342,17 @@
 			let dashboardRole = "user";
 			let isAdmin = false;
 			let eventSource = null;
+
+			async function loadDashboardVersion() {
+				const res = await fetch("/api/dashboard/version");
+				if (!res.ok) return;
+
+				const data = await res.json();
+				if (!data.version) return;
+
+				document.getElementById("dashboardVersion").textContent =
+					`v${data.version}`;
+			}
 
 			async function initDashboardRole() {
 				const res = await fetch("/api/dashboard/me");
@@ -637,6 +663,7 @@
 
 			async function initDashboard() {
 				await initDashboardRole();
+				await loadDashboardVersion();
 				if (isAdmin) {
 					loadLogs();
 					initLogStream();

@@ -1,4 +1,5 @@
 [
+  // Outbreak 2
   {
     "Alias": "Outbreak 2",
     "BookingDurationMinutes": 30,
@@ -394,6 +395,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Haunted + Undead Arena
   {
     "Alias": "Haunted + Undead Arena (30 mins)",
     "BookingDurationMinutes": 30,
@@ -767,6 +769,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Haunted + Outbreak
   {
     "Alias": "Haunted + Outbreak (45 min)",
     "BookingDurationMinutes": 45,
@@ -1001,6 +1004,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Space Marine Threat Lethal Extra
   {
     "Alias": "SpaceMarineThreatLethalExtra",
     "BookingDurationMinutes": 45,
@@ -1320,6 +1324,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Space Marine VR Threat Lethal + Undead Arena
   {
     "Alias": "Space Marine VR Threat Lethal + Undead Arena",
     "BookingDurationMinutes": 60,
@@ -1554,6 +1559,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Space Marine Threat Lethal
   {
     "Alias": "SpaceMarineThreatLethal",
     "BookingDurationMinutes": 30,
@@ -1895,6 +1901,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Space Marine VR
   {
     "Alias": "SpaceMarineAvarax",
     "BookingDurationMinutes": 30,
@@ -2137,6 +2144,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Outbreak
   {
     "Alias": "Outbreak",
     "BookingDurationMinutes": 30,
@@ -2379,6 +2387,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Far Cry VR + Outbreak
   {
     "Alias": "Far Cry VR + Outbreak",
     "BookingDurationMinutes": 60,
@@ -2635,6 +2644,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Outbreak + Space Marine
   {
     "Alias": "Outbreak + Space Marine",
     "BookingDurationMinutes": 60,
@@ -2869,6 +2879,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Far Cry VR + Space Marine
   {
     "Alias": "FarCry + Space Marine",
     "BookingDurationMinutes": 60,
@@ -3103,6 +3114,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Singularity, Far Cry + Outbreak
   {
     "Alias": "Singularity, Far Cry + Outbreak",
     "BookingDurationMinutes": 90,
@@ -3373,6 +3385,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // VR Unlimited Outbreak
   {
     "Alias": "VR Unlimited Outbreak",
     "BookingDurationMinutes": 135,
@@ -3685,6 +3698,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Far Cry VR
   {
     "Alias": "Far Cry VR",
     "BookingDurationMinutes": 30,
@@ -3927,6 +3941,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Undead Arena + Undead Arena
   {
     "Alias": "Undead Arena + Undead Arena",
     "BookingDurationMinutes": 30,
@@ -4183,6 +4198,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Engineerium + Undead Arena
   {
     "Alias": "Engineerium + Undead Arena",
     "BookingDurationMinutes": 30,
@@ -4439,6 +4455,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Sol Raiders + Sol Raiders
   {
     "Alias": "Sol Raiders + Sol Raiders",
     "BookingDurationMinutes": 30,
@@ -4695,6 +4712,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Singularity
   {
     "Alias": "Singularity",
     "BookingDurationMinutes": 30,
@@ -4937,6 +4955,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Engineerium + Sol Raiders
   {
     "Alias": "Engineerium + Sol Raiders",
     "BookingDurationMinutes": 30,
@@ -5193,6 +5212,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Sol Raiders
   {
     "Alias": "Sol Raiders",
     "BookingDurationMinutes": 15,
@@ -5444,6 +5464,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Sol Raiders - Sol Heist Event
   {
     "Alias": "Sol Raiders - Sol Heist Event",
     "BookingDurationMinutes": 60,
@@ -5737,6 +5758,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Far Cry VR + Singularity
   {
     "Alias": "Far Cry VR + Singularity",
     "BookingDurationMinutes": 60,
@@ -5993,6 +6015,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Space Marine VR + Singularity
   {
     "Alias": "Space Marine VR + Singularity",
     "BookingDurationMinutes": 60,
@@ -6227,6 +6250,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Axe Throwing 30m
   {
     "Alias": "Axe Throwing 30m",
     "BookingDurationMinutes": 30,
@@ -6440,6 +6464,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Axe Throwing 60m
   {
     "Alias": "Axe Throwing (60m)",
     "BookingDurationMinutes": 60,
@@ -6653,6 +6678,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Outbreak 1 + 2
   {
     "Alias": "Outbreak 1 + 2",
     "BookingDurationMinutes": 60,
@@ -7062,6 +7088,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Gaming Lounge Day Pass
   {
     "Alias": "Gaming Lounge Day Pass",
     "BookingDurationMinutes": 90,
@@ -7275,6 +7302,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // SNK Night - King of Fighters XV
   {
     "Alias": "SNK Night - King of Fighters XV",
     "BookingDurationMinutes": 90,
@@ -7488,6 +7516,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // SNK Night - Fatal Fury: City of the Wolves
   {
     "Alias": "SNK Night - Fatal Fury: City of the Wolves",
     "BookingDurationMinutes": 90,
@@ -7679,6 +7708,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Switch Cup
   {
     "Alias": "Switch Cup",
     "BookingDurationMinutes": 90,
@@ -7892,6 +7922,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Rocket League Showdown
   {
     "Alias": "Rocket League Showdown",
     "BookingDurationMinutes": 90,
@@ -8105,6 +8136,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Call of Duty LAN
   {
     "Alias": "Call of Duty LAN",
     "BookingDurationMinutes": 90,
@@ -8318,6 +8350,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Outbreak 2 + Space Marine VR
   {
     "Alias": "Outbreak 2 + Space Marine VR",
     "BookingDurationMinutes": 60,
@@ -8530,6 +8563,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // ESports Tournaments
   {
     "Alias": "ESports Tournaments",
     "BookingDurationMinutes": 180,
@@ -8729,6 +8763,7 @@
     "OpenTimeStart": null,
     "OpenTimeEnd": null
   },
+  // Outbreak 2 + Far Cry VR
   {
     "Alias": "Outbreak 2 + Far Cry VR",
     "BookingDurationMinutes": 60,
