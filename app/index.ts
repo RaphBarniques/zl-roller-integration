@@ -28,9 +28,12 @@ import {
 import { getRollerToken } from './api/rollerAuth.ts';
 import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
 import { getSession } from './api/zlAPI.ts';
+import { parse } from 'yaml';
+
 
 customLog('-------------------------------------------------');
-customLog('ZL-ROLLER-INTEGRATION v1.1.0 - Starting server...');
+const startupVersion = await getStartupVersion();
+customLog(`ZL-ROLLER-INTEGRATION v${startupVersion} - Starting server...`);
 
 await initDb();
 await initConfig();
@@ -98,6 +101,15 @@ const server = Bun.serve({
 				if (authResponse) return authResponse;
 
 				return Response.json(getDashboardSessionInfo(req));
+			},
+		},
+
+		'/api/dashboard/version': {
+			GET: (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return Response.json({ version: config.server.version || 'dev' });
 			},
 		},
 
@@ -173,7 +185,12 @@ const server = Bun.serve({
 					return new Response('Bad Request', { status: 400 });
 				}
 
-				await queueWebhook(payload);
+				if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+					customLog(`Rejected webhook, payload must be a JSON object`, 'ERROR');
+					return new Response('Bad Request', { status: 400 });
+				}
+
+				await queueWebhook(payload as Record<string, unknown>);
 
 				return new Response('OK', { status: 200 });
 			}),
@@ -197,3 +214,18 @@ setInterval(() => {
 
 customLog(`Listening for webhooks at ${server.url}webhooks/roller`);
 customLog(`Dashboard up at ${server.url} and ${server.url}dashboard`);
+
+
+async function getStartupVersion() {
+	try {
+		const configContent = await Bun.file('./config/config.yaml').text();
+		const parsed = parse(configContent) as {
+			server?: {
+				version?: string;
+			};
+		};
+		return parsed.server?.version || 'dev';
+	} catch {
+		return 'dev';
+	}
+}

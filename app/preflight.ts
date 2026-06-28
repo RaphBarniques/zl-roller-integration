@@ -12,6 +12,7 @@ type AppConfig = {
 	server: {
 		host: string;
 		port: number;
+		version?: string;
 	};
 	venue: {
 		location: string;
