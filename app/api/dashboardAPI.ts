@@ -67,14 +67,15 @@ export function searchBookings(req: Request) {
         WHERE roller_booking_id LIKE ?
            OR roller_item_id LIKE ?
            OR zl_booking_id LIKE ?
-					 OR email LIKE ?
-					 OR package_name LIKE ?
-					 OR start_time LIKE ?
+		   OR email LIKE ?
+		   OR attraction LIKE ?
+		   OR package_name LIKE ?
+		   OR start_time LIKE ?
            OR sync_status LIKE ?
         ORDER BY updated_at DESC
         LIMIT 100
       `)
-			.all(q, q, q, q, q, q, q);
+			.all(q, q, q, q, q, q, q, q);
 	} else {
 		rows = db
 			.query(`
