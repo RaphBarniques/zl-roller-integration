@@ -5,7 +5,7 @@ import {
 	config,
 	type PackageConfig,
 } from '../preflight.ts';
-import { getCustomerEmail } from '../api/rollerAPI.ts';
+import { getCustomerEmail, getCustomerProfile } from '../api/rollerAPI.ts';
 import { sendEmail } from '../utils/sendMail.ts';
 import {
 	checkProcessedEvent,
@@ -15,7 +15,11 @@ import {
 	saveSyncedItem,
 	updateSyncedItemStatus,
 } from '../utils/db.ts';
-import { createZLSession, deleteZLSession } from '../api/zlAPI.ts';
+import {
+	createZLSession,
+	deleteZLSession,
+	updateZLCustomerProfile,
+} from '../api/zlAPI.ts';
 import { updateRollerBookingComments } from '../api/rollerAPI.ts';
 
 export async function handleUpdatedWebhook(payload: any) {
@@ -61,6 +65,14 @@ export async function handleUpdatedWebhook(payload: any) {
 		);
 		return;
 	}
+
+	const customerProfile = await getCustomerProfile(String(booking.customerId));
+	const customerEmailFromProfile = customerProfile?.email?.trim() || null;
+	const customerFirstNameFromProfile =
+		customerProfile?.firstName?.trim() || null;
+	const customerLastNameFromProfile = customerProfile?.lastName?.trim() || null;
+	const customerPhoneFromProfile = customerProfile?.phoneNumber?.trim() || null;
+	let zlCustomerIdToUpdate: string | null = null;
 
 	// Loop through remaining items and process each booking if they are in the allowedPackages list
 	const bookingItems = booking.items;
@@ -153,6 +165,9 @@ export async function handleUpdatedWebhook(payload: any) {
 					overrideGameSpace,
 					isPrivate,
 				);
+				if (created?.customerId && !zlCustomerIdToUpdate) {
+					zlCustomerIdToUpdate = created.customerId;
+				}
 				if (created) {
 					logMessage += `Updated ZL session for booking ${bookingReference} and item ${item.bookingItemId} due to changes in booking details.\n`;
 					booked_status = true;
@@ -186,7 +201,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				await saveSyncedItem(
 					booking,
 					item,
-					created,
+					created?.bookingId ?? null,
 					packageConfig,
 					attraction,
 					booked_status,
@@ -203,7 +218,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
 						startTime: item.sessionStartTime,
-						zlBookingId: created,
+						zlBookingId: created?.bookingId,
 					});
 				}
 				customLog(logMessage, 'INFO');
@@ -226,7 +241,9 @@ export async function handleUpdatedWebhook(payload: any) {
 			}
 		} else {
 			logMessage += `No existing synced item found for booking ${bookingReference} and item ${item.bookingItemId}. Creating new record and ZL session...\n`;
-			const email: string = await getCustomerEmail(booking.customerId);
+			const email: string =
+				customerEmailFromProfile ||
+				(await getCustomerEmail(booking.customerId));
 
 			const created = await createZLSession(
 				item.bookingItemId,
@@ -239,6 +256,9 @@ export async function handleUpdatedWebhook(payload: any) {
 				overrideGameSpace,
 				isPrivate,
 			);
+			if (created?.customerId && !zlCustomerIdToUpdate) {
+				zlCustomerIdToUpdate = created.customerId;
+			}
 
 			if (created) {
 				logMessage += `Created ZL session for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
@@ -273,7 +293,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			await saveSyncedItem(
 				booking,
 				item,
-				created,
+				created?.bookingId ?? null,
 				packageConfig,
 				attraction,
 				booked_status,
@@ -290,7 +310,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					bookingReference: bookingReference,
 					startDate: item.bookingDate,
 					startTime: item.sessionStartTime,
-					zlBookingId: created,
+					zlBookingId: created?.bookingId,
 				});
 			}
 			customLog(logMessage, 'INFO');
@@ -301,6 +321,13 @@ export async function handleUpdatedWebhook(payload: any) {
 		booking.bookingReference,
 		String(booking.uniqueId ?? booking.bookingReference),
 		booking.comments,
+	);
+	await updateZLCustomerProfileOnce(
+		zlCustomerIdToUpdate,
+		customerFirstNameFromProfile,
+		customerLastNameFromProfile,
+		customerPhoneFromProfile,
+		String(booking.name ?? ''),
 	);
 }
 
@@ -383,6 +410,47 @@ async function syncRollerBookingComments(
 		zlBookingIds,
 		currentComments,
 	);
+}
+
+function splitBookingName(bookingName: string) {
+	const parts = bookingName
+		.trim()
+		.split(/\s+/)
+		.filter((part) => part.length > 0);
+
+	if (parts.length === 0) {
+		return { firstName: null, lastName: null };
+	}
+
+	const firstName = parts[0] ?? null;
+	const lastName = parts.slice(1).join(' ') || null;
+	return { firstName, lastName };
+}
+
+async function updateZLCustomerProfileOnce(
+	zlCustomerId: string | null,
+	firstNameFromProfile: string | null,
+	lastNameFromProfile: string | null,
+	phoneNumber: string | null,
+	bookingName: string,
+) {
+	if (!zlCustomerId) {
+		return;
+	}
+
+	const fallbackName = splitBookingName(bookingName);
+	const firstName = firstNameFromProfile ?? fallbackName.firstName;
+	const lastName = lastNameFromProfile ?? fallbackName.lastName;
+
+	if (!firstName || !lastName) {
+		customLog(
+			`Skipping ZL customer profile update for ${zlCustomerId}: missing first or last name`,
+			'WARN',
+		);
+		return;
+	}
+
+	await updateZLCustomerProfile(zlCustomerId, firstName, lastName, phoneNumber);
 }
 
 function getPackageGameSpace(
