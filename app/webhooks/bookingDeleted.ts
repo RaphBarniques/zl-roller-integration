@@ -77,17 +77,23 @@ export async function handleDeletedWebhook(payload: any) {
 	await syncRollerBookingComments(
 		booking.bookingReference,
 		String(booking.uniqueId ?? booking.bookingReference),
+		booking.comments,
 	);
 }
 
 async function syncRollerBookingComments(
 	bookingReference: string,
 	rollerBookingId: string,
+	currentComments?: string | null,
 ) {
 	const syncedRows = await getSyncedItems(bookingReference);
 	const zlBookingIds = syncedRows
 		.filter((row) => row.zl_booked && row.zl_booking_id)
 		.map((row) => String(row.zl_booking_id));
 
-	await updateRollerBookingComments(rollerBookingId, zlBookingIds);
+	await updateRollerBookingComments(
+		rollerBookingId,
+		zlBookingIds,
+		currentComments,
+	);
 }
