@@ -200,6 +200,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
 						startTime: item.sessionStartTime,
+						zlBookingId: created,
 					});
 				}
 				customLog(logMessage, 'INFO');
@@ -284,6 +285,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					bookingReference: bookingReference,
 					startDate: item.bookingDate,
 					startTime: item.sessionStartTime,
+					zlBookingId: created,
 				});
 			}
 			customLog(logMessage, 'INFO');

@@ -1,4 +1,5 @@
 import { transporter } from '../preflight.ts';
+import { config } from '../preflight.ts';
 // Todo : Envoyer des mails d'alertes pour les cas où une action manuelle est requise (prix à 0, échec de booking, etc.)
 export async function sendEmail(
 	email: string,
@@ -20,7 +21,7 @@ export async function sendEmail(
 	switch (type) {
 		case 1:
 			subject = `Justification requise pour le booking ${infos.bookingReference}`;
-			text = `Bonjour,\n\nLe booking ZL ${infos.bookingReference} du ${infos.startDate} à ${infos.startTime} a bien été créé mais il se pourrait qu'un justificatif de prix soit requis.\n\nMerci.`;
+			text = `Bonjour,\n\nLe booking ZL ${infos.bookingReference} du ${infos.startDate} à ${infos.startTime} a bien été créé mais il se pourrait qu'un justificatif de prix soit requis.\n\nhttps://portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${infos.zlBookingId}\n\nMerci.`;
 			// Envoyer un email pour demander un explicatif manuel
 			break;
 		case 2:
