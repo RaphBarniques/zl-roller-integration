@@ -168,6 +168,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						email: dbItem.email,
 						packageName: packageName,
 						quantity: item.quantity,
+						price: price,
 					});
 					sendEmail(config.email.info_email, 2, {
 						bookingReference: bookingReference,
@@ -176,6 +177,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						email: dbItem.email,
 						packageName: packageName,
 						quantity: item.quantity,
+						price: price,
 					});
 				}
 
@@ -253,6 +255,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					email: email,
 					packageName: packageName,
 					quantity: item.quantity,
+					price: price,
 				});
 				sendEmail(config.email.info_email, 2, {
 					bookingReference: bookingReference,
@@ -261,6 +264,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					email: email,
 					packageName: packageName,
 					quantity: item.quantity,
+					price: price,
 				});
 			}
 

@@ -26,7 +26,7 @@ export async function sendEmail(
 			break;
 		case 2:
 			subject = `Échec de booking ${infos.bookingReference}`;
-			text = `Bonjour,\n\nNous avons rencontré un problème lors de la réservation du booking ZL ${infos.bookingReference}. \nMerci de créer la session manuellement.\n\nRoller booking ID: ${infos.bookingReference}\nEmail: ${infos.email}\nDate et heure: ${infos.startDate} à ${infos.startTime}\nPackage: ${infos.packageName}\nJoueurs: ${infos.quantity}\n\nMerci.`;
+			text = `Bonjour,\n\nNous avons rencontré un problème lors de la réservation du booking ZL ${infos.bookingReference}. \nMerci de créer la session manuellement.\n\nRoller booking ID: ${infos.bookingReference}\nEmail: ${infos.email}\nDate et heure: ${infos.startDate} à ${infos.startTime}\nPackage: ${infos.packageName}\nJoueurs: ${infos.quantity}\nPrix: ${infos.price}\n\nMerci.`;
 			// Envoyer un email pour signaler un échec de booking
 			break;
 		default:
