@@ -4,9 +4,11 @@ import {
 	checkProcessedEvent,
 	updateSyncedItemStatus,
 	getSyncedItem,
+	getSyncedItems,
 	saveProcessedEvent,
 } from '../utils/db.ts';
 import { deleteZLSession } from '../api/zlAPI.ts';
+import { updateRollerBookingComments } from '../api/rollerAPI.ts';
 
 export async function handleDeletedWebhook(payload: any) {
 	const eventId = payload.id;
@@ -47,7 +49,7 @@ export async function handleDeletedWebhook(payload: any) {
 	for (const item of booking.items) {
 		let logMessage = `Processing item ${item.bookingItemId} for booking ${bookingReference}...\n`;
 		const session = await getSyncedItem(bookingReference, item.bookingItemId);
-		if (session && session.zl_booked) {
+		if (session?.zl_booked) {
 			await deleteZLSession(session.zl_booking_id, bookingReference);
 			await updateSyncedItemStatus(
 				bookingReference,
@@ -57,7 +59,7 @@ export async function handleDeletedWebhook(payload: any) {
 			);
 			logMessage = `Deleted record and ZL session ${item.bookingItemId} for booking ${bookingReference}...\n`;
 			customLog(logMessage, 'INFO');
-		} else if (session && session.sync_status === 'Skipped') {
+		} else if (session?.sync_status === 'Skipped') {
 			await updateSyncedItemStatus(
 				bookingReference,
 				item.bookingItemId,
@@ -71,4 +73,21 @@ export async function handleDeletedWebhook(payload: any) {
 			customLog(logMessage, 'ERROR');
 		}
 	}
+
+	await syncRollerBookingComments(
+		booking.bookingReference,
+		String(booking.uniqueId ?? booking.bookingReference),
+	);
+}
+
+async function syncRollerBookingComments(
+	bookingReference: string,
+	rollerBookingId: string,
+) {
+	const syncedRows = await getSyncedItems(bookingReference);
+	const zlBookingIds = syncedRows
+		.filter((row) => row.zl_booked && row.zl_booking_id)
+		.map((row) => String(row.zl_booking_id));
+
+	await updateRollerBookingComments(rollerBookingId, zlBookingIds);
 }

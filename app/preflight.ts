@@ -79,6 +79,7 @@ export async function initDb() {
 	db.run(`
     CREATE TABLE IF NOT EXISTS synced_items (
       roller_booking_id TEXT NOT NULL,
+	roller_booking_unique_id TEXT,
       roller_item_id TEXT NOT NULL,
       zl_booking_id TEXT,
 	  attraction TEXT,
@@ -102,6 +103,17 @@ export async function initDb() {
       )
     )
   `);
+
+	const syncedItemsColumns = db
+		.query(`PRAGMA table_info(synced_items)`)
+		.all() as Array<{ name: string }>;
+	const hasBookingUniqueIdColumn = syncedItemsColumns.some(
+		(column) => column.name === 'roller_booking_unique_id',
+	);
+	if (!hasBookingUniqueIdColumn) {
+		db.run(`ALTER TABLE synced_items ADD COLUMN roller_booking_unique_id TEXT`);
+		logMessage += 'Added column: synced_items.roller_booking_unique_id\n';
+	}
 
 	db.run(`
   CREATE TABLE IF NOT EXISTS processed_events (

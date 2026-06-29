@@ -2,6 +2,7 @@ import { db } from '../preflight.ts';
 
 export type Booking = {
 	roller_booking_id: string;
+	roller_booking_unique_id: string | null;
 	roller_item_id: string;
 	zl_booking_id: string;
 	payment_status: string;
@@ -202,6 +203,7 @@ export async function saveSyncedItem(
 		`
     INSERT OR REPLACE INTO synced_items (
       roller_booking_id,
+			roller_booking_unique_id,
       roller_item_id,
       zl_booking_id,
       payment_status,
@@ -216,10 +218,11 @@ export async function saveSyncedItem(
       package_name,
       price
     )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
 		[
 			booking.bookingReference,
+			booking.uniqueId ?? null,
 			bookingItem.bookingItemId,
 			zlbookingID,
 			booking.status,
