@@ -4,6 +4,15 @@ import { customLog } from '../utils/logger.ts';
 import { RollerAuthToken, refreshRollerToken } from './rollerAuth.ts';
 import { config } from '../preflight.ts';
 
+function normalizeComments(value: string | null | undefined) {
+	return String(value ?? '')
+		.replace(/\r\n/g, '\n')
+		.split('\n')
+		.map((line) => line.trim())
+		.filter((line) => line.length > 0)
+		.join('\n');
+}
+
 export async function getCustomerEmail(customerID: string) {
 	const retryMax = 3;
 	const delay = 1000;
@@ -46,4 +55,74 @@ export async function getCustomerEmail(customerID: string) {
 		'ERROR',
 	);
 	return 'undefined';
+}
+
+export async function updateRollerBookingComments(
+	rollerBookingId: string,
+	zlBookingIds: Array<string | number>,
+	currentComments?: string | null,
+) {
+	const retryMax = 3;
+	const delay = 1000;
+
+	const links = [...new Set(zlBookingIds.map((id) => String(id)))].sort(
+		(a, b) => a.localeCompare(b),
+	);
+	const nextComments = links
+		.map(
+			(zlBookingId) =>
+				`portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${zlBookingId}`,
+		)
+		.join('\n');
+
+	if (normalizeComments(currentComments) === normalizeComments(nextComments)) {
+		customLog(
+			`Skipping Roller booking ${rollerBookingId} comment update: links unchanged`,
+			'INFO',
+		);
+		return true;
+	}
+
+	for (let attempt = 1; attempt <= retryMax; attempt++) {
+		const response = await fetch(
+			`${config.roller.api_base_url}/bookings/${rollerBookingId}`,
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${RollerAuthToken}`,
+				},
+				method: 'PUT',
+				body: JSON.stringify({ comments: nextComments }),
+			},
+		);
+
+		if (!response.ok && response.status === 401) {
+			customLog(
+				`Unauthorized when updating comments for Roller booking ${rollerBookingId}, refreshing token and retrying...`,
+				'WARN',
+			);
+			await refreshRollerToken();
+			setTimeout(() => {}, delay);
+		} else if (!response.ok) {
+			const text = await response.text();
+			customLog(
+				`Failed to update comments for Roller booking ${rollerBookingId}: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
+				'ERROR',
+			);
+			setTimeout(() => {}, delay);
+		} else {
+			customLog(
+				`Updated comments for Roller booking ${rollerBookingId} with ${links.length} ZL link(s)`,
+				'INFO',
+			);
+			return true;
+		}
+	}
+
+	customLog(
+		`Failed to update comments for Roller booking ${rollerBookingId} after ${retryMax} attempts`,
+		'ERROR',
+	);
+	return false;
 }
