@@ -1,4 +1,5 @@
 import { transporter } from '../preflight.ts';
+import { config } from '../preflight.ts';
 // Todo : Envoyer des mails d'alertes pour les cas où une action manuelle est requise (prix à 0, échec de booking, etc.)
 export async function sendEmail(
 	email: string,
@@ -20,12 +21,12 @@ export async function sendEmail(
 	switch (type) {
 		case 1:
 			subject = `Justification requise pour le booking ${infos.bookingReference}`;
-			text = `Bonjour,\n\nLe booking ZL ${infos.bookingReference} du ${infos.startDate} à ${infos.startTime} a bien été créé mais il se pourrait qu'un justificatif de prix soit requis.\n\nMerci.`;
+			text = `Bonjour,\n\nLe booking ZL ${infos.bookingReference} du ${infos.startDate} à ${infos.startTime} a bien été créé mais il se pourrait qu'un justificatif de prix soit requis.\n\nhttps://portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${infos.zlBookingId}\n\nMerci.`;
 			// Envoyer un email pour demander un explicatif manuel
 			break;
 		case 2:
 			subject = `Échec de booking ${infos.bookingReference}`;
-			text = `Bonjour,\n\nNous avons rencontré un problème lors de la réservation du booking ZL ${infos.bookingReference}. \nMerci de créer la session manuellement.\n\nRoller booking ID: ${infos.bookingReference}\nEmail: ${infos.email}\nDate et heure: ${infos.startDate} à ${infos.startTime}\nPackage: ${infos.packageName}\nJoueurs: ${infos.quantity}\n\nMerci.`;
+			text = `Bonjour,\n\nNous avons rencontré un problème lors de la réservation du booking ZL ${infos.bookingReference}. \nMerci de créer la session manuellement.\n\nRoller booking ID: ${infos.bookingReference}\nEmail: ${infos.email}\nDate et heure: ${infos.startDate} à ${infos.startTime}\nPackage: ${infos.packageName}\nJoueurs: ${infos.quantity}\nPrix: ${infos.price}\n\nMerci.`;
 			// Envoyer un email pour signaler un échec de booking
 			break;
 		default:

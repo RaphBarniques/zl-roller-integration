@@ -93,7 +93,7 @@ Reach out for pricing details and to schedule a call with us.
 - [x] Add Booking flow
 - [x] Add Email Alerts
 - [x] Add Monitoring Dashboard
-- [ ] Add Private Event Booking
+- [x] Add Private Event Booking
 - [ ] Add Waiver Integration
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
