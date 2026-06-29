@@ -212,7 +212,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
-				if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
+				if ((isPriceTooLow || booking.status === 'NoPaymentRequired') && attraction === 'ZLVR') {
 					logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`;
 					sendEmail(config.email.admin_email, 1, {
 						bookingReference: bookingReference,
@@ -304,7 +304,7 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 			logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`;
 
-			if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
+			if ((isPriceTooLow || booking.status === 'NoPaymentRequired') && attraction === 'ZLVR') {
 				logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`;
 				sendEmail(config.email.admin_email, 1, {
 					bookingReference: bookingReference,
