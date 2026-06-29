@@ -47,3 +47,60 @@ export async function getCustomerEmail(customerID: string) {
 	);
 	return 'undefined';
 }
+
+export async function updateRollerBookingComments(
+	rollerBookingId: string,
+	zlBookingIds: Array<string | number>,
+) {
+	const retryMax = 3;
+	const delay = 1000;
+	const comments = zlBookingIds
+		.map(
+			(zlBookingId) =>
+				`portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${zlBookingId}`,
+		)
+		.join('\n');
+
+	for (let attempt = 1; attempt <= retryMax; attempt++) {
+		const response = await fetch(
+			`${config.roller.api_base_url}/bookings/${rollerBookingId}`,
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${RollerAuthToken}`,
+				},
+				method: 'PUT',
+				body: JSON.stringify({ comments }),
+			},
+		);
+
+		if (!response.ok && response.status === 401) {
+			customLog(
+				`Unauthorized when updating comments for Roller booking ${rollerBookingId}, refreshing token and retrying...`,
+				'WARN',
+			);
+			await refreshRollerToken();
+			setTimeout(() => {}, delay);
+		} else if (!response.ok) {
+			const text = await response.text();
+			customLog(
+				`Failed to update comments for Roller booking ${rollerBookingId}: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
+				'ERROR',
+			);
+			setTimeout(() => {}, delay);
+		} else {
+			customLog(
+				`Updated comments for Roller booking ${rollerBookingId} with ${zlBookingIds.length} ZL link(s)`,
+				'INFO',
+			);
+			return true;
+		}
+	}
+
+	customLog(
+		`Failed to update comments for Roller booking ${rollerBookingId} after ${retryMax} attempts`,
+		'ERROR',
+	);
+	return false;
+}
