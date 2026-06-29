@@ -4,6 +4,13 @@ import { customLog } from '../utils/logger.ts';
 import { RollerAuthToken, refreshRollerToken } from './rollerAuth.ts';
 import { config } from '../preflight.ts';
 
+export type RollerCustomerProfile = {
+	email: string;
+	firstName: string | null;
+	lastName: string | null;
+	phoneNumber: string | null;
+};
+
 function normalizeComments(value: string | null | undefined) {
 	return String(value ?? '')
 		.replace(/\r\n/g, '\n')
@@ -52,7 +59,7 @@ async function getRollerBookingComments(rollerBookingId: string) {
 	return null;
 }
 
-export async function getCustomerEmail(customerID: string) {
+export async function getCustomerProfile(customerID: string) {
 	const retryMax = 3;
 	const delay = 1000;
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
@@ -81,18 +88,46 @@ export async function getCustomerEmail(customerID: string) {
 			);
 			setTimeout(() => {}, delay);
 		} else {
-			const data = (await response.json()) as { email: string; phone: string };
+			const data = (await response.json()) as {
+				email?: string | null;
+				phone?: string | null;
+				phoneNumber?: string | null;
+				firstName?: string | null;
+				lastName?: string | null;
+			};
 			customLog(
-				`Customer email fetched successfully for customer ${customerID}`,
+				`Customer profile fetched successfully for customer ${customerID}`,
 				'INFO',
 			);
-			return data.email || `${data.phone}@phone.com`;
+			return {
+				email: data.email ?? '',
+				firstName: data.firstName ?? null,
+				lastName: data.lastName ?? null,
+				phoneNumber: data.phoneNumber ?? data.phone ?? null,
+			} as RollerCustomerProfile;
 		}
 	}
 	customLog(
-		`Failed to get customer email for customer ${customerID} after ${retryMax} attempts`,
+		`Failed to get customer profile for customer ${customerID} after ${retryMax} attempts`,
 		'ERROR',
 	);
+	return null;
+}
+
+export async function getCustomerEmail(customerID: string) {
+	const profile = await getCustomerProfile(customerID);
+	if (!profile) {
+		return 'undefined';
+	}
+
+	if (profile.email) {
+		return profile.email;
+	}
+
+	if (profile.phoneNumber) {
+		return `${profile.phoneNumber}@phone.com`;
+	}
+
 	return 'undefined';
 }
 
