@@ -55,6 +55,22 @@ async function buildZLHeaders() {
 	return headers;
 }
 
+function toFiniteNumber(value: unknown, fallback: number) {
+	const parsed = Number(value);
+	return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function normalizeIsoTimestamp(value: unknown) {
+	if (typeof value === 'string' && value.trim().length > 0) {
+		const parsed = Date.parse(value);
+		if (!Number.isNaN(parsed)) {
+			return new Date(parsed).toISOString();
+		}
+	}
+
+	return new Date().toISOString();
+}
+
 export async function getSession() {
 	const result = await fetch(
 		'https://api.zerolatencyvr.com/api/v1/sites/71/session/2428512',
@@ -124,41 +140,55 @@ export async function createZLSession(
 				`Unauthorized when creating ZL session for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else if (!response.ok) {
 			const text = await response.text();
 			customLog(
 				`Failed to create ZL session: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else {
 			const data = (await response.json()) as {
-				Product: {
-					BookingId: number;
-					AmountDue: number;
-					CreatedDateTime: string;
+				Product?: {
+					BookingId?: number;
+					AmountDue?: number;
+					CreatedDateTime?: string;
 				};
-				Charge: {
-					Tax: number;
+				Charge?: {
+					Tax?: number;
 				};
 			} & Record<string, unknown>;
+			const bookingId = data.Product?.BookingId;
+			if (!bookingId) {
+				customLog(
+					`Failed to create ZL session for Roller booking ${rollerBookingID}: missing Product.BookingId in response.`,
+					'ERROR',
+				);
+				await Bun.sleep(delay);
+				continue;
+			}
+
+			const amountDue = toFiniteNumber(data.Product?.AmountDue, price);
+			const taxAmount = toFiniteNumber(data.Charge?.Tax, 0);
+			const createdAt = normalizeIsoTimestamp(data.Product?.CreatedDateTime);
+
 			customLog(
-				`ZL session created successfully for Roller booking ${rollerBookingID} with ZL session ID: ${data.Product.BookingId}`,
+				`ZL session created successfully for Roller booking ${rollerBookingID} with ZL session ID: ${bookingId}`,
 				'INFO',
 			);
 
 			await confirmZLSession(
 				Number(rollerBookingID),
 				Number(rollerSessionID),
-				data.Product.BookingId,
-				data.Product.AmountDue,
-				data.Charge.Tax,
-				data.Product.CreatedDateTime,
+				bookingId,
+				amountDue,
+				taxAmount,
+				createdAt,
 				email,
 			);
 			return {
-				bookingId: data.Product.BookingId,
+				bookingId,
 				customerId: extractZLCustomerId(data),
 			};
 		}
@@ -214,14 +244,14 @@ export async function updateZLCustomerProfile(
 				`Unauthorized when updating ZL customer ${zlCustomerId}, refreshing token and retrying...`,
 				'WARN',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else if (!response.ok) {
 			const text = await response.text();
 			customLog(
 				`Failed to update ZL customer ${zlCustomerId}: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else {
 			customLog(`ZL customer ${zlCustomerId} updated successfully`, 'INFO');
 			return true;
@@ -254,16 +284,12 @@ export async function confirmZLSession(
 			Fee: 0,
 			GiftVoucherAmount: null,
 			CurrencyCode: 'CAD',
-			DateCreated: dateCreated,
+			DateCreated: normalizeIsoTimestamp(dateCreated),
 			PaymentMethodReference: 'Cash',
 			PaymentMethodTypeId: 5,
-			SiteId: 71,
+			SiteId: Number(config.zl.site_id),
 			Tax: tax,
-			UserId: null,
 			EmailAddress: email,
-			PhoneNumber: null,
-			FullName: null,
-			Postcode: null,
 		};
 		const response = await fetch(
 			`${config.zl.api_base_url}/sites/${config.zl.site_id}/bookings/${zlBookingID}/confirm`,
@@ -279,14 +305,14 @@ export async function confirmZLSession(
 				`Unauthorized when confirming ZL session for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else if (!response.ok) {
 			const text = await response.text();
 			customLog(
 				`Failed to confirm ZL session: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else {
 			customLog(
 				`ZL session confirmed successfully for Roller booking ${rollerBookingID} with ZL session ID: ${zlBookingID}`,
@@ -325,14 +351,14 @@ export async function deleteZLSession(
 				`Unauthorized when cancelling ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}, refreshing token and retrying...`,
 				'WARN',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else if (!response.ok) {
 			const text = await response.text();
 			customLog(
 				`Failed to cancel ZL session ${ZLSessionID} for Roller booking ${rollerBookingID}: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
-			setTimeout(() => {}, delay);
+			await Bun.sleep(delay);
 		} else {
 			customLog(
 				`ZL session ${ZLSessionID} cancelled successfully for Roller booking ${rollerBookingID}`,
