@@ -10,7 +10,6 @@ import {
 	deleteQueuedWebhook,
 	updateQueuedWebhookStatus,
 } from '../utils/db.ts';
-import { config } from '../preflight.ts';
 
 let isProcessingQueue = false;
 
@@ -21,40 +20,11 @@ function mapEventType(eventType: unknown) {
 	return String(eventType ?? 'UNKNOWN').toUpperCase();
 }
 
-function isBeforeIntegrationStartDate(payload: Record<string, unknown>) {
-	const integrationStartDate = config.venue.integration_start_date;
-	if (!integrationStartDate) {
-		return false;
-	}
-
-	const booking = (payload['data'] as Record<string, unknown> | undefined)?.[
-		'booking'
-	] as Record<string, unknown> | undefined;
-
-	const createdDateRaw = booking?.['createdDate'] ?? booking?.['created_date'];
-	if (!createdDateRaw) {
-		return false;
-	}
-
-	const bookingCreatedAt = Date.parse(String(createdDateRaw));
-	const integrationStartAt = Date.parse(integrationStartDate);
-
-	if (Number.isNaN(bookingCreatedAt) || Number.isNaN(integrationStartAt)) {
-		customLog(
-			`Unable to compare booking created date (${String(createdDateRaw)}) with integration start date (${integrationStartDate}).`,
-			'WARN',
-		);
-		return false;
-	}
-
-	return bookingCreatedAt < integrationStartAt;
-}
-
 export async function queueWebhook(payload: Record<string, unknown>) {
 	const pl = payload as Record<string, unknown>;
 	const eventId = String((pl['id'] ?? pl['eventId'] ?? '') as string);
 	const eventType = mapEventType(pl['eventType']);
-	const bookingReference =
+	const bookingReferenceRaw =
 		(
 			(pl['data'] as Record<string, unknown> | undefined)?.['booking'] as
 				| Record<string, unknown>
@@ -62,6 +32,8 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 		)?.['bookingReference'] ??
 		pl['bookingId'] ??
 		null;
+	const bookingReference =
+		bookingReferenceRaw == null ? null : String(bookingReferenceRaw);
 
 	await enqueueWebhookItem(
 		eventId,
@@ -132,15 +104,6 @@ async function processQueueItem(item: {
 
 	try {
 		const payload = JSON.parse(item.payload) as Record<string, unknown>;
-
-		if (isBeforeIntegrationStartDate(payload)) {
-			customLog(
-				`Skipping queued webhook ${item.id} (${item.event_type}) because booking ${item.booking_reference ?? 'unknown'} was created before integration start date ${config.venue.integration_start_date}.`,
-				'INFO',
-			);
-			await deleteQueuedWebhook(item.id);
-			return;
-		}
 
 		await logWebhookPayload(
 			item.id,

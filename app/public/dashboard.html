@@ -524,6 +524,8 @@
 
 				const date = new Date(booking.start_time);
 				const formattedDate = formatDate(date);
+				const formattedCreatedAt = formatSqlUtcToLocal(booking.created_at);
+				const formattedUpdatedAt = formatSqlUtcToLocal(booking.updated_at);
 
 				container.innerHTML = `
         <div class="field"><strong>ROLLER Booking</strong>${booking.roller_booking_reference ?? booking.roller_booking_id ?? ""}</div>
@@ -534,8 +536,8 @@
         <div class="field"><strong>Date</strong>${formattedDate ?? ""}</div>
         <div class="field"><strong>Status</strong>${booking.sync_status ?? ""}</div>
         <div class="field"><strong>Players</strong>${booking.players ?? ""}</div>
-        <div class="field"><strong>Created</strong>${booking.created_at ?? ""}</div>
-        <div class="field"><strong>Updated</strong>${booking.updated_at ?? ""}</div>
+				<div class="field"><strong>Created</strong>${formattedCreatedAt ?? ""}</div>
+				<div class="field"><strong>Updated</strong>${formattedUpdatedAt ?? ""}</div>
       `;
 			}
 
@@ -561,6 +563,7 @@
 				document.getElementById("bookingRows").innerHTML = rows
 					.map((row) => {
 						const statusClass = `status-${row.sync_status}`;
+						const formattedUpdatedAt = formatSqlUtcToLocal(row.updated_at);
 
 						return `
           <tr>
@@ -572,7 +575,7 @@
             <td>${row.package_name ?? ""}</td>
             <td>${row.players ?? ""}</td>
             <td class="${statusClass}">${row.sync_status ?? ""}</td>
-            <td>${row.updated_at ?? ""}</td>
+						<td>${formattedUpdatedAt ?? ""}</td>
           </tr>
         `;
 					})
@@ -599,22 +602,25 @@
 				}
 
 				document.getElementById("queueRows").innerHTML = rows
-					.map(
-						(row) => `
+					.map((row) => {
+						const formattedCreatedAt = formatSqlUtcToLocal(row.created_at);
+						const formattedUpdatedAt = formatSqlUtcToLocal(row.updated_at);
+
+						return `
         <tr>
           <td>${row.id}</td>
           <td>${row.event_type}</td>
           <td>${row.booking_reference ?? ""}</td>
           <td>${row.status}</td>
-          <td>${row.created_at}</td>
-          <td>${row.updated_at}</td>
+					<td>${formattedCreatedAt}</td>
+					<td>${formattedUpdatedAt}</td>
           <td>
             <button onclick="deleteQueueItem(${row.id})">Delete</button>
             <button onclick="bypassQueueItem(${row.id})">Bypass</button>
           </td>
         </tr>
-      `,
-					)
+							`;
+					})
 					.join("");
 			}
 
@@ -698,6 +704,16 @@
 						padTo2Digits(date.getSeconds()),
 					].join(":")
 				);
+			}
+
+			function formatSqlUtcToLocal(value) {
+				if (!value) return "";
+				const isoUtc = String(value).replace(" ", "T") + "Z";
+				const date = new Date(isoUtc);
+				if (Number.isNaN(date.getTime())) {
+					return String(value);
+				}
+				return formatDate(date);
 			}
 		</script>
 	</body>

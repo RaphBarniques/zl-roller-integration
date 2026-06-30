@@ -3,6 +3,7 @@ import {
 	allowedVRPackages,
 	allowedOtherPackages,
 	config,
+	parseIntegrationStartTimestamp,
 	type PackageConfig,
 } from '../preflight.ts';
 import { getCustomerEmail, getCustomerProfile } from '../api/rollerAPI.ts';
@@ -42,7 +43,12 @@ export async function handleUpdatedWebhook(payload: any) {
 
 	const integrationStartDate = config.venue.integration_start_date;
 	const bookingCreatedAt = Date.parse(String(booking.createdDate ?? ''));
-	const integrationStartAt = Date.parse(String(integrationStartDate ?? ''));
+	const integrationStartAt = integrationStartDate
+		? parseIntegrationStartTimestamp(
+				integrationStartDate,
+				config.venue.timezone,
+			)
+		: Number.NaN;
 
 	if (
 		integrationStartDate &&
@@ -50,15 +56,18 @@ export async function handleUpdatedWebhook(payload: any) {
 		!Number.isNaN(integrationStartAt) &&
 		bookingCreatedAt < integrationStartAt
 	) {
+		await saveBookingItemsAsSkipped(booking, 'None');
 		customLog(
 			`Booking ${bookingReference} has been skipped because it was created before integration start date ${integrationStartDate}`,
 			'INFO',
 		);
+		await saveSkippedItemsForIntegrationStartDate(booking);
 		return;
 	}
 
 	// Checker le paiment et continuer seulement si le paiment est complété
 	if (booking.status !== 'Paid' && booking.status !== 'NoPaymentRequired') {
+		await saveBookingItemsAsSkipped(booking, 'None');
 		customLog(
 			`Booking ${bookingReference} has been skipped because it is not fully paid`,
 			'WARN',
@@ -212,7 +221,10 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
-				if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
+				if (
+					(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
+					attraction === 'ZLVR'
+				) {
 					logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`;
 					sendEmail(config.email.admin_email, 1, {
 						bookingReference: bookingReference,
@@ -304,7 +316,10 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 			logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`;
 
-			if (isPriceTooLow || booking.status === 'NoPaymentRequired') {
+			if (
+				(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
+				attraction === 'ZLVR'
+			) {
 				logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`;
 				sendEmail(config.email.admin_email, 1, {
 					bookingReference: bookingReference,
@@ -412,6 +427,23 @@ async function syncRollerBookingComments(
 	);
 }
 
+async function saveBookingItemsAsSkipped(booking: any, attraction: string) {
+	for (const item of booking.items ?? []) {
+		await saveSyncedItem(
+			booking,
+			item,
+			null,
+			{},
+			attraction,
+			false,
+			null,
+			null,
+			null,
+			'Skipped',
+		);
+	}
+}
+
 function splitBookingName(bookingName: string) {
 	const parts = bookingName
 		.trim()
@@ -479,4 +511,32 @@ function getPackageGameSpace(
 
 function convertToISO(date: string, time: string) {
 	return `${date}T${time}:00.000`;
+}
+
+async function saveSkippedItemsForIntegrationStartDate(booking: any) {
+	for (const item of booking.items ?? []) {
+		const vrPackageConfig = allowedVRPackages.get(item.productId);
+		const otherPackageConfig = allowedOtherPackages.get(item.productId);
+		const packageConfig = vrPackageConfig ?? otherPackageConfig ?? {};
+		const attraction = vrPackageConfig
+			? 'ZLVR'
+			: (otherPackageConfig?.attraction ?? 'None');
+		const isoDate =
+			item.bookingDate && item.sessionStartTime
+				? convertToISO(item.bookingDate, item.sessionStartTime)
+				: null;
+
+		await saveSyncedItem(
+			booking,
+			item,
+			null,
+			packageConfig,
+			attraction,
+			false,
+			null,
+			isoDate,
+			null,
+			'Skipped',
+		);
+	}
 }
