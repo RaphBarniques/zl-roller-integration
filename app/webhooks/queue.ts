@@ -10,7 +10,6 @@ import {
 	deleteQueuedWebhook,
 	updateQueuedWebhookStatus,
 } from '../utils/db.ts';
-import { config, parseIntegrationStartTimestamp } from '../preflight.ts';
 
 let isProcessingQueue = false;
 
@@ -19,38 +18,6 @@ function mapEventType(eventType: unknown) {
 	if (eventType === 2 || eventType === '2') return 'UPDATED';
 	if (eventType === 3 || eventType === '3') return 'DELETED';
 	return String(eventType ?? 'UNKNOWN').toUpperCase();
-}
-
-function isBeforeIntegrationStartDate(payload: Record<string, unknown>) {
-	const integrationStartDate = config.venue.integration_start_date;
-	if (!integrationStartDate) {
-		return false;
-	}
-
-	const booking = (payload['data'] as Record<string, unknown> | undefined)?.[
-		'booking'
-	] as Record<string, unknown> | undefined;
-
-	const createdDateRaw = booking?.['createdDate'] ?? booking?.['created_date'];
-	if (!createdDateRaw) {
-		return false;
-	}
-
-	const bookingCreatedAt = Date.parse(String(createdDateRaw));
-	const integrationStartAt = parseIntegrationStartTimestamp(
-		integrationStartDate,
-		config.venue.timezone,
-	);
-
-	if (Number.isNaN(bookingCreatedAt) || Number.isNaN(integrationStartAt)) {
-		customLog(
-			`Unable to compare booking created date (${String(createdDateRaw)}) with integration start date (${integrationStartDate}).`,
-			'WARN',
-		);
-		return false;
-	}
-
-	return bookingCreatedAt < integrationStartAt;
 }
 
 export async function queueWebhook(payload: Record<string, unknown>) {
@@ -137,15 +104,6 @@ async function processQueueItem(item: {
 
 	try {
 		const payload = JSON.parse(item.payload) as Record<string, unknown>;
-
-		if (isBeforeIntegrationStartDate(payload)) {
-			customLog(
-				`Skipping queued webhook ${item.id} (${item.event_type}) because booking ${item.booking_reference ?? 'unknown'} was created before integration start date ${config.venue.integration_start_date}.`,
-				'INFO',
-			);
-			await deleteQueuedWebhook(item.id);
-			return;
-		}
 
 		await logWebhookPayload(
 			item.id,
