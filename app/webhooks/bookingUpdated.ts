@@ -151,6 +151,11 @@ export async function handleUpdatedWebhook(payload: any) {
 		const dbItem = await getSyncedItem(bookingReference, item.bookingItemId);
 		if (dbItem) {
 			logMessage += `Found existing synced item for booking ${bookingReference} and item ${item.bookingItemId}. Updating the record and ZL session if necessary...\n`;
+			const resolvedEmail =
+				typeof dbItem.email === 'string' && dbItem.email.trim().length > 0
+					? dbItem.email.trim()
+					: customerEmailFromProfile ||
+						(await getCustomerEmail(String(booking.customerId)));
 
 			booked_status = dbItem.zl_booked;
 			// Si le booking existe déjà, vérifier si les détails ont changé (ex: nombre de joueurs, date, etc.) et mettre à jour la session ZL en conséquence
@@ -166,7 +171,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				const created = await createZLSession(
 					item.bookingItemId,
 					booking.bookingReference,
-					dbItem.email,
+					resolvedEmail,
 					zlPackageId,
 					isoDate,
 					item.quantity,
@@ -190,7 +195,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
 						startTime: item.sessionStartTime,
-						email: dbItem.email,
+						email: resolvedEmail,
 						packageName: packageName,
 						quantity: item.quantity,
 						price: price,
@@ -199,7 +204,7 @@ export async function handleUpdatedWebhook(payload: any) {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
 						startTime: item.sessionStartTime,
-						email: dbItem.email,
+						email: resolvedEmail,
 						packageName: packageName,
 						quantity: item.quantity,
 						price: price,
@@ -214,7 +219,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					packageConfig,
 					attraction,
 					booked_status,
-					dbItem.email,
+					resolvedEmail,
 					isoDate,
 					price,
 					sync_status,
@@ -243,7 +248,7 @@ export async function handleUpdatedWebhook(payload: any) {
 					packageConfig,
 					attraction,
 					booked_status,
-					dbItem.email,
+					resolvedEmail,
 					isoDate,
 					price,
 					sync_status,
