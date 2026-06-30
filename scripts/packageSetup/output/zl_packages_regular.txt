@@ -1,0 +1,39 @@
+# ZL Regular Packages
+# generated_at: 2026-06-30T15:38:38.015Z
+# package_name | zl_id
+
+Outbreak 2 | 6496
+Haunted + Undead Arena (30 mins) | 5849
+Haunted + Outbreak (45 min) | 6064
+SpaceMarineThreatLethalExtra | 4975
+Space Marine VR Threat Lethal + Undead Arena | 5241
+SpaceMarineThreatLethal | 4974
+SpaceMarineAvarax | 3913
+Outbreak | 3127
+Far Cry VR + Outbreak | 3128
+Outbreak + Space Marine | 4047
+FarCry + Space Marine | 4048
+Singularity, Far Cry + Outbreak | 3129
+VR Unlimited Outbreak | 3130
+Far Cry VR | 1764
+Undead Arena + Undead Arena | 1765
+Engineerium + Undead Arena | 1766
+Sol Raiders + Sol Raiders | 1768
+Singularity | 1769
+Engineerium + Sol Raiders | 1771
+Sol Raiders | 1372
+Sol Raiders - Sol Heist Event | 1102
+Far Cry VR + Singularity | 1999
+Space Marine VR + Singularity | 5426
+Axe Throwing 30m | 5538
+Axe Throwing (60m) | 5545
+Outbreak 1 + 2 | 6670
+Gaming Lounge Day Pass | 7698
+SNK Night - King of Fighters XV | 7699
+SNK Night - Fatal Fury: City of the Wolves | 7734
+Switch Cup | 7700
+Rocket League Showdown | 7701
+Call of Duty LAN | 7702
+Outbreak 2 + Space Marine VR | 7752
+ESports Tournaments | 7837
+Outbreak 2 + Far Cry VR | 7897

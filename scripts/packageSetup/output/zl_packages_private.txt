@@ -1,0 +1,14 @@
+# ZL Private Packages
+# generated_at: 2026-06-30T15:38:38.015Z
+# package_name | zl_id
+
+Adventure Awaits [8 Players] | 7756
+Adventure Awaits [16 Players] | 7757
+Adventure Awaits [24 Players] | 7758
+Escape Reality [8 Players] | 7759
+Escape Reality [16 Players] | 7760
+PVP Arena All-Stars [8 Players] | 7761
+PVP Arena All-Stars [16 Players] | 7762
+Teen Arena All-Stars [up to 8 Players] | 7763
+ATeen Arena All-Stars EXTRA [up to 8 Players] | 7764
+VR ULTIME (jusqu'à 8 joueurs) | 7765

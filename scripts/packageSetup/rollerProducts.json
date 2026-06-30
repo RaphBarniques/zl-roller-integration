@@ -1,12 +1,11 @@
 [
-    // Outbreak
     {
         "products": [
             {
                 "price": 47.9900,
                 "taxId": 12666,
                 "parLevel": 0,
-                "id": "1896368",
+                "id": "1234567",
                 "name": "Billet 1 - 3",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/d4xYx7UxGESIuT5nz1RYwQ.jpe",
@@ -183,8 +182,8 @@
                 "maxAdditionalGuests": 0
             }
         ],
-        "id": "1896367",
-        "parentProductId": "1896367",
+        "id": "7654321",
+        "parentProductId": "7654321",
         "name": "Outbreak",
         "parentProductName": "Outbreak",
         "shortDescription": "Expérience VR  - une aventure de zombie passionnante. \nVR immersive experience - a terrifying zombie experience.",
@@ -211,7 +210,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Adventure Awaits | 2 à 24 joueurs
     {
         "products": [
             {
@@ -444,7 +442,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Gaming Lounge Passe Journalière
     {
         "products": [
             {
@@ -507,7 +504,6 @@
         "hideSessionDuration": false,
         "minPurchase": 1
     },
-    // Far Cry
     {
         "products": [
             {
@@ -719,7 +715,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Outbreak 2
     {
         "products": [
             {
@@ -931,7 +926,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Singularity
     {
         "products": [
             {
@@ -1143,7 +1137,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Space Marine
     {
         "products": [
             {
@@ -1355,7 +1348,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Engineerium + Undead
     {
         "products": [
             {
@@ -1567,7 +1559,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Haunted + Undead Arena
     {
         "products": [
             {
@@ -1779,7 +1770,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Lancer de hache - 30 min
     {
         "products": [
             {
@@ -1867,7 +1857,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Corpo choix
     {
         "products": [
             {
@@ -1998,7 +1987,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // ADDON - Gaming Lounge | 30 minutes
     {
         "products": [
             {
@@ -2063,7 +2051,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Évasion | 2 à 16 joueurs
     {
         "products": [
             {
@@ -2222,7 +2209,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // PVP Champions de l'arène | 2 à 16 joueurs
     {
         "products": [
             {
@@ -2381,7 +2367,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Ados en vedette | 2 à 8 joueurs
     {
         "products": [
             {
@@ -2449,7 +2434,6 @@
         "duration": 120,
         "durationType": "perSession"
     },
-    // Ados en vedette PLUS | 2 à 8 joueurs
     {
         "products": [
             {
@@ -2514,7 +2498,6 @@
         "duration": 120,
         "durationType": "perSession"
     },
-    // Lancer de hache - 60 minutes
     {
         "products": [
             {
@@ -2602,7 +2585,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // AJOUTER - Lancer de hache | 30 minutes
     {
         "products": [
             {
@@ -2688,7 +2670,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // Far Cry + Singularity
     {
         "products": [
             {
@@ -2900,7 +2881,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // Far Cry + Space Marine
     {
         "products": [
             {
@@ -3112,7 +3092,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // Outbreak + Outbreak 2
     {
         "products": [
             {
@@ -3324,7 +3303,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // Outbreak 2 + Space Marine
     {
         "products": [
             {
@@ -3536,7 +3514,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // Outbreak 2 + Far Cry
     {
         "products": [
             {
@@ -3748,7 +3725,6 @@
         "duration": 60,
         "durationType": "perSession"
     },
-    // Undead Arena + Sol Raider (PVP)
     {
         "products": [
             {
@@ -3960,7 +3936,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // VR 30 minutes - Staff only
     {
         "products": [
             {
@@ -4047,7 +4022,6 @@
         "duration": 30,
         "durationType": "perSession"
     },
-    // VR 15 minutes - Staff only
     {
         "products": [
             {
@@ -4135,7 +4109,6 @@
         "duration": 15,
         "durationType": "perSession"
     },
-    // The Ultimate Class Celebration | 8 à 24 joueurs
     {
         "products": [
             {
