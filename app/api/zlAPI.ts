@@ -312,6 +312,16 @@ export async function confirmZLSession(
 				`Failed to confirm ZL session: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
+			customLog(`Amount: ${amount},
+			Fee: 0,
+			GiftVoucherAmount: null,
+			CurrencyCode: 'CAD',
+			DateCreated: ${normalizeIsoTimestamp(dateCreated)},
+			PaymentMethodReference: 'Cash',
+			PaymentMethodTypeId: 5,
+			SiteId: ${Number(config.zl.site_id)},
+			Tax: ${tax},
+			EmailAddress: ${email},`, 'ERROR');
 			await Bun.sleep(delay);
 		} else {
 			customLog(
