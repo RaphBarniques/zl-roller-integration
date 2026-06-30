@@ -101,29 +101,6 @@ export async function createZLSession(
 
 	for (let attempt = 1; attempt <= retryMax; attempt++) {
 		const headers = await buildZLHeaders();
-		customLog(`accessCode: null,
-			emailAddress: ${email},
-			packageId: ${packageId},
-			sessionName: null,
-			slots: ${slots},
-			userId: null,
-			paymentMethodTypeId: 5,
-			overridePrice: ${price},
-			overrideOpenTime: true,
-			overrideStartTime: ${bookingDate},
-			overrideGameSpace: ${overrideGameSpace},
-			overrideMaxPlayers: true,
-			overrideFreeBookingLimit: true,
-			discountCode: null,
-			adBlockEnabled: null,
-			isPrivate: ${isPrivate},
-			privateEventTypeId: ${isPrivate ? 3 : null},
-			priceCode: null,
-			sessionId: null,
-			externalBookingId: ${rollerBookingID},
-			bookingSystemId: null,
-			payInFull: true,
-			rewardFlowData: null,`, 'WARN');
 		const body = {
 			accessCode: null,
 			emailAddress: email,
@@ -335,16 +312,6 @@ export async function confirmZLSession(
 				`Failed to confirm ZL session: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
 				'ERROR',
 			);
-			customLog(`Amount: ${amount},
-			Fee: 0,
-			GiftVoucherAmount: null,
-			CurrencyCode: 'CAD',
-			DateCreated: ${normalizeIsoTimestamp(dateCreated)},
-			PaymentMethodReference: 'Cash',
-			PaymentMethodTypeId: 5,
-			SiteId: ${Number(config.zl.site_id)},
-			Tax: ${tax},
-			EmailAddress: ${email},`, 'ERROR');
 			await Bun.sleep(delay);
 		} else {
 			customLog(
