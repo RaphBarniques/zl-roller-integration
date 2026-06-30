@@ -48,6 +48,89 @@ export type AttractionConfig = {
 	gamespace: number;
 };
 
+function getTimeZoneOffsetMs(atUtcMs: number, timeZone: string) {
+	const parts = new Intl.DateTimeFormat('en-CA', {
+		timeZone,
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+		hour12: false,
+	}).formatToParts(new Date(atUtcMs));
+
+	const map: Record<string, string> = {};
+	for (const part of parts) {
+		if (part.type !== 'literal') {
+			map[part.type] = part.value;
+		}
+	}
+
+	const asIfUtc = Date.UTC(
+		Number(map.year),
+		Number(map.month) - 1,
+		Number(map.day),
+		Number(map.hour),
+		Number(map.minute),
+		Number(map.second),
+	);
+
+	return asIfUtc - atUtcMs;
+}
+
+function localDateTimeInTimeZoneToUtcMs(dateTime: string, timeZone: string) {
+	const match = dateTime.match(
+		/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::(\d{2}))?)?$/,
+	);
+	if (!match) {
+		return Number.NaN;
+	}
+
+	const year = Number(match[1]);
+	const month = Number(match[2]);
+	const day = Number(match[3]);
+	const hour = Number(match[4] ?? '0');
+	const minute = Number(match[5] ?? '0');
+	const second = Number(match[6] ?? '0');
+
+	const utcGuess = Date.UTC(year, month - 1, day, hour, minute, second);
+	const offset1 = getTimeZoneOffsetMs(utcGuess, timeZone);
+	let resolved = utcGuess - offset1;
+
+	const offset2 = getTimeZoneOffsetMs(resolved, timeZone);
+	if (offset2 !== offset1) {
+		resolved = utcGuess - offset2;
+	}
+
+	return resolved;
+}
+
+export function parseIntegrationStartTimestamp(
+	value: string,
+	timeZone?: string,
+) {
+	const trimmed = value.trim();
+	if (!trimmed) {
+		return Number.NaN;
+	}
+
+	const hasExplicitOffset = /([zZ]|[+\-]\d{2}:\d{2})$/.test(trimmed);
+	if (hasExplicitOffset) {
+		return Date.parse(trimmed);
+	}
+
+	if (timeZone) {
+		try {
+			return localDateTimeInTimeZoneToUtcMs(trimmed, timeZone);
+		} catch {
+			// fallback below
+		}
+	}
+
+	return Date.parse(trimmed);
+}
+
 // --DATABASE INITIALIZATION--
 export async function initDb() {
 	let logMessage: string = 'Initializing database...\n';

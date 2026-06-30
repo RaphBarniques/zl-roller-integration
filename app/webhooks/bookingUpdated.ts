@@ -3,6 +3,7 @@ import {
 	allowedVRPackages,
 	allowedOtherPackages,
 	config,
+	parseIntegrationStartTimestamp,
 	type PackageConfig,
 } from '../preflight.ts';
 import { getCustomerEmail, getCustomerProfile } from '../api/rollerAPI.ts';
@@ -42,7 +43,12 @@ export async function handleUpdatedWebhook(payload: any) {
 
 	const integrationStartDate = config.venue.integration_start_date;
 	const bookingCreatedAt = Date.parse(String(booking.createdDate ?? ''));
-	const integrationStartAt = Date.parse(String(integrationStartDate ?? ''));
+	const integrationStartAt = integrationStartDate
+		? parseIntegrationStartTimestamp(
+				integrationStartDate,
+				config.venue.timezone,
+			)
+		: Number.NaN;
 
 	if (
 		integrationStartDate &&
@@ -212,7 +218,10 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
-				if ((isPriceTooLow || booking.status === 'NoPaymentRequired') && attraction === 'ZLVR') {
+				if (
+					(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
+					attraction === 'ZLVR'
+				) {
 					logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`;
 					sendEmail(config.email.admin_email, 1, {
 						bookingReference: bookingReference,
@@ -304,7 +313,10 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 			logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`;
 
-			if ((isPriceTooLow || booking.status === 'NoPaymentRequired') && attraction === 'ZLVR') {
+			if (
+				(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
+				attraction === 'ZLVR'
+			) {
 				logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`;
 				sendEmail(config.email.admin_email, 1, {
 					bookingReference: bookingReference,

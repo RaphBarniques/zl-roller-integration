@@ -1,5 +1,5 @@
 import { customLog } from '../utils/logger.ts';
-import { config } from '../preflight.ts';
+import { config, parseIntegrationStartTimestamp } from '../preflight.ts';
 import {
 	checkProcessedEvent,
 	updateSyncedItemStatus,
@@ -29,7 +29,12 @@ export async function handleDeletedWebhook(payload: any) {
 
 	const integrationStartDate = config.venue.integration_start_date;
 	const bookingCreatedAt = Date.parse(String(booking.createdDate ?? ''));
-	const integrationStartAt = Date.parse(String(integrationStartDate ?? ''));
+	const integrationStartAt = integrationStartDate
+		? parseIntegrationStartTimestamp(
+				integrationStartDate,
+				config.venue.timezone,
+			)
+		: Number.NaN;
 
 	if (
 		integrationStartDate &&

@@ -10,7 +10,7 @@ import {
 	deleteQueuedWebhook,
 	updateQueuedWebhookStatus,
 } from '../utils/db.ts';
-import { config } from '../preflight.ts';
+import { config, parseIntegrationStartTimestamp } from '../preflight.ts';
 
 let isProcessingQueue = false;
 
@@ -37,7 +37,10 @@ function isBeforeIntegrationStartDate(payload: Record<string, unknown>) {
 	}
 
 	const bookingCreatedAt = Date.parse(String(createdDateRaw));
-	const integrationStartAt = Date.parse(integrationStartDate);
+	const integrationStartAt = parseIntegrationStartTimestamp(
+		integrationStartDate,
+		config.venue.timezone,
+	);
 
 	if (Number.isNaN(bookingCreatedAt) || Number.isNaN(integrationStartAt)) {
 		customLog(
@@ -54,7 +57,7 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 	const pl = payload as Record<string, unknown>;
 	const eventId = String((pl['id'] ?? pl['eventId'] ?? '') as string);
 	const eventType = mapEventType(pl['eventType']);
-	const bookingReference =
+	const bookingReferenceRaw =
 		(
 			(pl['data'] as Record<string, unknown> | undefined)?.['booking'] as
 				| Record<string, unknown>
@@ -62,6 +65,8 @@ export async function queueWebhook(payload: Record<string, unknown>) {
 		)?.['bookingReference'] ??
 		pl['bookingId'] ??
 		null;
+	const bookingReference =
+		bookingReferenceRaw == null ? null : String(bookingReferenceRaw);
 
 	await enqueueWebhookItem(
 		eventId,
