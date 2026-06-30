@@ -1,0 +1,2226 @@
+[
+  {
+    "Alias": "Adventure Awaits [8 Players]",
+    "BookingDurationMinutes": 60,
+    "ExperienceDurationMinutes": 60,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "PRIVATE SESSION FOR UP TO 8 PLAYERS - Choose your experience from our most popular VR adventures:\n\nOutbreak 2 Mall Mayhem: The apocalypse that began in Outbreak has a new home, the mall. And it’s crawling with mutant zombies. Can you survive the chaos?\n\nSpace Marine VR: Channel fear into fury, and defeat alien swarms as a genetically enhanced Space Marine, in an adrenaline-filled sci-fi battle.\n\nFar Cry VR: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\n\n**Includes 30 minutes of axe throwing or 30 minutes of the Gaming Lounge",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Adventure Awaits [8 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "**SESSION PRIVÉE JUSQU’À 8 JOUEURS**\nChoisissez votre expérience parmi nos aventures VR les plus populaires :\n\n**Outbreak 2 : Mall Mayhem**\nL’apocalypse qui a débuté dans *Outbreak* a maintenant élu domicile… au centre commercial. Et il grouille de zombies terrifiants. Saurez-vous survivre au chaos ?\n\n**Space Marine VR**\nLa menace extraterrestre se fait sentir, mais votre équipe de super-soldats génétiquement améliorés est plus qu’à la hauteur de la tâche. Dans Warhammer 40,000 : Space Marine VR, seule la guerre existe. Saurez-vous renverser le cours des choses contre toute attente ?\n\n**Far Cry VR**\nUne eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. Pas tout à fait les vacances tropicales que vous espériez?\n\n**inclus 30 minutes de lancer de hache OU 30 minute au salon de gaming\n.",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Vivez l’Aventure [8 joueurs]",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 0,
+    "PackageId": 7756,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/templates/65.jpg",
+    "VideoUrl": "https://youtu.be/U4LEjMYC024",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 480,
+          "Cost": 480,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 71.904,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 551.904
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 530,
+          "Cost": 530,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 79.394,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 609.394
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30914,
+        "PackageId": 7756,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25696,
+        "PackageId": 7756,
+        "ExperienceId": 8,
+        "DurationMinutes": 30,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25697,
+        "PackageId": 7756,
+        "ExperienceId": 1145,
+        "DurationMinutes": 30,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "Adventure Awaits [16 Players]",
+    "BookingDurationMinutes": 90,
+    "ExperienceDurationMinutes": 90,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "Includes TWO PRIVATE back-to-back sessions, each hosting up to 8 players. Choose from our most popular experiences:\n\nOutbreak 2 Mall Mayhem: The apocalypse that began in Outbreak has a new home, the mall. And it’s crawling with mutant zombies. Can you survive the chaos?\n\nSpace Marine VR: Channel fear into fury, and defeat alien swarms as a genetically enhanced Space Marine, in an adrenaline-filled sci-fi battle.\n\nFar Cry VR: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\n\n\nGet some pre-game tips - watch all the action with our arena viewing windows and spectator screens.\n\n**Includes 30 minutes of axe throwing or 30 minutes of the Gaming Lounge",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Adventure Awaits [16 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "Comprend DEUX SESSIONS PRIVÉES consécutives, pouvant accueillir jusqu’à 8 joueurs chacune.\nChoisissez parmi nos expériences VR les plus populaires :\nProfitez de notre lounge donnant sur l’arène et de nos écrans spectateurs pour observer l’action en direct.\n**Outbreak 2 : Mall Mayhem**\nL’apocalypse qui a débuté dans *Outbreak* a maintenant élu domicile… au centre commercial. Et il grouille de zombies terrifiants. Saurez-vous survivre au chaos ?\n\n**Space Marine VR**\nLa menace extraterrestre se fait sentir, mais votre équipe de super-soldats génétiquement améliorés est plus qu’à la hauteur de la tâche. Dans Warhammer 40,000 : Space Marine VR, seule la guerre existe. Saurez-vous renverser le cours des choses contre toute attente ?\n\n**Far Cry VR**\nUne eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. Pas",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Vivez l’Aventure  [16 joueurs]",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 16,
+    "MinimumPlayers": 9,
+    "MinimumAge": 0,
+    "PackageId": 7757,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/templates/66.jpg",
+    "VideoUrl": "https://youtu.be/U4LEjMYC024",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 910,
+          "Cost": 910,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 136.318,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1046.318
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1010,
+          "Cost": 1010,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 151.298,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1161.298
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30915,
+        "PackageId": 7757,
+        "GameId": 33,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30916,
+        "PackageId": 7757,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25698,
+        "PackageId": 7757,
+        "ExperienceId": 9,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25699,
+        "PackageId": 7757,
+        "ExperienceId": 8,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25700,
+        "PackageId": 7757,
+        "ExperienceId": 1145,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.34,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "Adventure Awaits [24 Players]",
+    "BookingDurationMinutes": 120,
+    "ExperienceDurationMinutes": 120,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "Includes THREE back-to-back sessions, each hosting up to 8 players. Choose from our most popular experiences:\n\nOutbreak 2 Mall Mayhem: The apocalypse that began in Outbreak has a new home, the mall. And it’s crawling with mutant zombies. Can you survive the chaos?\n\n\nSpace Marine VR: Channel fear into fury, and defeat alien swarms as a genetically enhanced Space Marine, in an adrenaline-filled sci-fi battle.\n\nFar Cry VR: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\n\n**Includes 30 minutes of axe throwing or 30 minutes of the Gaming Lounge\nAsk about our in-venue catering options available, to keep your crew fuelled between sessions.",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Adventure Awaits [24 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "Comprend TROIS SESSIONS PRIVÉES consécutives, pouvant accueillir jusqu’à 8 joueurs chacune.\nChoisissez parmi nos expériences VR les plus populaires :\nLes équipes qui sortent de l'arène pourront profiter du lounge, espace bar et des autres activités sur place.\n**Outbreak 2 : Mall Mayhem**\nL’apocalypse qui a débuté dans *Outbreak* a maintenant élu domicile… au centre commercial. Et il grouille de zombies terrifiants. Saurez-vous survivre au chaos ?\n\n**Space Marine VR**\nLa menace extraterrestre se fait sentir, mais votre équipe de super-soldats génétiquement améliorés est plus qu’à la hauteur de la tâche. Dans Warhammer 40,000 : Space Marine VR, seule la guerre existe. Saurez-vous renverser le cours des choses contre toute attente ?\n\n**Far Cry VR**\nUne eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. P",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Vivez l’Aventure  [24 joueurs]",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 24,
+    "MinimumPlayers": 17,
+    "MinimumAge": 0,
+    "PackageId": 7758,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/templates/67.jpg",
+    "VideoUrl": "https://youtu.be/U4LEjMYC024",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 1295,
+          "Cost": 1295,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 193.991,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1488.991
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1200,
+          "Cost": 1200,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 179.76,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1379.76
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1200,
+          "Cost": 1200,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 179.76,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1379.76
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1430,
+          "Cost": 1430,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 214.214,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1644.214
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1200,
+          "Cost": 1200,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 179.76,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1379.76
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30917,
+        "PackageId": 7758,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30918,
+        "PackageId": 7758,
+        "GameId": 33,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30919,
+        "PackageId": 7758,
+        "GameId": 24,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25701,
+        "PackageId": 7758,
+        "ExperienceId": 8,
+        "DurationMinutes": 30,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25702,
+        "PackageId": 7758,
+        "ExperienceId": 9,
+        "DurationMinutes": 30,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25703,
+        "PackageId": 7758,
+        "ExperienceId": 7,
+        "DurationMinutes": 30,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25704,
+        "PackageId": 7758,
+        "ExperienceId": 1145,
+        "DurationMinutes": 30,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "Escape Reality [8 Players]",
+    "BookingDurationMinutes": 90,
+    "ExperienceDurationMinutes": 90,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "Double the fun ** play 2 VR 30-minutes sessions\n\nPRIVATE SESSION FOR UP TO 8 PLAYERS - Choose two experiences from our most popular VR adventures:\n\nOutbreak 2 Mall Mayhem: The apocalypse that began in Outbreak has a new home, the mall. And it’s crawling with mutant zombies. Can you survive the chaos?\n\nSpace Marine VR: Channel fear into fury, and defeat alien swarms as a genetically enhanced Space Marine, in an adrenaline-filled sci-fi battle.\n\nFar Cry VR: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\n\n**Includes 30 minutes of axe throwing or 30 minutes of the Gaming Lounge \nHaunted - ultra-immersive VR haunted house\nEngineerium - mind-bending puzzling adventure",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Escape Reality [8 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "**SESSION PRIVÉE JUSQU’À 8 JOUEURS**\nChoisissez votre expérience parmi nos aventures VR les plus populaires :\n\n**Outbreak 2 : Mall Mayhem**\nL’apocalypse qui a débuté dans *Outbreak* a maintenant élu domicile… au centre commercial. Et il grouille de zombies terrifiants. Saurez-vous survivre au chaos ?\n\n**Space Marine VR**\nLa menace extraterrestre se fait sentir, mais votre équipe de super-soldats génétiquement améliorés est plus qu’à la hauteur de la tâche. Dans Warhammer 40,000 : Space Marine VR, seule la guerre existe. Saurez-vous renverser le cours des choses contre toute attente ?\n\n**Far Cry VR**\nUne eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. Pas tout à fait les vacances tropicales que vous espériez?\n\n**inclus 30 minutes de lancer de hache OU 30 minute au salon de gaming",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Évasion [8 joueurs]",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 0,
+    "PackageId": 7759,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/templates/116.jpg",
+    "VideoUrl": "https://youtu.be/46kD1uzZTco",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 720,
+          "Cost": 720,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 107.856,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 827.856
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 685,
+          "Cost": 685,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 102.613,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 787.613
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 685,
+          "Cost": 685,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 102.613,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 787.613
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 795,
+          "Cost": 795,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 119.091,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 914.091
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 685,
+          "Cost": 685,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 102.613,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 787.613
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30920,
+        "PackageId": 7759,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30921,
+        "PackageId": 7759,
+        "GameId": 33,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25705,
+        "PackageId": 7759,
+        "ExperienceId": 8,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25706,
+        "PackageId": 7759,
+        "ExperienceId": 1145,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25707,
+        "PackageId": 7759,
+        "ExperienceId": 9,
+        "DurationMinutes": 30,
+        "CostPercentage": 33.34,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "Escape Reality [16 Players]",
+    "BookingDurationMinutes": 120,
+    "ExperienceDurationMinutes": 120,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "Double the fun ** play 2  x VR 30-minutes sessions\nIncludes TWO PRIVATE back-to-back sessions, each hosting up to 8 players. Choose two of our most popular experiences:\n\nOutbreak 2 Mall Mayhem: The apocalypse that began in Outbreak has a new home, the mall. And it’s crawling with mutant zombies. Can you survive the chaos?\n\nSpace Marine VR: Channel fear into fury, and defeat alien swarms as a genetically enhanced Space Marine, in an adrenaline-filled sci-fi battle.\n\nFar Cry VR: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\n\n\nGet some pre-game tips - watch all the action with our arena viewing windows and spectator screens.\n\n**Includes 30 minutes of axe throwing or 30 minutes of the Gaming Lounge",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Escape Reality [16 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "Comprend DEUX SESSIONS PRIVÉES consécutives, pouvant accueillir jusqu’à 8 joueurs chacune.\nChoisissez parmi nos expériences VR les plus populaires :\nProfitez de notre lounge donnant sur l’arène et de nos écrans spectateurs pour observer l’action en direct.\n**Outbreak 2 : Mall Mayhem**\nL’apocalypse qui a débuté dans *Outbreak* a maintenant élu domicile… au centre commercial. Et il grouille de zombies terrifiants. Saurez-vous survivre au chaos ?\n\n**Space Marine VR**\nLa menace extraterrestre se fait sentir, mais votre équipe de super-soldats génétiquement améliorés est plus qu’à la hauteur de la tâche. Dans Warhammer 40,000 : Space Marine VR, seule la guerre existe. Saurez-vous renverser le cours des choses contre toute attente ?\n\n**Far Cry VR**\nUne eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. Pas",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Évasion [16 joueurs]",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 16,
+    "MinimumPlayers": 9,
+    "MinimumAge": 0,
+    "PackageId": 7760,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/templates/117.jpg",
+    "VideoUrl": "https://youtu.be/46kD1uzZTco",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 1370,
+          "Cost": 1370,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 205.226,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1575.226
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1300,
+          "Cost": 1300,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 194.74,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1494.74
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1300,
+          "Cost": 1300,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 194.74,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1494.74
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1510,
+          "Cost": 1510,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 226.198,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1736.198
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1300,
+          "Cost": 1300,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 194.74,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1494.74
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30927,
+        "PackageId": 7760,
+        "GameId": 33,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30928,
+        "PackageId": 7760,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25713,
+        "PackageId": 7760,
+        "ExperienceId": 1145,
+        "DurationMinutes": 60,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25714,
+        "PackageId": 7760,
+        "ExperienceId": 9,
+        "DurationMinutes": 30,
+        "CostPercentage": 16.67,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25715,
+        "PackageId": 7760,
+        "ExperienceId": 14,
+        "DurationMinutes": 30,
+        "CostPercentage": 16.67,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25716,
+        "PackageId": 7760,
+        "ExperienceId": 1145,
+        "DurationMinutes": 60,
+        "CostPercentage": 33.33,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "PVP Arena All-Stars [8 Players]",
+    "BookingDurationMinutes": 30,
+    "ExperienceDurationMinutes": 60,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "IIncludes TWO back-to-back sessions of SOL RAIDER our PVP option for a fun competition, each hosting up to 8 players. \n\nForm your crew and prepare for blistering, team-based combat across 3 diverse maps, complete with unique objectives. The ultimate competitive virtual reality experience for up to 8 players. Fun for casual players and professionals alike.\n\nFight for the highest score and ultimate bragging rights.",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "PVP Arena All-Stars [8 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "Comprend DEUX sessions consécutives de Sol Raider, notre option JcJ (PVP) pour une compétition amusante, pouvant accueillir jusqu’à 8 joueurs par session.\n\nRalliez votre équipe et préparez-vous à des combats immersifs sur 3 cartes différentes, avec des objectifs précis. L'expérience de réalité virtuelle compétitive ultime, jusqu'à 8 joueurs (4 contre 4). Palpitants pour les joueurs occasionnels et les professionnels.\n\nAffrontez-vous pour obtenir le droit de vous vanter.",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "PVP Champions de l'arène (jusqu'à 8 joueurs)",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 0,
+    "PackageId": 7761,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/71/package-Arena All-Stars [8 Players]-2040684537.jpg",
+    "VideoUrl": "https://www.youtube.com/embed/ADOEuzyYstc?rel=0&autoplay=1",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 480,
+          "Cost": 480,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 71.904,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 551.904
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 530,
+          "Cost": 530,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 79.394,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 609.394
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 440,
+          "Cost": 440,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 65.912,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 505.912
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30201,
+        "PackageId": 7761,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      },
+      {
+        "PackageGameId": 30202,
+        "PackageId": 7761,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 24835,
+        "PackageId": 7761,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 24836,
+        "PackageId": 7761,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "PVP Arena All-Stars [16 Players]",
+    "BookingDurationMinutes": 60,
+    "ExperienceDurationMinutes": 60,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "Includes FOUR back-to-back sessions of SOL RAIDER our PVP option for a fun competition, each hosting up to 8 players. \n\nForm your crew and prepare for blistering, team-based combat across 3 diverse maps, complete with unique objectives. The ultimate competitive virtual reality experience for up to 16 players. Fun for casual players and professionals alike.\n\nFight for the highest score and ultimate bragging rights.\n\nGet some pre-game tips (or laugh at others' misfortune) by watching all the action with arena viewing windows and spectator screens showcasing the experience.",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "PVP Arena All-Stars [16 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "Comprend QUATRE sessions consécutives de Sol Raider, notre option JcJ (PVP) pour une compétition amusante, pouvant accueillir jusqu’à 8 joueurs par session.\n\nRalliez votre équipe et préparez-vous à des combats immersifs sur 3 cartes différentes, avec des objectifs précis. L'expérience de réalité virtuelle compétitive ultime, jusqu'à 16 joueurs (2 X 4 contre 4). Palpitants pour les joueurs occasionnels et les professionnels.\n\nAffrontez-vous pour obtenir le droit de vous vanter.\n\nAvant de jouer, profitez du lounge donnant sur l’arène et des écrans spectateurs pour observer toute l’action, recueillir quelques conseils… ou rire (gentiment) des mésaventures des autres,",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "PVP Champions de l'arène (jusqu'à 16 joueurs)",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 16,
+    "MinimumPlayers": 9,
+    "MinimumAge": 0,
+    "PackageId": 7762,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/71/package-PVP Arena All-Stars [16 Players]-139670018.jpg",
+    "VideoUrl": "https://www.youtube.com/embed/ADOEuzyYstc?rel=0&autoplay=1",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 910,
+          "Cost": 910,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 136.318,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1046.318
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 1010,
+          "Cost": 1010,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 151.298,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 1161.298
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30949,
+        "PackageId": 7762,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      },
+      {
+        "PackageGameId": 30950,
+        "PackageId": 7762,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      },
+      {
+        "PackageGameId": 30951,
+        "PackageId": 7762,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      },
+      {
+        "PackageGameId": 30952,
+        "PackageId": 7762,
+        "GameId": 16,
+        "GameDurationMinutes": 15
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25771,
+        "PackageId": 7762,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25772,
+        "PackageId": 7762,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25773,
+        "PackageId": 7762,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25774,
+        "PackageId": 7762,
+        "ExperienceId": 5,
+        "DurationMinutes": 15,
+        "CostPercentage": 25,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "Teen Arena All-Stars [up to 8 Players]",
+    "BookingDurationMinutes": 120,
+    "ExperienceDurationMinutes": 120,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "CELEBRATE YOUR KID'S BIRTHDAY WITH AN UNFORGETTABLE EXPERIENCE\nAge 9 & up\nPRIVATE SESSION FOR UP TO 8 PLAYERS\nYour challenge - Singularity: Al has taken control of your space station. Time to lead your troops against an army of rogue robots and drones.\nIncludes 4 vintage gaming stations",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Teen Arena All-Stars [up to 8 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "CÉLÉBREZ L’ANNIVERSAIRE DE VOTRE ENFANT AVEC UNE EXPÉRIENCE INOUBLIABLE\nÂge : 9 ans et plus\n\n**SESSION PRIVÉE JUSQU’À 8 JOUEURS**\n\nVotre défi – Singularity : Entrez dans une expérience immersive de science-fiction sur une station perdue dans les profondeurs de l'espace. Luttez pour votre vie contre des robots tueurs en explorant des couloirs étroits, des ascenseurs piégés et des environnements en apesanteur. Vous devrez travailler avec votre équipe pour en sortir vivant et vaincre la machine qui a pris le contrôle de la station.\n\n**Inclut l’accès au 4 consoles de jeu vidéo vintage**",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Ados en vedette (jusqu'à 8 joueurs)",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 9,
+    "PackageId": 7763,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/71/package-Teen Arena All-Stars [up to 8 Players]-185672606.jpg",
+    "VideoUrl": "https://www.youtube.com/embed/jx4HrEA5218?rel=0&autoplay=1",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 320,
+          "Cost": 320,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 47.936,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 367.936
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 320,
+          "Cost": 320,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 47.936,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 367.936
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 320,
+          "Cost": 320,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 47.936,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 367.936
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 320,
+          "Cost": 320,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 47.936,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 367.936
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 320,
+          "Cost": 320,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 47.936,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 367.936
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30221,
+        "PackageId": 7763,
+        "GameId": 10,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 24855,
+        "PackageId": 7763,
+        "ExperienceId": 2,
+        "DurationMinutes": 30,
+        "CostPercentage": 100,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "ATeen Arena All-Stars EXTRA [up to 8 Players]",
+    "BookingDurationMinutes": 120,
+    "ExperienceDurationMinutes": 120,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "CELEBRATE YOUR KID'S BIRTHDAY WITH AN UNFORGETTABLE EXPERIENCE\nAge 9 & up\n2 x PRIVATE SESSION FOR UP TO 8 PLAYERS for 60 minutes of immersive VR experience\nYour challenge:\n - Singularity: Al has taken control of your space station. Time to lead your troops against an army of rogue robots and drones.\n- FarCry: This is no tropical getaway - you're being hunted for sport by bloodthirsty pirates and trapped on a deadly island. There’s no escape, only survival.\nIncludes unlimited access to the Gaming Lounge, including RockBand\nOne portion of Slush and Popcorn per person\nPing Pong table",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "Teen Arena All-Stars EXTRA [up to 8 Players]",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "CÉLÉBREZ L’ANNIVERSAIRE DE VOTRE ENFANT AVEC UNE EXPÉRIENCE INOUBLIABLE\nÂge : 9 ans et plus\n\n**2 x 30 minutes de VR en SESSION PRIVÉE JUSQU’À 8 JOUEURS**\n\nVotre défi:\n– Singularity : Entrez dans une expérience immersive de science-fiction sur une station perdue dans les profondeurs de l'espace. Luttez pour votre vie contre des robots tueurs en explorant des couloirs étroits, des ascenseurs piégés et des environnements en apesanteur. Vous devrez travailler avec votre équipe pour en sortir vivant et vaincre la machine qui a pris le contrôle de la station.\n- FarCry: Une eau cristalline scintille à perte de vue. De bons amis et de bons moments sur une plage paradisiaque. C'est exactement ainsi que se déroulait ce voyage avant que votre groupe ne soit capturé et emprisonné par Vaas et son armée de pirates. Pas tout à fait les vacances tropicales que vous espériez?\n\nInclus: \n-l’accès au Gaming Lounge et le jeu Rock Band\n-une slush cerise et sac de popcorn par personne\n-table de ping pong",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "Ados en vedette PLUS (jusqu'à 8 joueurs)",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 9,
+    "PackageId": 7764,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/71/package-ATeen Arena All-Stars EXTRA [up to 8 Players]-1477181515.jpg",
+    "VideoUrl": "https://www.youtube.com/embed/jx4HrEA5218?rel=0&autoplay=1",
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 400,
+          "Cost": 400,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 59.92,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 459.92
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 400,
+          "Cost": 400,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 59.92,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 459.92
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 540,
+          "Cost": 540,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 80.892,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 620.892
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 400,
+          "Cost": 400,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 59.92,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 459.92
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 400,
+          "Cost": 400,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 59.92,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 459.92
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30937,
+        "PackageId": 7764,
+        "GameId": 10,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30938,
+        "PackageId": 7764,
+        "GameId": 24,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 25746,
+        "PackageId": 7764,
+        "ExperienceId": 2,
+        "DurationMinutes": 30,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 25747,
+        "PackageId": 7764,
+        "ExperienceId": 7,
+        "DurationMinutes": 30,
+        "CostPercentage": 50,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  },
+  {
+    "Alias": "VR ULTIME (jusqu'à 8 joueurs)",
+    "BookingDurationMinutes": 180,
+    "ExperienceDurationMinutes": 180,
+    "LanguageData": [
+      {
+        "LanguageTypeId": 4,
+        "Description": "THIS IS FOR THE ULTIMATE PLAYER: enjoy two hours of VR with your team.\nYou will decide the games, team or PVP based, and have the entire arena for yourself.\nWe include a 30-minute pause halfway to recharge - you'll need it.",
+        "ImageUrl": null,
+        "Language": "English (American)",
+        "Locale": "en-US",
+        "Name": "ULTIMATE VR (up to 8 players)",
+        "VideoUrl": null
+      },
+      {
+        "LanguageTypeId": 17,
+        "Description": "POUR LE JOUEUR ULTIME : profitez de deux heures de réalité virtuelle avec votre équipe.\nC’est vous qui choisissez les jeux, en mode équipe ou PvP, et vous avez l’arène complète rien que pour vous.\nNous incluons une pause de 30 minutes à mi-parcours pour recharger — vous en aurez besoin.",
+        "ImageUrl": null,
+        "Language": "French Canadian",
+        "Locale": "fr-CA",
+        "Name": "VR ULTIME (jusqu'à 8 joueurs)",
+        "VideoUrl": null
+      }
+    ],
+    "MaximumPlayers": 8,
+    "MinimumPlayers": 1,
+    "MinimumAge": 0,
+    "PackageId": 7765,
+    "RootPackageId": null,
+    "VersionNumber": 1,
+    "SupersededByPackageId": null,
+    "Header": null,
+    "HeaderImage": "https://zerolatencyvr.azureedge.net/booking-engine/71/package-VR ULTIME (jusqu'à 8 joueurs)-1091143739.jpg",
+    "VideoUrl": null,
+    "SortOrder": 0,
+    "PackageTierPrices": [
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#333",
+          "IsDefault": true,
+          "IsDeleted": false,
+          "Name": "Regular - peak",
+          "PriceTierTypeId": 242
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#c80e0e",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Week nights",
+          "PriceTierTypeId": 308
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5cb200",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Kids",
+          "PriceTierTypeId": 309
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 0,
+          "Cost": 0,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 0,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 0
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#ea8f00",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Ligue (sol heist)",
+          "PriceTierTypeId": 417
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#5b66ed",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Saturday",
+          "PriceTierTypeId": 456
+        }
+      },
+      {
+        "Price": {
+          "ListPrice": 840,
+          "Cost": 840,
+          "CurrencyCode": "CAD",
+          "CurrencyLocale": "en-CA",
+          "CurrencySymbol": "$",
+          "DecimalPlaces": 2,
+          "Tax": 125.832,
+          "TaxInclusive": false,
+          "TaxRate": 0.1498,
+          "Total": 965.832
+        },
+        "PriceTierType": {
+          "AllowPromotions": true,
+          "Color": "#00a1d7",
+          "IsDefault": false,
+          "IsDeleted": false,
+          "Name": "Wednesday",
+          "PriceTierTypeId": 615
+        }
+      }
+    ],
+    "SiteId": 71,
+    "RecentTicketsSold": 0,
+    "PackageGames": [
+      {
+        "PackageGameId": 30227,
+        "PackageId": 7765,
+        "GameId": 33,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30228,
+        "PackageId": 7765,
+        "GameId": 24,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30229,
+        "PackageId": 7765,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30230,
+        "PackageId": 7765,
+        "GameId": 31,
+        "GameDurationMinutes": 30
+      },
+      {
+        "PackageGameId": 30231,
+        "PackageId": 7765,
+        "GameId": 10,
+        "GameDurationMinutes": 30
+      }
+    ],
+    "PackageExperiences": [
+      {
+        "PackageExperienceId": 24861,
+        "PackageId": 7765,
+        "ExperienceId": 9,
+        "DurationMinutes": 30,
+        "CostPercentage": 20,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 24862,
+        "PackageId": 7765,
+        "ExperienceId": 7,
+        "DurationMinutes": 30,
+        "CostPercentage": 20,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 24863,
+        "PackageId": 7765,
+        "ExperienceId": 14,
+        "DurationMinutes": 30,
+        "CostPercentage": 20,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 24864,
+        "PackageId": 7765,
+        "ExperienceId": 8,
+        "DurationMinutes": 30,
+        "CostPercentage": 20,
+        "StartOffsetMinutes": null
+      },
+      {
+        "PackageExperienceId": 24865,
+        "PackageId": 7765,
+        "ExperienceId": 2,
+        "DurationMinutes": 30,
+        "CostPercentage": 20,
+        "StartOffsetMinutes": null
+      }
+    ],
+    "AttractionTypeId": 1,
+    "PrivacyTypeId": 1,
+    "PrivacyChargePercentage": 0,
+    "PackageTypeId": 2,
+    "PlayersPerResource": 8,
+    "PerPersonPricing": false,
+    "OpenTimeStart": null,
+    "OpenTimeEnd": null
+  }
+]

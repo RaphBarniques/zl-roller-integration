@@ -1,0 +1,138 @@
+# Roller Packages For Config
+# generated_at: 2026-06-30T15:38:38.015Z
+# package_name / roller_ids / zl_id / private
+
+- package_name: "Outbreak"
+    roller_ids: [7654321, 1234567, 1958769, 1958770]
+    zl_id: 
+    private: false
+
+- package_name: "Adventure Awaits | 2 à 24 joueurs"
+    roller_ids: [1902859, 1902860, 1902861, 1902862]
+    zl_id: 
+    private: false
+
+- package_name: "Gaming Lounge - passe journalière"
+    roller_ids: [1988279, 1902877]
+    zl_id: 
+    private: false
+
+- package_name: "FarCry: Dive into Insanity"
+    roller_ids: [1917071, 1917072, 1960883, 1960884]
+    zl_id: 
+    private: false
+
+- package_name: "Outbreak 2 Mall Mayhem"
+    roller_ids: [1917094, 1917095, 1962006, 1962007]
+    zl_id: 
+    private: false
+
+- package_name: "Singularity"
+    roller_ids: [1917112, 1917113, 1962008, 1962009]
+    zl_id: 
+    private: false
+
+- package_name: "Space Marine VR"
+    roller_ids: [1917139, 1917140, 1962016, 1962017]
+    zl_id: 
+    private: false
+
+- package_name: "Engineerium + Undead Arena"
+    roller_ids: [1917194, 1917195, 1951025, 1951026]
+    zl_id: 
+    private: false
+
+- package_name: "Haunted + Undead Arena"
+    roller_ids: [1917206, 1917207, 1958759, 1958760]
+    zl_id: 
+    private: false
+
+- package_name: "Lancer de hache - 30 minutes"
+    roller_ids: [1917395, 1917396]
+    zl_id: 
+    private: false
+
+- package_name: "CORPO CHOIX - lancer de hache OU Gaming Lounge | 30 minutes"
+    roller_ids: [1924249, 1924250, 1924301]
+    zl_id: 
+    private: false
+
+- package_name: "AJOUTER - Gaming Lounge | 30 minutes"
+    roller_ids: [1924252, 1924253]
+    zl_id: 
+    private: false
+
+- package_name: "Évasion | 2 à 16 joueurs"
+    roller_ids: [1942159, 1942160, 1942161]
+    zl_id: 
+    private: false
+
+- package_name: "PVP Champions de l'arène | 2 à 16 joueurs"
+    roller_ids: [1942165, 1942166, 1942167]
+    zl_id: 
+    private: false
+
+- package_name: "Ados en vedette | 2 à 8 joueurs"
+    roller_ids: [1942171, 1942172]
+    zl_id: 
+    private: false
+
+- package_name: "Ados en vedette PLUS | 2 à 8 joueurs"
+    roller_ids: [1942206, 1942207]
+    zl_id: 
+    private: false
+
+- package_name: "Lancer de hache - 60 minutes"
+    roller_ids: [1942211, 1942212]
+    zl_id: 
+    private: false
+
+- package_name: "AJOUTER - Lancer de hache | 30 minutes"
+    roller_ids: [1942213, 1942214]
+    zl_id: 
+    private: false
+
+- package_name: "Far Cry + Singularity"
+    roller_ids: [1947188, 1947189, 1959803, 1959804]
+    zl_id: 
+    private: false
+
+- package_name: "Far Cry + Space Marine"
+    roller_ids: [1947197, 1947198, 1960055, 1960056]
+    zl_id: 
+    private: false
+
+- package_name: "Outbreak + Outbreak 2"
+    roller_ids: [1947215, 1947216, 1961700, 1961701]
+    zl_id: 
+    private: false
+
+- package_name: "Outbreak 2 + Space Marine"
+    roller_ids: [1947218, 1947219, 1962004, 1962005]
+    zl_id: 
+    private: false
+
+- package_name: "Outbreak 2 + Far Cry"
+    roller_ids: [1954663, 1954664, 1961878, 1961880]
+    zl_id: 
+    private: false
+
+- package_name: "Undead Arena + Sol Raider (PVP)"
+    roller_ids: [1954666, 1954667, 1954668, 1954669]
+    zl_id: 
+    private: false
+
+- package_name: "VR 30 minutes - Staff only"
+    roller_ids: [1988267, 1988268]
+    zl_id: 
+    private: false
+
+- package_name: "VR 15 minutes - Staff only"
+    roller_ids: [1988278, 1988279]
+    zl_id: 
+    private: false
+
+- package_name: "The Ultimate Class Celebration | 8 à 24 joueurs"
+    roller_ids: [1988329, 1988330, 1988331, 1988332]
+    zl_id: 
+    private: false
