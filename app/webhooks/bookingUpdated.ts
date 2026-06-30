@@ -104,9 +104,9 @@ export async function handleUpdatedWebhook(payload: any) {
 				booking,
 				item,
 				null,
-				false,
 				{},
 				attraction,
+				false,
 				null,
 				null,
 				null,
@@ -240,7 +240,7 @@ export async function handleUpdatedWebhook(payload: any) {
 				}
 				customLog(logMessage, 'INFO');
 			} else {
-				sync_status = 'Skipped';
+				sync_status = 'Matched';
 				await saveSyncedItem(
 					booking,
 					item,
