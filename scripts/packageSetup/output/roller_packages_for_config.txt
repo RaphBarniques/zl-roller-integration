@@ -1,9 +1,9 @@
 # Roller Packages For Config
-# generated_at: 2026-06-30T15:38:38.015Z
+# generated_at: 2026-07-01T18:10:02.127Z
 # package_name / roller_ids / zl_id / private
 
 - package_name: "Outbreak"
-    roller_ids: [7654321, 1234567, 1958769, 1958770]
+    roller_ids: [1896367, 1896368, 1958769, 1958770]
     zl_id: 
     private: false
 
@@ -13,7 +13,7 @@
     private: false
 
 - package_name: "Gaming Lounge - passe journalière"
-    roller_ids: [1988279, 1902877]
+    roller_ids: [1902876, 1902877]
     zl_id: 
     private: false
 
@@ -89,6 +89,11 @@
 
 - package_name: "AJOUTER - Lancer de hache | 30 minutes"
     roller_ids: [1942213, 1942214]
+    zl_id: 
+    private: false
+
+- package_name: "Carte cadeau sur mesure"
+    roller_ids: [1942221, 1942222]
     zl_id: 
     private: false
 

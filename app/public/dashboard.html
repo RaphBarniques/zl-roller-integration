@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<title>ROLLER → ZL Dashboard</title>
@@ -174,6 +174,19 @@
 				flex-wrap: wrap;
 			}
 
+			.log-actions {
+				display: flex;
+				gap: 10px;
+				justify-content: center;
+				align-items: center;
+				margin-top: 12px;
+			}
+
+			#logsCountLabel {
+				font-size: 12px;
+				color: #5f6368;
+			}
+
 			.latest {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -207,6 +220,7 @@
 			</div>
 			<div class="header-actions">
 				<button
+					type="button"
 					id="backupButton"
 					onclick="manualBackup()"
 					style="display: none"
@@ -214,6 +228,7 @@
 					Manual Backup
 				</button>
 				<button
+					type="button"
 					id="restartButton"
 					onclick="restartService()"
 					style="display: none"
@@ -221,28 +236,40 @@
 					Restart
 				</button>
 				<button
+					type="button"
 					id="updateButton"
 					onclick="updateAndRestart()"
 					style="display: none"
 				>
 					Update
 				</button>
-				<a href="/dashboard/logout"><button>Logout</button></a>
+				<a href="/dashboard/logout"><button type="button">Logout</button></a>
 			</div>
 		</header>
 
 		<nav>
 			<button
+				type="button"
 				id="bookingsButton"
 				onclick="showTab('bookings')"
 				class="navButton active"
 			>
 				Bookings
 			</button>
-			<button id="queueButton" onclick="showTab('queue')" class="navButton">
+			<button
+				type="button"
+				id="queueButton"
+				onclick="showTab('queue')"
+				class="navButton"
+			>
 				Requests
 			</button>
-			<button id="logsButton" onclick="showTab('logs')" class="navButton">
+			<button
+				type="button"
+				id="logsButton"
+				onclick="showTab('logs')"
+				class="navButton"
+			>
 				Logs
 			</button>
 		</nav>
@@ -251,6 +278,8 @@
 			<section id="logs" class="tab">
 				<div class="panel">
 					<div class="toolbar">
+						<input id="logDate" type="date" />
+
 						<select id="logLevel">
 							<option value="ALL">All logs</option>
 							<option value="INFO">Info</option>
@@ -258,11 +287,23 @@
 							<option value="ERROR">Errors</option>
 						</select>
 
-						<button onclick="loadLogs()">Refresh</button>
-						<button onclick="clearVisibleLogs()">Clear visible</button>
+						<button type="button" onclick="loadLogs(true)">Refresh</button>
+						<button type="button" onclick="clearVisibleLogs()">
+							Clear visible
+						</button>
 					</div>
 
 					<pre id="logOutput"></pre>
+					<div class="log-actions">
+						<button
+							type="button"
+							id="loadMoreLogsButton"
+							onclick="loadLogs(false)"
+						>
+							Load more logs
+						</button>
+						<span id="logsCountLabel">Showing 0 logs</span>
+					</div>
 				</div>
 			</section>
 
@@ -288,7 +329,7 @@
 							<option value="Error">Error</option>
 							<option value="Cancelled">Cancelled</option>
 						</select>
-						<button onclick="searchBookings()">Search</button>
+						<button type="button" onclick="searchBookings()">Search</button>
 					</div>
 
 					<table>
@@ -314,8 +355,14 @@
 				<div class="panel">
 					<h3>Webhook request queue</h3>
 					<div class="toolbar">
-						<button onclick="refreshQueue()">Refresh queue</button>
-						<button onclick="toggleQueue()" id="queueToggleButton">
+						<button type="button" onclick="refreshQueue()">
+							Refresh queue
+						</button>
+						<button
+							type="button"
+							onclick="toggleQueue()"
+							id="queueToggleButton"
+						>
 							Pause queue
 						</button>
 					</div>
@@ -342,6 +389,39 @@
 			let dashboardRole = "user";
 			let isAdmin = false;
 			let eventSource = null;
+			let logsOffset = 0;
+			let logsTotal = 0;
+			const LOG_PAGE_SIZE = 200;
+
+			function todayAsInputValue() {
+				const now = new Date();
+				const yyyy = now.getFullYear();
+				const mm = String(now.getMonth() + 1).padStart(2, "0");
+				const dd = String(now.getDate()).padStart(2, "0");
+				return `${yyyy}-${mm}-${dd}`;
+			}
+
+			function getSelectedLogDate() {
+				const input = document.getElementById("logDate");
+				return input.value || todayAsInputValue();
+			}
+
+			function isViewingTodayLogs() {
+				return getSelectedLogDate() === todayAsInputValue();
+			}
+
+			function updateLoadMoreState(hasMore) {
+				const button = document.getElementById("loadMoreLogsButton");
+				button.disabled = !hasMore;
+				button.textContent = hasMore ? "Load more logs" : "No more logs";
+			}
+
+			function updateLogsCountLabel() {
+				const output = document.getElementById("logOutput");
+				const shown = output.children.length;
+				const label = document.getElementById("logsCountLabel");
+				label.textContent = `Showing ${shown} of ${logsTotal} logs`;
+			}
 
 			async function loadDashboardVersion() {
 				const res = await fetch("/api/dashboard/version");
@@ -471,23 +551,44 @@
 				return div;
 			}
 
-			async function loadLogs() {
+			async function loadLogs(reset = true) {
 				const level = document.getElementById("logLevel").value;
-				const res = await fetch(
-					`/api/dashboard/logs?level=${encodeURIComponent(level)}`,
-				);
-				const lines = await res.json();
+				const date = getSelectedLogDate();
+				if (reset) {
+					logsOffset = 0;
+				}
+
+				const query = new URLSearchParams({
+					level,
+					date,
+					offset: String(logsOffset),
+					limit: String(LOG_PAGE_SIZE),
+				});
+				const res = await fetch(`/api/dashboard/logs?${query.toString()}`);
+				const data = await res.json();
+				const lines = Array.isArray(data?.lines) ? data.lines : [];
 
 				const output = document.getElementById("logOutput");
-				output.innerHTML = "";
+				if (reset) {
+					output.innerHTML = "";
+				}
 
 				for (const line of lines) {
 					output.appendChild(renderLogLine(line));
 				}
+
+				logsTotal = Number.isFinite(data?.total) ? data.total : logsTotal;
+				logsOffset += lines.length;
+				updateLoadMoreState(Boolean(data?.hasMore));
+				updateLogsCountLabel();
 			}
 
 			function clearVisibleLogs() {
 				document.getElementById("logOutput").innerHTML = "";
+				logsOffset = 0;
+				logsTotal = 0;
+				updateLoadMoreState(true);
+				updateLogsCountLabel();
 			}
 
 			function initLogStream() {
@@ -499,6 +600,7 @@
 					const line = JSON.parse(event.data);
 
 					if (line === "connected") return;
+					if (!isViewingTodayLogs()) return;
 
 					const level = document.getElementById("logLevel").value;
 
@@ -553,7 +655,7 @@
 
 				console.log(rows);
 
-				if (rows.length == 0) {
+				if (rows.length === 0) {
 					document.getElementById("bookingRows").innerHTML =
 						"<tr><td>No booking that fits that search.</td></tr>";
 					console.log("empty");
@@ -657,7 +759,10 @@
 			}
 
 			document.getElementById("logLevel").addEventListener("change", () => {
-				if (isAdmin) loadLogs();
+				if (isAdmin) loadLogs(true);
+			});
+			document.getElementById("logDate").addEventListener("change", () => {
+				if (isAdmin) loadLogs(true);
 			});
 			document.getElementById("bookingSearch").addEventListener("input", () => {
 				clearTimeout(window.searchTimer);
@@ -670,8 +775,9 @@
 			async function initDashboard() {
 				await initDashboardRole();
 				await loadDashboardVersion();
+				document.getElementById("logDate").value = todayAsInputValue();
 				if (isAdmin) {
-					loadLogs();
+					loadLogs(true);
 					initLogStream();
 				}
 				loadLatestBooking();

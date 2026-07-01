@@ -16,12 +16,31 @@ import {
 export async function getLogs(req: Request) {
 	const url = new URL(req.url);
 	const level = url.searchParams.get('level') || 'ALL';
+	const requestedDate = (url.searchParams.get('date') || '').trim();
+	const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+	const date = datePattern.test(requestedDate)
+		? requestedDate
+		: formatDate(new Date(), false);
+	const offsetRaw = Number(url.searchParams.get('offset') || '0');
+	const limitRaw = Number(url.searchParams.get('limit') || '200');
+	const offset = Number.isFinite(offsetRaw)
+		? Math.max(0, Math.floor(offsetRaw))
+		: 0;
+	const limit = Number.isFinite(limitRaw)
+		? Math.min(1000, Math.max(1, Math.floor(limitRaw)))
+		: 200;
 
-	const date = formatDate(new Date(), false);
 	const file = Bun.file(`./logs/server-${date}.log`);
 
 	if (!(await file.exists())) {
-		return Response.json([]);
+		return Response.json({
+			date,
+			offset,
+			limit,
+			total: 0,
+			hasMore: false,
+			lines: [],
+		});
 	}
 
 	const text = await file.text();
@@ -32,7 +51,15 @@ export async function getLogs(req: Request) {
 		lines = lines.filter((line) => line.includes(`(${level})`));
 	}
 
-	return Response.json(lines.slice(0, 500));
+	const page = lines.slice(offset, offset + limit);
+	return Response.json({
+		date,
+		offset,
+		limit,
+		total: lines.length,
+		hasMore: offset + page.length < lines.length,
+		lines: page,
+	});
 }
 
 export function getLogsStream(_req: Request) {
@@ -173,11 +200,14 @@ export async function manageAdminAction(req: Request) {
 		const scriptPath = './scripts/manualbackup.ps1';
 		const repoDir = process.cwd().replaceAll('\\', '/');
 
-		const backup = Bun.spawnSync(['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath], {
-			cwd: process.cwd(),
-			stdout: 'pipe',
-			stderr: 'pipe',
-		});
+		const backup = Bun.spawnSync(
+			['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath],
+			{
+				cwd: process.cwd(),
+				stdout: 'pipe',
+				stderr: 'pipe',
+			},
+		);
 
 		if (backup.exitCode !== 0) {
 			const stderr = new TextDecoder().decode(backup.stderr).trim();
