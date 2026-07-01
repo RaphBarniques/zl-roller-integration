@@ -5,8 +5,8 @@
                 "price": 47.9900,
                 "taxId": 12666,
                 "parLevel": 0,
-                "id": "1234567",
-                "name": "Billet 1 - 3",
+                "id": "1896368",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/d4xYx7UxGESIuT5nz1RYwQ.jpe",
                 "cost": 47.9900,
@@ -182,8 +182,8 @@
                 "maxAdditionalGuests": 0
             }
         ],
-        "id": "7654321",
-        "parentProductId": "7654321",
+        "id": "1896367",
+        "parentProductId": "1896367",
         "name": "Outbreak",
         "parentProductName": "Outbreak",
         "shortDescription": "Expérience VR  - une aventure de zombie passionnante. \nVR immersive experience - a terrifying zombie experience.",
@@ -480,7 +480,7 @@
                 "maxAdditionalGuests": 0
             }
         ],
-        "id": "1988279",
+        "id": "1902876",
         "parentProductId": "1902876",
         "name": "Gaming Lounge - passe journalière",
         "parentProductName": "Gaming Lounge - passe journalière",
@@ -511,7 +511,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917072",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/d2ACiMZRqEyG7CDagfWHVA.png",
                 "cost": 47.9900,
@@ -722,7 +722,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917095",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/MIHXqoVRjUmlP0nwrIEchA.jpe",
                 "cost": 47.9900,
@@ -933,7 +933,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917113",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/EheYJILebUCpLCiob4Qn3g.jpe",
                 "cost": 47.9900,
@@ -1144,7 +1144,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917140",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/pwqEg8aDTEqmtVdRJ6ZFpw.jpe",
                 "cost": 47.9900,
@@ -1355,7 +1355,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917195",
-                "name": "Billets 1-3",
+                "name": "Billets",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/SZhWEK8nXUmaVOHv-S0s8Q.jpe",
                 "cost": 47.9900,
@@ -1566,7 +1566,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1917207",
-                "name": "Billet 1-3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/CTlpAxwJb0iyISbBKBZWzQ.jpe",
                 "cost": 47.9900,
@@ -2673,11 +2673,66 @@
     {
         "products": [
             {
+                "price": 0.0000,
+                "taxId": 12373,
+                "parLevel": 0,
+                "id": "1942222",
+                "name": "Montant de votre choix",
+                "description": "",
+                "imageUrl": "https://cdn.rollerdigital.com/image/bM7t_2NybkK_ikDxAEkdaQ.png",
+                "cost": 0.0000,
+                "tax": 0.000,
+                "isTaxInclusive": false,
+                "groupSize": 1,
+                "minPurchase": 1,
+                "forceMinPurchase": false,
+                "hasUserDefinedCost": true,
+                "maxUserDefinedCost": 750.0,
+                "minUserDefinedCost": 0.01,
+                "locations": [],
+                "locationTimes": [],
+                "isSuspended": false,
+                "maxAdditionalGuests": 0
+            }
+        ],
+        "id": "1942221",
+        "parentProductId": "1942221",
+        "name": "Carte cadeau sur mesure",
+        "parentProductName": "Carte cadeau sur mesure",
+        "shortDescription": "Carte cadeau du montant de votre choix\nGift card for the amount of your choice",
+        "description": "Carte cadeau du montant de votre choix, pour toutes les activités offertent chez Zero Latency Montréal<br /><br />Gift card for the amount of your choice, valid for any activity in our center",
+        "imageUrl": "https://cdn.rollerdigital.com/image/bM7t_2NybkK_ikDxAEkdaQ.png",
+        "depositPercentage": 0.0,
+        "tags": [
+            "Gift Card"
+        ],
+        "addOns": [],
+        "restrictedAddOns": [],
+        "type": "giftcard",
+        "isWaiverRequired": false,
+        "modifiers": [],
+        "modifierGroups": [],
+        "giftcard": {
+            "canSendDigital": true,
+            "canSendPhysical": false,
+            "supportsVideoMessage": true,
+            "supportsWrittenMessage": true,
+            "productPostages": []
+        },
+        "captureTicketHolderName": false,
+        "captureCustomTicketId": false,
+        "termsAndConditionsText": "Aucun échange ni remboursement.<br />No exchange or refund.",
+        "hideSessionDuration": false,
+        "minPurchase": 1
+    },
+    {
+        "products": [
+            {
                 "price": 79.9900,
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1947189",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/dPlEq_ofmkegflV4xFddkA.jpe",
                 "cost": 79.9900,
@@ -2723,7 +2778,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 59.99
+                            "price": 64.99
                         }
                     ],
                     "type": "time",
@@ -2783,7 +2838,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 47.99
+                            "price": 51.99
                         }
                     ],
                     "type": "time",
@@ -2843,7 +2898,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 44.99
+                            "price": 48.75
                         }
                     ],
                     "type": "time",
@@ -2888,7 +2943,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1947198",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/JYtsRrlQA0ydZVq2R1QTnw.jpe",
                 "cost": 79.9900,
@@ -2934,7 +2989,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 59.99
+                            "price": 64.99
                         }
                     ],
                     "type": "time",
@@ -2994,7 +3049,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 47.99
+                            "price": 51.99
                         }
                     ],
                     "type": "time",
@@ -3054,7 +3109,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 44.99
+                            "price": 48.75
                         }
                     ],
                     "type": "time",
@@ -3099,7 +3154,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1947216",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/rpluUd6nY0WEzMk41rKe4A.jpe",
                 "cost": 79.9900,
@@ -3145,7 +3200,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 59.99
+                            "price": 64.99
                         }
                     ],
                     "type": "time",
@@ -3205,7 +3260,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 47.99
+                            "price": 51.99
                         }
                     ],
                     "type": "time",
@@ -3265,7 +3320,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 44.99
+                            "price": 48.75
                         }
                     ],
                     "type": "time",
@@ -3310,7 +3365,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1947219",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/LQENq1psSU6DF3wF9G6mBg.jpe",
                 "cost": 79.9900,
@@ -3356,7 +3411,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 59.99
+                            "price": 64.99
                         }
                     ],
                     "type": "time",
@@ -3416,7 +3471,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 47.99
+                            "price": 51.99
                         }
                     ],
                     "type": "time",
@@ -3476,7 +3531,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 44.99
+                            "price": 48.75
                         }
                     ],
                     "type": "time",
@@ -3521,7 +3576,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1954664",
-                "name": "Billet 1 - 3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/VcfiOPThSkuhMGU3fPO3kA.jpe",
                 "cost": 79.9900,
@@ -3567,7 +3622,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 59.99
+                            "price": 64.99
                         }
                     ],
                     "type": "time",
@@ -3627,7 +3682,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 47.99
+                            "price": 51.99
                         }
                     ],
                     "type": "time",
@@ -3687,7 +3742,7 @@
                         },
                         {
                             "tierId": "7822df169b9ce64",
-                            "price": 44.99
+                            "price": 48.75
                         }
                     ],
                     "type": "time",
@@ -3732,7 +3787,7 @@
                 "taxId": 12666,
                 "parLevel": 0,
                 "id": "1954667",
-                "name": "Billet 1-3",
+                "name": "Billet",
                 "description": "",
                 "imageUrl": "https://cdn.rollerdigital.com/image/YUZrMrSLqU-3SxJCZ3s26g.jpe",
                 "cost": 47.9900,

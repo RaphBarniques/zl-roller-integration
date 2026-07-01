@@ -1,5 +1,5 @@
 # ZL Regular Packages
-# generated_at: 2026-06-30T15:38:38.015Z
+# generated_at: 2026-07-01T18:10:02.127Z
 # package_name | zl_id
 
 Outbreak 2 | 6496
