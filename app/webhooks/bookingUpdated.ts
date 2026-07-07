@@ -66,7 +66,7 @@ export async function handleUpdatedWebhook(payload: any) {
 	}
 
 	// Checker le paiment et continuer seulement si le paiment est complété
-	if (booking.status !== 'Paid' && booking.status !== 'NoPaymentRequired') {
+	if (booking.status !== 'Paid' && booking.status !== 'NoPaymentRequired' &&  booking.status !== 'PartiallyPaid') {
 		await saveBookingItemsAsSkipped(booking, 'None');
 		customLog(
 			`Booking ${bookingReference} has been skipped because it is not fully paid`,
