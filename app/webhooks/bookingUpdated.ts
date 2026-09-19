@@ -145,7 +145,6 @@ export async function handleUpdatedWebhook(payload: any) {
 			price =
 				Math.round((item.cost * item.quantity - item.discount) * 100) / 100;
 		}
-		const isPriceTooLow = item.discount / item.quantity > item.cost / 2;
 
 		// Vérifier si le booking existe déjà dans la base de données (Create or update)
 		const dbItem = await getSyncedItem(bookingReference, item.bookingItemId);
@@ -226,11 +225,8 @@ export async function handleUpdatedWebhook(payload: any) {
 				);
 				logMessage += `Updated synced item for booking ${bookingReference} and item ${item.bookingItemId}.\n`;
 
-				if (
-					(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
-					attraction === 'ZLVR'
-				) {
-					logMessage += `Discount too high detected. Sending an email alert to justify the session in portal.`;
+				if (created?.needsJustification) {
+					logMessage += `ZL flagged this session as needing a price justification. Sending an email alert.`;
 					sendEmail(config.email.admin_email, 1, {
 						bookingReference: bookingReference,
 						startDate: item.bookingDate,
@@ -321,11 +317,8 @@ export async function handleUpdatedWebhook(payload: any) {
 			);
 			logMessage += `Created synced item for booking ${bookingReference} and item ${item.bookingItemId}.`;
 
-			if (
-				(isPriceTooLow || booking.status === 'NoPaymentRequired') &&
-				attraction === 'ZLVR'
-			) {
-				logMessage += `\nDiscount too high detected. Sending an email alert to justify the session in portal.`;
+			if (created?.needsJustification) {
+				logMessage += `\nZL flagged this session as needing a price justification. Sending an email alert.`;
 				sendEmail(config.email.admin_email, 1, {
 					bookingReference: bookingReference,
 					startDate: item.bookingDate,
@@ -434,6 +427,19 @@ async function syncRollerBookingComments(
 
 async function saveBookingItemsAsSkipped(booking: any, attraction: string) {
 	for (const item of booking.items ?? []) {
+		const dbItem = await getSyncedItem(
+			booking.bookingReference,
+			item.bookingItemId,
+		);
+
+		// Payment status can be transiently non-Paid (e.g. partially paid while
+		// adding a player before returning to fully paid). Don't wipe out an
+		// already booked ZL session's record in that case, or it becomes
+		// untracked and won't be cancelled/updated correctly afterwards.
+		if (dbItem?.zl_booked) {
+			continue;
+		}
+
 		await saveSyncedItem(
 			booking,
 			item,
