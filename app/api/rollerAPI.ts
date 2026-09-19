@@ -20,6 +20,18 @@ function normalizeComments(value: string | null | undefined) {
 		.join('\n');
 }
 
+function splitCommentLines(value: string | null | undefined) {
+	return String(value ?? '')
+		.replace(/\r\n/g, '\n')
+		.split('\n')
+		.map((line) => line.trim())
+		.filter((line) => line.length > 0);
+}
+
+function isPortalLinkLine(line: string) {
+	return /^portal\.zerolatencyvr\.com\//i.test(line);
+}
+
 async function getRollerBookingComments(rollerBookingId: string) {
 	const retryMax = 3;
 	const delay = 1000;
@@ -142,17 +154,22 @@ export async function updateRollerBookingComments(
 	const links = [...new Set(zlBookingIds.map((id) => String(id)))].sort(
 		(a, b) => a.localeCompare(b),
 	);
-	const nextComments = links
-		.map(
-			(zlBookingId) =>
-				`portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${zlBookingId}`,
-		)
-		.join('\n');
+	const portalLinks = links.map(
+		(zlBookingId) =>
+			`portal.zerolatencyvr.com/${config.zl.site_id}/bookings/${zlBookingId}`,
+	);
 
 	let sourceComments = currentComments;
 	if (sourceComments == null) {
 		sourceComments = await getRollerBookingComments(rollerBookingId);
 	}
+
+	// Preserve any manual/staff comments already on the booking. Only manage
+	// our own portal link lines so we never delete unrelated notes.
+	const preservedLines = splitCommentLines(sourceComments).filter(
+		(line) => !isPortalLinkLine(line),
+	);
+	const nextComments = [...preservedLines, ...portalLinks].join('\n');
 
 	if (normalizeComments(sourceComments) === normalizeComments(nextComments)) {
 		customLog(
