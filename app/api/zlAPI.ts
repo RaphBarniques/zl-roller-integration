@@ -15,6 +15,7 @@ import { getToken, ZLCookie } from './zlAuth.ts';
 export type ZLSessionCreateResult = {
 	bookingId: number;
 	customerId: string | null;
+	needsJustification: boolean;
 };
 
 export type ZLPlayerProfile = {
@@ -122,6 +123,17 @@ export type ZLSessionSignInPayload = {
 	CountryCode: string | null;
 };
 
+// underchargeStatusId > 0 means ZL flagged the booking as needing a price justification.
+function extractNeedsJustification(data: Record<string, unknown>) {
+	const candidate =
+		data.underchargeStatusId ??
+		(data.Product as Record<string, unknown> | undefined)?.underchargeStatusId ??
+		(data.Booking as Record<string, unknown> | undefined)?.underchargeStatusId ??
+		(data.Charge as Record<string, unknown> | undefined)?.underchargeStatusId;
+
+	return Number(candidate) > 0;
+}
+
 function extractZLCustomerId(data: Record<string, unknown>) {
 	const candidate =
 		(data.CustomerGuid as string | undefined) ??
@@ -213,7 +225,6 @@ export async function createZLSession(
 			sessionName: null,
 			slots: slots,
 			userId: null,
-			paymentMethodTypeId: 5,
 			overridePrice: price,
 			overrideOpenTime: true,
 			overrideStartTime: bookingDate,
@@ -230,6 +241,7 @@ export async function createZLSession(
 			bookingSystemId: null,
 			payInFull: true,
 			rewardFlowData: null,
+			paymentMethodTypeId: 15,
 		};
 		const response = await fetch(
 			`${config.zl.api_base_url}/sites/${config.zl.site_id}/bookings`,
@@ -283,7 +295,7 @@ export async function createZLSession(
 				'INFO',
 			);
 
-			await confirmZLSession(
+			const confirmNeedsJustification = await confirmZLSession(
 				Number(rollerBookingID),
 				Number(rollerSessionID),
 				bookingId,
@@ -295,6 +307,8 @@ export async function createZLSession(
 			return {
 				bookingId,
 				customerId: extractZLCustomerId(data),
+				needsJustification:
+					extractNeedsJustification(data) || Boolean(confirmNeedsJustification),
 			};
 		}
 	}
@@ -663,7 +677,7 @@ export async function confirmZLSession(
 			CurrencyCode: 'CAD',
 			DateCreated: normalizeIsoTimestamp(dateCreated),
 			PaymentMethodReference: 'Cash',
-			PaymentMethodTypeId: 5,
+			PaymentMethodTypeId: 15,
 			SiteId: Number(config.zl.site_id),
 			Tax: tax,
 			EmailAddress: email,
@@ -695,14 +709,18 @@ export async function confirmZLSession(
 				`ZL session confirmed successfully for Roller booking ${rollerBookingID} with ZL session ID: ${zlBookingID}`,
 				'INFO',
 			);
-			return;
+			const data = (await response.json().catch(() => ({}))) as Record<
+				string,
+				unknown
+			>;
+			return extractNeedsJustification(data);
 		}
 	}
 	customLog(
 		`Failed to confirm ZL session for Roller booking ${rollerBookingID} after ${retryMax} attempts`,
 		'ERROR',
 	);
-	return null;
+	return false;
 }
 
 export async function deleteZLSession(
