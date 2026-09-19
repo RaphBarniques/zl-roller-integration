@@ -13,6 +13,27 @@ import {
 	getQueueState,
 } from '../webhooks/queue.ts';
 
+function spawnScript(baseName: string) {
+	if (process.platform === 'win32') {
+		return Bun.spawnSync(
+			[
+				'powershell',
+				'-ExecutionPolicy',
+				'Bypass',
+				'-File',
+				`./scripts/${baseName}.ps1`,
+			],
+			{ cwd: process.cwd(), stdout: 'pipe', stderr: 'pipe' },
+		);
+	}
+
+	return Bun.spawnSync(['bash', `./scripts/${baseName}.sh`], {
+		cwd: process.cwd(),
+		stdout: 'pipe',
+		stderr: 'pipe',
+	});
+}
+
 export async function getLogs(req: Request) {
 	const url = new URL(req.url);
 	const level = url.searchParams.get('level') || 'ALL';
@@ -157,16 +178,8 @@ export async function manageAdminAction(req: Request) {
 
 	if (body.action === 'update') {
 		customLog('Admin requested update + restart', 'WARN');
-		const scriptPath = './scripts/update.ps1';
 
-		const pull = Bun.spawnSync(
-			['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath],
-			{
-				cwd: process.cwd(),
-				stdout: 'pipe',
-				stderr: 'pipe',
-			},
-		);
+		const pull = spawnScript('update');
 
 		if (pull.exitCode !== 0) {
 			const stderr = new TextDecoder().decode(pull.stderr).trim();
@@ -197,16 +210,8 @@ export async function manageAdminAction(req: Request) {
 
 	if (body.action === 'backup') {
 		customLog('Admin requested manual backup', 'WARN');
-		const scriptPath = './scripts/manualbackup.ps1';
 
-		const backup = Bun.spawnSync(
-			['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath],
-			{
-				cwd: process.cwd(),
-				stdout: 'pipe',
-				stderr: 'pipe',
-			},
-		);
+		const backup = spawnScript('manualbackup');
 
 		if (backup.exitCode !== 0) {
 			const stderr = new TextDecoder().decode(backup.stderr).trim();
