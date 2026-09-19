@@ -157,10 +157,10 @@ export async function manageAdminAction(req: Request) {
 
 	if (body.action === 'update') {
 		customLog('Admin requested update + restart', 'WARN');
-		const repoDir = process.cwd().replaceAll('\\', '/');
+		const scriptPath = './scripts/update.ps1';
 
 		const pull = Bun.spawnSync(
-			['git', '-c', `safe.directory=${repoDir}`, 'pull', '--ff-only'],
+			['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath],
 			{
 				cwd: process.cwd(),
 				stdout: 'pipe',
@@ -198,7 +198,6 @@ export async function manageAdminAction(req: Request) {
 	if (body.action === 'backup') {
 		customLog('Admin requested manual backup', 'WARN');
 		const scriptPath = './scripts/manualbackup.ps1';
-		const repoDir = process.cwd().replaceAll('\\', '/');
 
 		const backup = Bun.spawnSync(
 			['powershell', '-ExecutionPolicy', 'Bypass', '-File', scriptPath],
