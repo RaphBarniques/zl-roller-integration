@@ -1,0 +1,2318 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Kiosk Sign-in</title>
+		<style>
+			:root {
+				--nav-bg: #171826;
+				--ink: #10163a;
+				--muted: #58607d;
+				--line: #d8dce6;
+				--panel: #f3f5fa;
+				--chip: #1b1f36;
+				--accent: #42b3ff;
+				--button: #20233a;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+				background: #fff;
+				color: var(--ink);
+			}
+
+			.app {
+				min-height: 100vh;
+				width: 100%;
+				max-width: none;
+				margin: 0 auto;
+				border-left: none;
+				border-right: none;
+				background: #fff;
+			}
+
+			.topbar {
+				height: 56px;
+				background: var(--nav-bg);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 18px;
+				color: #fff;
+			}
+
+			.logo {
+				display: flex;
+				align-items: center;
+				line-height: 1;
+				cursor: pointer;
+				user-select: none;
+			}
+
+			.logo-image {
+				height: 30px;
+				width: auto;
+				display: block;
+			}
+
+			.actions {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				font-size: 14px;
+			}
+
+			.lang-pill {
+				border: 1px solid #3a3c53;
+				border-radius: 9px;
+				height: 34px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				background: transparent;
+				font-size: 13px;
+			}
+
+			.lang-pill {
+				padding: 0 12px;
+				font-weight: 700;
+			}
+
+			.cancel {
+				border: none;
+				color: #fff;
+				opacity: 0.88;
+				font-size: 13px;
+				font-weight: 700;
+				background: transparent;
+				cursor: pointer;
+			}
+
+			.page {
+				padding: 24px 26px 42px;
+			}
+
+			.back {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 20px;
+				font-weight: 700;
+				color: #1f365f;
+				padding: 8px 0px;
+				text-decoration: none;
+			}
+
+			.back:hover {
+				background: #e6edff;
+			}
+
+			.back:focus-visible {
+				outline: 2px solid #3e65ad;
+				outline-offset: 2px;
+			}
+
+			h1 {
+				margin: 15px 0 20px 0;
+				font-size: 35px;
+				line-height: 1.06;
+				font-weight: 900;
+				letter-spacing: -0.01em;
+			}
+
+			h2 {
+				margin: 0 0 16px;
+				font-size: 54px;
+				line-height: 1.06;
+				font-weight: 900;
+				letter-spacing: -0.01em;
+			}
+
+			.panel {
+				background: var(--panel);
+				border-radius: 14px;
+				padding: 18px;
+			}
+
+			.hint {
+				font-size: 20px;
+				color: #5f6791;
+				margin-bottom: 16px;
+			}
+
+			.session-toolbar {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				margin-bottom: 14px;
+			}
+
+			.session-date-label {
+				font-size: 14px;
+				color: #63709c;
+				font-weight: 700;
+			}
+
+			.previous-toggle {
+				border: 1px solid #c8d2e8;
+				background: #fff;
+				border-radius: 9px;
+				padding: 10px 14px;
+				font-size: 14px;
+				font-weight: 700;
+				cursor: pointer;
+				color: #1f3f73;
+			}
+
+			.previous-toggle:disabled {
+				opacity: 0.5;
+				cursor: default;
+			}
+
+			.session-card,
+			.booking-card {
+				background: #fff;
+				border-radius: 9px;
+				border: 1px solid #e1e5ef;
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 300px;
+				overflow: hidden;
+				margin-bottom: 12px;
+			}
+
+			.booking-card.full {
+				opacity: 0.58;
+				border-style: dashed;
+			}
+
+			.session-body,
+			.booking-body {
+				padding: 16px;
+				font-size: 16px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				min-height: 160px;
+			}
+
+			.booking-body {
+				min-height: 80px;
+			}
+
+			.badge {
+				display: inline-block;
+				background: #17203f;
+				color: #fff;
+				border-radius: 999px;
+				padding: 4px 10px;
+				font-size: 11px;
+				font-weight: 700;
+				margin-bottom: 10px;
+				width: fit-content;
+			}
+
+			.badge * {
+				margin: auto;
+			}
+
+			.time {
+				font-size: 30px;
+				font-weight: 900;
+				line-height: 1.1;
+			}
+
+			.meta {
+				color: #5f6788;
+				margin-top: 4px;
+				font-size: 21px;
+			}
+
+			.players {
+				margin-top: 8px;
+				line-height: 1.25;
+				font-size: 20px;
+				font-weight: 900;
+			}
+
+			.more {
+				font-size: 18px;
+				color: #5270a0;
+				margin-top: 8px;
+			}
+
+			.poster {
+				position: relative;
+				background-color: #1c1e2b;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				overflow: hidden;
+			}
+
+			.poster::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background:
+					linear-gradient(180deg, rgba(16, 18, 30, 0.04), rgba(16, 18, 30, 0.46)),
+					radial-gradient(
+						circle at 80% 35%,
+						rgba(255, 184, 105, 0.28),
+						transparent 46%
+					);
+			}
+
+			.poster::after {
+				content: attr(data-title);
+				position: absolute;
+				left: 12px;
+				width: calc(100% - 24px);
+				bottom: 12px;
+				font-size: 22px;
+				font-weight: 900;
+				color: #fff;
+			}
+
+			.booking-title {
+				font-size: 30px;
+				font-weight: 900;
+				line-height: 1.1;
+			}
+
+			.booking-email {
+				font-size: 19px;
+				color: #4f6494;
+				margin-top: 6px;
+			}
+
+			.slots {
+				margin-top: 6px;
+				font-size: 18px;
+				color: #3d4e74;
+				font-style: italic;
+			}
+
+			.form-row {
+				margin-bottom: 16px;
+			}
+
+			label {
+				display: block;
+				font-size: 18px;
+				color: #505980;
+				margin-bottom: 8px;
+			}
+
+			label .required {
+				color: #ff5f54;
+			}
+
+			input,
+			select {
+				width: 100%;
+				height: 46px;
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				padding: 0 14px;
+				background: #fff;
+				font: inherit;
+				font-size: 16px;
+			}
+
+			.inline-2,
+			.inline-3 {
+				display: grid;
+				gap: 14px;
+			}
+
+			.inline-2 {
+				grid-template-columns: 1fr 1fr;
+			}
+
+			.inline-3 {
+				grid-template-columns: 1fr 1fr 1fr;
+			}
+
+			.why {
+				margin-top: 18px;
+			}
+
+			.marketing-hero {
+				position: relative;
+				margin-bottom: 14px;
+			}
+
+			.marketing-banner {
+				width: 100%;
+				height: 86px;
+				display: block;
+				border-radius: 10px;
+				object-fit: cover;
+			}
+
+			.marketing-title {
+				position: absolute;
+				top: 50%;
+				left: 16px;
+				transform: translateY(-50%);
+				margin: 0;
+				font-size: 35px;
+				line-height: 1.05;
+				font-weight: 900;
+				color: #10163a;
+				letter-spacing: -0.01em;
+			}
+
+			.marketing-copy {
+				font-size: 15px;
+				color: #2d3552;
+				line-height: 1.45;
+				margin-bottom: 20px;
+			}
+
+			.marketing-perks {
+				display: grid;
+				grid-template-columns: repeat(4, minmax(0, 1fr));
+				gap: 12px;
+				margin-bottom: 30px;
+			}
+
+			.marketing-perk {
+				display: grid;
+				justify-items: center;
+				text-align: center;
+				gap: 8px;
+			}
+
+			.marketing-perk-dot {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				display: grid;
+				place-items: center;
+			}
+
+			.marketing-perk-dot img {
+				width: 50px;
+				height: 50px;
+				display: block;
+			}
+
+			.marketing-perk-text {
+				font-size: 13px;
+				line-height: 1.3;
+				color: #2f3550;
+			}
+
+			.marketing-preferences-title {
+				font-size: 12px;
+				font-weight: 800;
+				letter-spacing: 0.08em;
+				color: #4f5a7d;
+				text-transform: uppercase;
+				margin: 10px 0 4px;
+			}
+
+			.marketing-preferences-note {
+				font-size: 14px;
+				color: #5a678e;
+				margin: 0 0 20px;
+			}
+
+			.why h3 {
+				margin: 0 0 14px;
+				font-size: 18px;
+				color: #546187;
+				font-weight: 400;
+			}
+
+			.why-item {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				font-size: 18px;
+				line-height: 1.35;
+				margin-bottom: 12px;
+			}
+
+			.dot {
+				width: 42px;
+				height: 42px;
+				border-radius: 50%;
+				background: #fff;
+				border: 1px solid #e2e6f0;
+				flex: 0 0 42px;
+				display: grid;
+				place-items: center;
+				color: #22345d;
+			}
+
+			.dot svg {
+				width: 24px;
+				height: 24px;
+				display: block;
+			}
+
+			.actions-bottom {
+				margin-top: 28px;
+			}
+
+			.btn {
+				width: 100%;
+				height: 52px;
+				border: none;
+				border-radius: 10px;
+				background: var(--button);
+				color: #fff;
+				font: inherit;
+				font-weight: 700;
+				font-size: 17px;
+			}
+
+			.btn.secondary {
+				background: #a1a3af;
+				color: #fff;
+			}
+
+			.waiver-text {
+				font-size: 15px;
+				line-height: 1.55;
+				color: #39405f;
+				max-height: 360px;
+				overflow: auto;
+				border: 1px solid #d7ddeb;
+				border-radius: 10px;
+				padding: 12px;
+				background: #fff;
+				padding-right: 8px;
+				white-space: pre-wrap;
+			}
+
+			.waiver-scroll-wrap {
+				position: relative;
+			}
+
+			.waiver-scroll-arrow {
+				position: absolute;
+				right: 12px;
+				bottom: 12px;
+				width: 44px;
+				height: 44px;
+				border: none;
+				border-radius: 50%;
+				background: #1f355f;
+				color: #fff;
+				font-size: 24px;
+				line-height: 1;
+				cursor: pointer;
+				box-shadow: 0 6px 14px rgba(11, 21, 44, 0.28);
+			}
+
+			.agree {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-top: 16px;
+				font-size: 15px;
+			}
+
+			.agree-stack {
+				display: grid;
+				gap: 12px;
+				margin-top: 16px;
+			}
+
+			.agree input[type="checkbox"] {
+				width: 18px;
+				height: 18px;
+			}
+
+			.step[data-step="6"] .panel {
+				padding: 12px;
+			}
+
+			.step[data-step="6"] .agree-stack {
+				gap: 10px;
+				margin-top: 10px;
+			}
+
+			.step[data-step="6"] .agree {
+				margin-top: 0;
+				font-size: 15px;
+				line-height: 1.25;
+			}
+
+			.step[data-step="6"] .actions-bottom {
+				margin-top: 18px;
+			}
+
+			.step {
+				display: none;
+			}
+
+			.step.active {
+				display: block;
+			}
+
+			.notice {
+				margin-top: 14px;
+				font-size: 15px;
+				color: #315287;
+			}
+
+			.notice.error {
+				color: #a12f2a;
+			}
+
+			.match-list {
+				display: grid;
+			}
+
+			.inline-actions {
+				display: grid;
+				gap: 12px;
+			}
+
+			.aliases {
+				margin-top: 10px;
+				font-size: 16px;
+				color: #425883;
+			}
+
+			.muted {
+				color: #6f7895;
+			}
+
+			@media (max-width: 900px) {
+				.page {
+					padding: 18px 18px 28px;
+				}
+
+				h1,
+				h2 {
+					font-size: 35px;
+				}
+
+				.session-card,
+				.booking-card {
+					grid-template-columns: minmax(0, 1fr) 300px;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.topbar {
+					height: 50px;
+					padding: 0 12px;
+				}
+
+				.logo-text {
+					font-size: 16px;
+				}
+
+				.logo-image {
+					height: 26px;
+				}
+
+				.page {
+					padding: 16px 14px 24px;
+				}
+
+				.panel {
+					padding: 14px;
+				}
+
+				.session-card,
+				.booking-card {
+					grid-template-columns: minmax(0, 1fr) 300px;
+				}
+
+				.players {
+					font-size: 31px;
+				}
+
+				.booking-title {
+					font-size: 29px;
+				}
+
+				.time {
+					font-size: 30px;
+				}
+
+				.hint {
+					font-size: 20px;
+				}
+
+				.meta,
+				.more,
+				.booking-email,
+				.slots,
+				label,
+				.why h3,
+				.why-item,
+				.notice,
+				.agree,
+				input,
+				select,
+				.btn {
+					font-size: 15px;
+				}
+
+				.marketing-perks {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+
+				.marketing-title {
+					font-size: 30px;
+				}
+
+				.marketing-banner {
+					height: 80px;
+				}
+			}
+
+			@media (max-width: 520px) {
+				.page {
+					padding: 14px 12px 22px;
+				}
+
+				h1,
+				h2 {
+					font-size: 36px;
+				}
+
+				.session-card,
+				.booking-card {
+					grid-template-columns: 1fr;
+				}
+
+				.poster {
+					min-height: 140px;
+				}
+
+				.actions {
+					gap: 6px;
+				}
+
+				.lang-pill,
+				.icon-btn {
+					height: 28px;
+					font-size: 11px;
+				}
+
+				.session-body,
+				.booking-body {
+					padding: 14px;
+				}
+
+				.time {
+					font-size: 27px;
+				}
+
+				.players {
+					font-size: 27px;
+				}
+
+				.booking-title {
+					font-size: 24px;
+				}
+
+				.btn {
+					height: 48px;
+				}
+
+				.marketing-title {
+					font-size: 26px;
+					left: 12px;
+				}
+
+				.marketing-banner {
+					height: 74px;
+				}
+
+				.inline-2,
+				.inline-3 {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (max-width: 420px) {
+				h1,
+				h2 {
+					font-size: 32px;
+				}
+
+				.hint,
+				.notice,
+				label,
+				.why-item {
+					font-size: 13px;
+				}
+
+				.page {
+					padding: 12px 10px 20px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app">
+			<header class="topbar">
+				<div
+					class="logo"
+					id="brandLogo"
+					title="Double tap to select a different date"
+				>
+					<img
+						class="logo-image"
+						src="/assets/zl-logo.png"
+						alt="Zero Latency VR"
+					/>
+				</div>
+				<input id="sessionDateOverride" type="date" hidden />
+				<div class="actions">
+					<div class="lang-pill">English</div>
+					<button type="button" id="cancelButton" class="cancel">Cancel</button>
+				</div>
+			</header>
+
+			<main class="page">
+				<section class="step active" data-step="1">
+					<h1>Select your session</h1>
+					<div class="panel">
+						<div class="hint">Pick the start time of your booking.</div>
+						<div class="session-toolbar">
+							<button
+								type="button"
+								id="togglePreviousSessionsButton"
+								class="previous-toggle"
+							>
+								Display previous sessions
+							</button>
+							<div id="selectedDateLabel" class="session-date-label"></div>
+						</div>
+						<div id="sessionOptions" class="match-list"></div>
+						<div id="sessionNotice" class="notice" style="display: none"></div>
+					</div>
+				</section>
+
+				<section class="step" data-step="2">
+					<a class="back" href="#" data-back="1">&lsaquo; Back</a>
+					<h1>Find your booking</h1>
+					<div class="panel">
+						<div id="bookingHint" class="hint">
+							Pick the booking you're part of.
+						</div>
+						<div id="bookingOptions" class="match-list"></div>
+						<div id="bookingNotice" class="notice" style="display: none"></div>
+					</div>
+				</section>
+
+				<section class="step" data-step="3">
+					<a class="back" href="#" data-back="2">&lsaquo; Back</a>
+					<h1>What's your email?</h1>
+					<div class="panel">
+						<div class="hint">We'll check for an existing player profile.</div>
+						<div class="form-row">
+							<label for="email">Email address</label>
+							<input id="email" type="email" />
+						</div>
+						<div class="why">
+							<h3>Why we ask for your email</h3>
+							<div class="why-item">
+								<div class="dot">
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										aria-hidden="true"
+										focusable="false"
+									>
+										<path
+											fill="currentColor"
+											d="M18 4V2H6v2H2v3a4 4 0 0 0 4 4 6.002 6.002 0 0 0 5 4.91V18H8a1 1 0 0 0 0 2h8a1 1 0 0 0 0-2h-3v-2.09A6.002 6.002 0 0 0 18 11a4 4 0 0 0 4-4V4h-4zM6 9a2 2 0 0 1-2-2V6h2v3zm14-2a2 2 0 0 1-2 2V6h2v1z"
+										></path>
+									</svg>
+								</div>
+								<div>
+									Get your game scores sent straight to you after you play.
+								</div>
+							</div>
+							<div class="why-item">
+								<div class="dot">
+									<svg
+										width="24"
+										height="24"
+										viewBox="0 0 24 24"
+										aria-hidden="true"
+										focusable="false"
+									>
+										<path
+											fill="currentColor"
+											d="M4 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2.382l3.553 1.776A1 1 0 0 0 22 15.5v-7a1 1 0 0 0-1.447-.894L17 9.382V7a2 2 0 0 0-2-2H4zm16 4.618v4.764L17 12.5l3-2.882V9.618z"
+										></path>
+									</svg>
+								</div>
+								<div>
+									Receive your take-home video highlights to relive the action.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="actions-bottom">
+						<button
+							type="button"
+							class="btn secondary"
+							id="emailContinue"
+							disabled
+						>
+							Continue
+						</button>
+					</div>
+					<div class="notice error" id="emailError" style="display: none"></div>
+				</section>
+
+				<section class="step" data-step="4">
+					<a class="back" href="#" data-back="3">&lsaquo; Back</a>
+					<h1>Is this you?</h1>
+					<div class="panel">
+						<div class="hint">
+							Choose an existing profile or continue as a new player.
+						</div>
+						<div id="profileMatches" class="match-list"></div>
+					</div>
+					<div class="actions-bottom inline-actions">
+						<button
+							type="button"
+							class="btn secondary"
+							id="createNewProfileButton"
+						>
+							Create new profile
+						</button>
+					</div>
+				</section>
+
+				<section class="step" data-step="5">
+					<a class="back" href="#" data-back="3">&lsaquo; Back</a>
+					<h1>Your profile</h1>
+					<div class="panel">
+						<input id="playerGuidInput" type="hidden" />
+						<div class="form-row" id="profileEmailRow">
+							<label id="profileEmailLabel">Email</label>
+							<input id="profileEmail" type="email" value="" />
+						</div>
+						<div class="inline-2 form-row">
+							<div id="firstNameGroup">
+								<label id="firstNameLabel"
+									>First name <span class="required">*</span></label
+								>
+								<input id="firstNameInput" type="text" />
+							</div>
+							<div id="lastNameGroup">
+								<label id="lastNameLabel"
+									>Last name <span class="required">*</span></label
+								>
+								<input id="lastNameInput" type="text" />
+							</div>
+						</div>
+						<div class="form-row" id="displayNameRow">
+							<label id="displayNameLabel">Player alias</label>
+							<input id="aliasInput" type="text" />
+						</div>
+						<div class="inline-3 form-row">
+							<div id="phoneNumberGroup">
+								<label id="phoneNumberLabel"
+									>Phone <span class="required">*</span></label
+								>
+								<select id="countryCodeInput">
+									<option>Canada (+1)</option>
+								</select>
+							</div>
+							<div id="phoneNumberInputGroup">
+								<label>&nbsp;</label>
+								<input id="phoneInput" type="text" />
+							</div>
+							<div id="postcodeGroup">
+								<label id="postcodeLabel">Postcode</label>
+								<input id="postcodeInput" type="text" />
+							</div>
+						</div>
+						<div class="inline-2 form-row">
+							<div id="dateOfBirthGroup">
+								<label id="dateOfBirthLabel">Date of birth</label>
+								<div class="inline-3">
+									<input id="birthDayInput" type="text" placeholder="Day" />
+									<select id="birthMonthInput">
+										<option value="">Month</option>
+										<option value="01">Jan</option>
+										<option value="02">Feb</option>
+										<option value="03">Mar</option>
+										<option value="04">Apr</option>
+										<option value="05">May</option>
+										<option value="06">Jun</option>
+										<option value="07">Jul</option>
+										<option value="08">Aug</option>
+										<option value="09">Sep</option>
+										<option value="10">Oct</option>
+										<option value="11">Nov</option>
+										<option value="12">Dec</option>
+									</select>
+									<input id="birthYearInput" type="text" placeholder="Year" />
+								</div>
+							</div>
+							<div id="genderGroup">
+								<label id="genderLabel"
+									>Gender <span class="required">*</span></label
+								>
+								<select id="genderInput">
+									<option value="">Select...</option>
+									<option value="M">Male</option>
+									<option value="F">Female</option>
+									<option value="O">Other</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="actions-bottom">
+						<button type="button" class="btn" id="profileContinue">
+							Continue
+						</button>
+					</div>
+					<div
+						class="notice error"
+						id="profileError"
+						style="display: none"
+					></div>
+				</section>
+
+				<section class="step" data-step="6">
+					<a class="back" href="#" data-back="5">&lsaquo; Back</a>
+					<div class="panel">
+						<div class="marketing-hero">
+							<img
+								class="marketing-banner"
+								src="/assets/banner.jpg"
+								alt="Marketing rewards"
+							/>
+							<h1 class="marketing-title">Unlock exclusive perks</h1>
+						</div>
+						<div class="marketing-copy">
+							Join our community and enjoy rewards such as:
+						</div>
+						<div class="marketing-perks">
+							<div class="marketing-perk">
+								<div class="marketing-perk-dot">
+									<img
+										src="/assets/sign_in_tablet_icon_rocket.png"
+										alt=""
+										aria-hidden="true"
+									/>
+								</div>
+								<div class="marketing-perk-text">
+									Early access to new experiences
+								</div>
+							</div>
+							<div class="marketing-perk">
+								<div class="marketing-perk-dot">
+									<img
+										src="/assets/sign_in_tablet_icon_ticket.png"
+										alt=""
+										aria-hidden="true"
+									/>
+								</div>
+								<div class="marketing-perk-text">
+									Exclusive return-player offers
+								</div>
+							</div>
+							<div class="marketing-perk">
+								<div class="marketing-perk-dot">
+									<img
+										src="/assets/sign_in_tablet_icon_star.png"
+										alt=""
+										aria-hidden="true"
+									/>
+								</div>
+								<div class="marketing-perk-text">Special event invitations</div>
+							</div>
+							<div class="marketing-perk">
+								<div class="marketing-perk-dot">
+									<img
+										src="/assets/sign_in_tablet_icon_lightning.png"
+										alt=""
+										aria-hidden="true"
+									/>
+								</div>
+								<div class="marketing-perk-text">
+									Limited-time deals and promotions
+								</div>
+							</div>
+						</div>
+						<div class="marketing-preferences-title">
+							Choose how we keep in touch
+						</div>
+						<p class="marketing-preferences-note">
+							No spam. Unsubscribe anytime.
+						</p>
+						<div class="agree-stack">
+							<label class="agree" id="subscribeEmailRow"
+								><input type="checkbox" id="subscribeEmailInput" /> Yes, email
+								me rewards, offers and updates.</label
+							>
+							<label class="agree" id="subscribeSmsRow"
+								><input type="checkbox" id="subscribeSmsInput" /> Yes, SMS me
+								rewards, offers and updates.</label
+							>
+						</div>
+					</div>
+					<div class="actions-bottom">
+						<button type="button" class="btn" id="marketingContinue">
+							Continue
+						</button>
+					</div>
+				</section>
+
+				<section class="step" data-step="7">
+					<a class="back" href="#" data-back="6">&lsaquo; Back</a>
+					<h1>Waiver</h1>
+					<div class="panel">
+						<div class="hint">
+							Please review and accept the waiver before continuing.
+						</div>
+						<div class="waiver-scroll-wrap">
+							<div class="waiver-text" id="waiverTextBlock"></div>
+							<button
+								type="button"
+								id="waiverScrollDownButton"
+								class="waiver-scroll-arrow"
+								aria-label="Scroll waiver to bottom"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-arrow-down-icon lucide-arrow-down"
+								>
+									<title>Scroll down</title>
+									<path d="M12 5v14" />
+									<path d="m19 12-7 7-7-7" />
+								</svg>
+							</button>
+						</div>
+						<input id="waiverSignedAtInput" type="hidden" />
+						<label class="agree"
+							><input type="checkbox" id="waiverCheck" /> I have read and agree
+							to the waiver terms.</label
+						>
+					</div>
+					<div class="actions-bottom">
+						<button
+							type="button"
+							class="btn secondary"
+							id="waiverContinue"
+							disabled
+						>
+							Complete sign in
+						</button>
+					</div>
+					<div class="notice" id="doneNotice" style="display: none"></div>
+					<div
+						class="actions-bottom inline-actions"
+						id="completionActions"
+						style="display: none"
+					>
+						<button type="button" class="btn" id="signInAnotherButton">
+							Sign in another player
+						</button>
+						<button type="button" class="btn secondary" id="closeFlowButton">
+							Close
+						</button>
+					</div>
+				</section>
+			</main>
+		</div>
+
+		<script>
+			const query = new URLSearchParams(window.location.search);
+			const token = query.get("token") || "";
+			const launchSource = query.get("source") || "phone";
+			const steps = Array.from(document.querySelectorAll(".step"));
+			const cancelButton = document.getElementById("cancelButton");
+			const sessionOptions = document.getElementById("sessionOptions");
+			const sessionNotice = document.getElementById("sessionNotice");
+			const togglePreviousSessionsButton = document.getElementById(
+				"togglePreviousSessionsButton",
+			);
+			const selectedDateLabel = document.getElementById("selectedDateLabel");
+			const sessionDateOverride = document.getElementById(
+				"sessionDateOverride",
+			);
+			const brandLogo = document.getElementById("brandLogo");
+			const bookingHint = document.getElementById("bookingHint");
+			const bookingOptions = document.getElementById("bookingOptions");
+			const bookingNotice = document.getElementById("bookingNotice");
+			const emailInput = document.getElementById("email");
+			const emailContinue = document.getElementById("emailContinue");
+			const emailError = document.getElementById("emailError");
+			const profileMatches = document.getElementById("profileMatches");
+			const createNewProfileButton = document.getElementById(
+				"createNewProfileButton",
+			);
+			const playerGuidInput = document.getElementById("playerGuidInput");
+			const profileEmail = document.getElementById("profileEmail");
+			const firstNameInput = document.getElementById("firstNameInput");
+			const lastNameInput = document.getElementById("lastNameInput");
+			const aliasInput = document.getElementById("aliasInput");
+			const countryCodeInput = document.getElementById("countryCodeInput");
+			const phoneInput = document.getElementById("phoneInput");
+			const postcodeInput = document.getElementById("postcodeInput");
+			const birthDayInput = document.getElementById("birthDayInput");
+			const birthMonthInput = document.getElementById("birthMonthInput");
+			const birthYearInput = document.getElementById("birthYearInput");
+			const genderInput = document.getElementById("genderInput");
+			const subscribeEmailInput = document.getElementById(
+				"subscribeEmailInput",
+			);
+			const subscribeSmsInput = document.getElementById("subscribeSmsInput");
+			const profileContinue = document.getElementById("profileContinue");
+			const marketingContinue = document.getElementById("marketingContinue");
+			const profileError = document.getElementById("profileError");
+			const waiverBackLink = document.querySelector(
+				'.step[data-step="7"] [data-back]',
+			);
+			const waiverCheck = document.getElementById("waiverCheck");
+			const waiverTextBlock = document.getElementById("waiverTextBlock");
+			const waiverScrollDownButton = document.getElementById(
+				"waiverScrollDownButton",
+			);
+			const waiverSignedAtInput = document.getElementById(
+				"waiverSignedAtInput",
+			);
+			const waiverContinue = document.getElementById("waiverContinue");
+			const doneNotice = document.getElementById("doneNotice");
+			const completionActions = document.getElementById("completionActions");
+			const signInAnotherButton = document.getElementById(
+				"signInAnotherButton",
+			);
+			const closeFlowButton = document.getElementById("closeFlowButton");
+			const isKioskDeviceLaunch = launchSource === "kiosk-device";
+
+			if (!isKioskDeviceLaunch) {
+				cancelButton.style.display = "none";
+			}
+
+			const state = {
+				sessions: [],
+				selectedDate: null,
+				showPreviousSessions: false,
+				lastLogoTapMs: 0,
+				selectedSessionId: null,
+				selectedBookingId: null,
+				matchedPlayers: [],
+				selectedPlayer: null,
+				signedWaiverDateTimeIso: null,
+				waiverScrolledToBottom: false,
+				shouldShowMarketingStep: true,
+				signInConfig: null,
+			};
+
+			const defaultSignInConfig = {
+				waiverText: "",
+				defaultCountryCode: "+1",
+				fields: {
+					phoneNumber: "required",
+					postcode: "optional",
+					dateOfBirth: "optional",
+					gender: "required",
+				},
+			};
+
+			const countryCodeOptions = [
+				{ code: "+1", label: "Canada / US (+1)" },
+				{ code: "+7", label: "Russia / Kazakhstan (+7)" },
+				{ code: "+20", label: "Egypt (+20)" },
+				{ code: "+27", label: "South Africa (+27)" },
+				{ code: "+30", label: "Greece (+30)" },
+				{ code: "+31", label: "Netherlands (+31)" },
+				{ code: "+32", label: "Belgium (+32)" },
+				{ code: "+33", label: "France (+33)" },
+				{ code: "+34", label: "Spain (+34)" },
+				{ code: "+36", label: "Hungary (+36)" },
+				{ code: "+39", label: "Italy (+39)" },
+				{ code: "+40", label: "Romania (+40)" },
+				{ code: "+41", label: "Switzerland (+41)" },
+				{ code: "+43", label: "Austria (+43)" },
+				{ code: "+44", label: "United Kingdom (+44)" },
+				{ code: "+45", label: "Denmark (+45)" },
+				{ code: "+46", label: "Sweden (+46)" },
+				{ code: "+47", label: "Norway (+47)" },
+				{ code: "+48", label: "Poland (+48)" },
+				{ code: "+49", label: "Germany (+49)" },
+				{ code: "+51", label: "Peru (+51)" },
+				{ code: "+52", label: "Mexico (+52)" },
+				{ code: "+53", label: "Cuba (+53)" },
+				{ code: "+54", label: "Argentina (+54)" },
+				{ code: "+55", label: "Brazil (+55)" },
+				{ code: "+56", label: "Chile (+56)" },
+				{ code: "+57", label: "Colombia (+57)" },
+				{ code: "+58", label: "Venezuela (+58)" },
+				{ code: "+60", label: "Malaysia (+60)" },
+				{ code: "+61", label: "Australia (+61)" },
+				{ code: "+62", label: "Indonesia (+62)" },
+				{ code: "+63", label: "Philippines (+63)" },
+				{ code: "+64", label: "New Zealand (+64)" },
+				{ code: "+65", label: "Singapore (+65)" },
+				{ code: "+66", label: "Thailand (+66)" },
+				{ code: "+81", label: "Japan (+81)" },
+				{ code: "+82", label: "South Korea (+82)" },
+				{ code: "+84", label: "Vietnam (+84)" },
+				{ code: "+86", label: "China (+86)" },
+				{ code: "+90", label: "Turkey (+90)" },
+				{ code: "+91", label: "India (+91)" },
+				{ code: "+92", label: "Pakistan (+92)" },
+				{ code: "+93", label: "Afghanistan (+93)" },
+				{ code: "+94", label: "Sri Lanka (+94)" },
+				{ code: "+95", label: "Myanmar (+95)" },
+				{ code: "+98", label: "Iran (+98)" },
+				{ code: "+212", label: "Morocco (+212)" },
+				{ code: "+213", label: "Algeria (+213)" },
+				{ code: "+216", label: "Tunisia (+216)" },
+				{ code: "+218", label: "Libya (+218)" },
+				{ code: "+233", label: "Ghana (+233)" },
+				{ code: "+234", label: "Nigeria (+234)" },
+				{ code: "+254", label: "Kenya (+254)" },
+				{ code: "+255", label: "Tanzania (+255)" },
+				{ code: "+256", label: "Uganda (+256)" },
+				{ code: "+263", label: "Zimbabwe (+263)" },
+				{ code: "+351", label: "Portugal (+351)" },
+				{ code: "+352", label: "Luxembourg (+352)" },
+				{ code: "+353", label: "Ireland (+353)" },
+				{ code: "+354", label: "Iceland (+354)" },
+				{ code: "+355", label: "Albania (+355)" },
+				{ code: "+356", label: "Malta (+356)" },
+				{ code: "+357", label: "Cyprus (+357)" },
+				{ code: "+358", label: "Finland (+358)" },
+				{ code: "+359", label: "Bulgaria (+359)" },
+				{ code: "+370", label: "Lithuania (+370)" },
+				{ code: "+371", label: "Latvia (+371)" },
+				{ code: "+372", label: "Estonia (+372)" },
+				{ code: "+380", label: "Ukraine (+380)" },
+				{ code: "+385", label: "Croatia (+385)" },
+				{ code: "+386", label: "Slovenia (+386)" },
+				{ code: "+420", label: "Czechia (+420)" },
+				{ code: "+421", label: "Slovakia (+421)" },
+				{ code: "+852", label: "Hong Kong (+852)" },
+				{ code: "+853", label: "Macau (+853)" },
+				{ code: "+855", label: "Cambodia (+855)" },
+				{ code: "+856", label: "Laos (+856)" },
+				{ code: "+880", label: "Bangladesh (+880)" },
+				{ code: "+886", label: "Taiwan (+886)" },
+				{ code: "+960", label: "Maldives (+960)" },
+				{ code: "+961", label: "Lebanon (+961)" },
+				{ code: "+962", label: "Jordan (+962)" },
+				{ code: "+963", label: "Syria (+963)" },
+				{ code: "+964", label: "Iraq (+964)" },
+				{ code: "+965", label: "Kuwait (+965)" },
+				{ code: "+966", label: "Saudi Arabia (+966)" },
+				{ code: "+967", label: "Yemen (+967)" },
+				{ code: "+968", label: "Oman (+968)" },
+				{ code: "+971", label: "United Arab Emirates (+971)" },
+				{ code: "+972", label: "Israel (+972)" },
+				{ code: "+973", label: "Bahrain (+973)" },
+				{ code: "+974", label: "Qatar (+974)" },
+				{ code: "+975", label: "Bhutan (+975)" },
+				{ code: "+976", label: "Mongolia (+976)" },
+				{ code: "+977", label: "Nepal (+977)" },
+				{ code: "+992", label: "Tajikistan (+992)" },
+				{ code: "+993", label: "Turkmenistan (+993)" },
+				{ code: "+994", label: "Azerbaijan (+994)" },
+				{ code: "+995", label: "Georgia (+995)" },
+				{ code: "+996", label: "Kyrgyzstan (+996)" },
+				{ code: "+998", label: "Uzbekistan (+998)" },
+			];
+
+			function populateCountryCodeOptions() {
+				countryCodeInput.innerHTML = countryCodeOptions
+					.map(
+						(option) =>
+							`<option value="${option.code}">${option.label}</option>`,
+					)
+					.join("");
+			}
+
+			const fixedFieldModes = {
+				email: "required",
+				firstName: "required",
+				lastName: "required",
+				displayName: "optional",
+				subscribeEmail: "optional",
+				subscribeSms: "optional",
+			};
+
+			function escapeHtml(value) {
+				return String(value ?? "")
+					.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("'", "&#39;");
+			}
+
+			function getCurrentStepNumber() {
+				const current = steps.find((step) => step.classList.contains("active"));
+				return current ? Number(current.getAttribute("data-step")) : 1;
+			}
+
+			function setStep(stepNumber) {
+				steps.forEach((step) => {
+					step.classList.toggle(
+						"active",
+						Number(step.getAttribute("data-step")) === stepNumber,
+					);
+				});
+
+				if (stepNumber === 7) {
+					resetWaiverReadState();
+				}
+			}
+
+			function setWaiverBackStep(stepNumber) {
+				if (waiverBackLink) {
+					waiverBackLink.setAttribute("data-back", String(stepNumber));
+				}
+			}
+
+			async function shouldShowMarketingForPlayer(playerGuid) {
+				if (!playerGuid) return true;
+
+				const response = await fetch(
+					`/api/kiosk/sign-in/preferences?token=${encodeURIComponent(token)}&playerGuid=${encodeURIComponent(playerGuid)}`,
+				);
+				if (!response.ok) {
+					return true;
+				}
+
+				const result = await response.json().catch(() => ({}));
+				return Boolean(result.shouldShowMarketing);
+			}
+
+			function isValidEmail(value) {
+				return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+			}
+
+			function isValidPhoneNumber(value) {
+				const compact = value.replace(/[^\d+]/g, "");
+				const digitsOnly = compact.replace(/\D/g, "");
+				if (!/^\+?[\d\s().-]+$/.test(value)) return false;
+				return digitsOnly.length >= 7 && digitsOnly.length <= 15;
+			}
+
+			function isValidPostcode(value) {
+				return /^[A-Za-z0-9][A-Za-z0-9\s-]{1,9}$/.test(value);
+			}
+
+			function parseDateOfBirthFromInputs() {
+				const day = birthDayInput.value.trim();
+				const month = birthMonthInput.value.trim();
+				const year = birthYearInput.value.trim();
+
+				if (!day && !month && !year) {
+					return { value: null, error: null };
+				}
+
+				if (
+					!/^\d{1,2}$/.test(day) ||
+					!/^\d{2}$/.test(month) ||
+					!/^\d{4}$/.test(year)
+				) {
+					return {
+						value: null,
+						error: "Date of birth must use valid day, month, and year.",
+					};
+				}
+
+				const dayNum = Number(day);
+				const monthNum = Number(month);
+				const yearNum = Number(year);
+				if (
+					dayNum < 1 ||
+					dayNum > 31 ||
+					monthNum < 1 ||
+					monthNum > 12 ||
+					yearNum < 1900
+				) {
+					return { value: null, error: "Date of birth is not valid." };
+				}
+
+				const iso = `${year}-${month}-${day.padStart(2, "0")}`;
+				const parsed = new Date(`${iso}T00:00:00`);
+				if (
+					Number.isNaN(parsed.getTime()) ||
+					parsed.getFullYear() !== yearNum ||
+					parsed.getMonth() !== monthNum - 1 ||
+					parsed.getDate() !== dayNum
+				) {
+					return { value: null, error: "Date of birth is not valid." };
+				}
+
+				const today = new Date();
+				today.setHours(0, 0, 0, 0);
+				if (parsed > today) {
+					return {
+						value: null,
+						error: "Date of birth cannot be in the future.",
+					};
+				}
+
+				return { value: iso, error: null };
+			}
+
+			function setNotice(element, message = "", isError = false) {
+				element.textContent = message;
+				element.style.display = message ? "block" : "none";
+				element.classList.toggle("error", isError);
+			}
+
+			function getFieldMode(key) {
+				if (Object.hasOwn(defaultSignInConfig.fields, key)) {
+					return (
+						state.signInConfig?.fields?.[key] ||
+						defaultSignInConfig.fields[key] ||
+						"optional"
+					);
+				}
+
+				return fixedFieldModes[key] || "optional";
+			}
+
+			function setLabelRequired(labelId, required) {
+				const label = document.getElementById(labelId);
+				if (!label) return;
+				const plainText = label.textContent.replace(/\s*\*$/, "").trim();
+				label.innerHTML = required
+					? `${escapeHtml(plainText)} <span class="required">*</span>`
+					: escapeHtml(plainText);
+			}
+
+			function setElementVisibility(id, visible) {
+				const element = document.getElementById(id);
+				if (!element) return;
+				element.style.display = visible ? "" : "none";
+			}
+
+			function applySignInConfig() {
+				const config = state.signInConfig || defaultSignInConfig;
+				waiverTextBlock.textContent =
+					config.waiverText || defaultSignInConfig.waiverText;
+				resetWaiverReadState();
+				countryCodeInput.value =
+					config.defaultCountryCode || defaultSignInConfig.defaultCountryCode;
+				if (!countryCodeInput.value) {
+					countryCodeInput.value = defaultSignInConfig.defaultCountryCode;
+				}
+
+				setElementVisibility(
+					"profileEmailRow",
+					getFieldMode("email") !== "hidden",
+				);
+				setElementVisibility(
+					"firstNameGroup",
+					getFieldMode("firstName") !== "hidden",
+				);
+				setElementVisibility(
+					"lastNameGroup",
+					getFieldMode("lastName") !== "hidden",
+				);
+				setElementVisibility(
+					"displayNameRow",
+					getFieldMode("displayName") !== "hidden",
+				);
+				setElementVisibility(
+					"phoneNumberGroup",
+					getFieldMode("phoneNumber") !== "hidden",
+				);
+				setElementVisibility(
+					"phoneNumberInputGroup",
+					getFieldMode("phoneNumber") !== "hidden",
+				);
+				setElementVisibility(
+					"postcodeGroup",
+					getFieldMode("postcode") !== "hidden",
+				);
+				setElementVisibility(
+					"dateOfBirthGroup",
+					getFieldMode("dateOfBirth") !== "hidden",
+				);
+				setElementVisibility(
+					"genderGroup",
+					getFieldMode("gender") !== "hidden",
+				);
+				setElementVisibility(
+					"subscribeEmailRow",
+					getFieldMode("subscribeEmail") !== "hidden",
+				);
+				setElementVisibility(
+					"subscribeSmsRow",
+					getFieldMode("subscribeSms") !== "hidden",
+				);
+
+				setLabelRequired(
+					"profileEmailLabel",
+					getFieldMode("email") === "required",
+				);
+				setLabelRequired(
+					"firstNameLabel",
+					getFieldMode("firstName") === "required",
+				);
+				setLabelRequired(
+					"lastNameLabel",
+					getFieldMode("lastName") === "required",
+				);
+				setLabelRequired(
+					"displayNameLabel",
+					getFieldMode("displayName") === "required",
+				);
+				setLabelRequired(
+					"phoneNumberLabel",
+					getFieldMode("phoneNumber") === "required",
+				);
+				setLabelRequired(
+					"postcodeLabel",
+					getFieldMode("postcode") === "required",
+				);
+				setLabelRequired(
+					"dateOfBirthLabel",
+					getFieldMode("dateOfBirth") === "required",
+				);
+				setLabelRequired("genderLabel", getFieldMode("gender") === "required");
+			}
+
+			function formatTime(value) {
+				const match = String(value).match(/T(\d{2}):(\d{2})/);
+				if (!match) {
+					return value;
+				}
+
+				const hour24 = Number(match[1]);
+				const minute = match[2];
+				const suffix = hour24 >= 12 ? "PM" : "AM";
+				const hour12 = hour24 % 12 || 12;
+				return `${hour12}:${minute} ${suffix}`;
+			}
+
+			function parseSessionWallClockDate(value) {
+				const match = String(value).match(
+					/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/,
+				);
+				if (!match) {
+					return null;
+				}
+
+				const year = Number(match[1]);
+				const month = Number(match[2]) - 1;
+				const day = Number(match[3]);
+				const hour = Number(match[4]);
+				const minute = Number(match[5]);
+				const second = Number(match[6] || "0");
+				return new Date(year, month, day, hour, minute, second);
+			}
+
+			function isSessionOlderThanMinutes(session, minutes) {
+				const sessionDate = parseSessionWallClockDate(session.startTime);
+				if (!sessionDate) return false;
+				return Date.now() - sessionDate.getTime() > minutes * 60 * 1000;
+			}
+
+			function getSessionCapacity(session) {
+				const bookings = Array.isArray(session.bookings)
+					? session.bookings
+					: [];
+				const totals = bookings.reduce(
+					(acc, booking) => {
+						acc.signed += Number(booking.occupiedCount || 0);
+						acc.capacity += Number(booking.playerCount || 0);
+						return acc;
+					},
+					{ signed: 0, capacity: 0 },
+				);
+
+				return `${totals.signed}/${totals.capacity}`;
+			}
+
+			function getVisibleSessions() {
+				if (state.showPreviousSessions) {
+					return state.sessions;
+				}
+
+				return state.sessions.filter(
+					(session) => !isSessionOlderThanMinutes(session, 7),
+				);
+			}
+
+			function getNextUpcomingSessionId(sessions) {
+				const now = Date.now();
+				let nextSession = null;
+
+				sessions.forEach((session) => {
+					const start = parseSessionWallClockDate(session.startTime);
+					if (!start) return;
+					if (start.getTime() < now) return;
+					if (!nextSession || start.getTime() < nextSession.startMs) {
+						nextSession = { id: session.sessionId, startMs: start.getTime() };
+					}
+				});
+
+				return nextSession?.id || null;
+			}
+
+			function formatDateLabel(dateStamp) {
+				if (!dateStamp) return "";
+				const localDate = new Date(`${dateStamp}T00:00:00`);
+				if (Number.isNaN(localDate.getTime())) return dateStamp;
+				return localDate.toLocaleDateString(undefined, {
+					weekday: "short",
+					year: "numeric",
+					month: "short",
+					day: "numeric",
+				});
+			}
+
+			function updateSessionControls() {
+				const hiddenCount = state.sessions.filter((session) =>
+					isSessionOlderThanMinutes(session, 7),
+				).length;
+				togglePreviousSessionsButton.style.display =
+					hiddenCount > 0 ? "" : "none";
+				togglePreviousSessionsButton.textContent = state.showPreviousSessions
+					? "Hide previous sessions"
+					: hiddenCount > 0
+						? `Display previous sessions (${hiddenCount})`
+						: "Display previous sessions";
+
+				selectedDateLabel.textContent = state.selectedDate
+					? `Showing ${formatDateLabel(state.selectedDate)}`
+					: "";
+			}
+
+			function getSelectedSession() {
+				return state.sessions.find(
+					(session) => session.sessionId === state.selectedSessionId,
+				);
+			}
+
+			function getSelectedBooking() {
+				const session = getSelectedSession();
+				return session?.bookings.find(
+					(booking) => booking.bookingId === state.selectedBookingId,
+				);
+			}
+
+			function clearCompletionState() {
+				waiverContinue.disabled = true;
+				waiverContinue.classList.add("secondary");
+				waiverContinue.textContent = "Complete sign in";
+				state.signedWaiverDateTimeIso = null;
+				waiverSignedAtInput.value = "";
+				doneNotice.style.display = "none";
+				completionActions.style.display = "none";
+			}
+
+			function isWaiverAtBottom() {
+				return (
+					waiverTextBlock.scrollTop + waiverTextBlock.clientHeight >=
+					waiverTextBlock.scrollHeight - 2
+				);
+			}
+
+			function updateWaiverReadState() {
+				state.waiverScrolledToBottom = isWaiverAtBottom();
+				waiverScrollDownButton.style.display = state.waiverScrolledToBottom
+					? "none"
+					: "";
+
+				const canSubmit = waiverCheck.checked && state.waiverScrolledToBottom;
+				waiverContinue.disabled = !canSubmit;
+				waiverContinue.classList.toggle("secondary", !canSubmit);
+			}
+
+			function resetWaiverReadState() {
+				waiverTextBlock.scrollTop = 0;
+				state.waiverScrolledToBottom = false;
+				updateWaiverReadState();
+			}
+
+			function formatTimestampForInput(value) {
+				if (!value) return "";
+				const date = new Date(value);
+				if (Number.isNaN(date.getTime())) return String(value);
+				return date.toLocaleString();
+			}
+
+			function buildPosterStyle(imageUrl) {
+				if (!imageUrl) return "";
+				const safeUrl = encodeURI(String(imageUrl).trim())
+					.replaceAll("'", "%27")
+					.replaceAll("(", "%28")
+					.replaceAll(")", "%29");
+				return `background-image: linear-gradient(180deg, rgba(18, 18, 28, 0.12), rgba(18, 18, 28, 0.55)), url('${safeUrl}');`;
+			}
+
+			function renderSessions() {
+				const visibleSessions = getVisibleSessions();
+				const nextSessionId = getNextUpcomingSessionId(visibleSessions);
+
+				if (!visibleSessions.length) {
+					sessionOptions.innerHTML = "";
+					if (state.sessions.length > 0 && !state.showPreviousSessions) {
+						setNotice(
+							sessionNotice,
+							"No upcoming sessions. Use Display previous sessions to view older bookings.",
+						);
+					} else {
+						setNotice(
+							sessionNotice,
+							"No sessions with bookings are available right now.",
+						);
+					}
+					updateSessionControls();
+					return;
+				}
+
+				setNotice(sessionNotice, "");
+				sessionOptions.innerHTML = visibleSessions
+					.map((session) => {
+						const badge =
+							session.sessionId === nextSessionId
+								? '<div class="badge">NEXT SESSION</div>'
+								: "";
+						const occupancy = getSessionCapacity(session);
+						return `
+							<article class="session-card" data-session-id="${session.sessionId}" style="cursor: pointer;">
+								<div class="session-body">
+									${badge}
+									<div class="time">${escapeHtml(formatTime(session.startTime))}</div>
+									<div class="meta">${escapeHtml(`${session.durationMinutes} min session · ${occupancy} players`)}</div>
+									<div class="players">${escapeHtml(session.bookingSummary)}</div>
+								</div>
+								<div class="poster" data-title="${escapeHtml(session.packageName)}" style="${buildPosterStyle(session.imageUrl)}"></div>
+							</article>
+						`;
+					})
+					.join("");
+				updateSessionControls();
+			}
+
+			function renderBookings() {
+				const session = getSelectedSession();
+				if (!session) {
+					bookingOptions.innerHTML = "";
+					setNotice(bookingNotice, "Please select a session first.", true);
+					return;
+				}
+
+				bookingHint.textContent = `${formatTime(session.startTime)} · ${session.packageName} - pick the booking you're part of.`;
+
+				if (!session.bookings.length) {
+					bookingOptions.innerHTML = "";
+					setNotice(
+						bookingNotice,
+						"No bookings are available for this session.",
+					);
+					return;
+				}
+
+				setNotice(bookingNotice, "");
+				bookingOptions.innerHTML = session.bookings
+					.map((booking) => {
+						const isFull = booking.openSlots <= 0;
+						const aliasLine = booking.signedAliases.length
+							? `Signed in: ${booking.signedAliases.join(", ")}`
+							: `${booking.occupiedCount} signed in so far`;
+						const availabilityLine = isFull
+							? "Booking is full"
+							: `${booking.playerCount} players · ${booking.openSlots} open slots`;
+						return `
+							<article class="booking-card${isFull ? " full" : ""}" data-booking-id="${booking.bookingId}" data-open-slots="${booking.openSlots}" style="grid-template-columns: 1fr; cursor: ${isFull ? "not-allowed" : "pointer"};">
+								<div class="booking-body">
+									<div class="booking-title">${escapeHtml(booking.leadName)}</div>
+									<div class="booking-email">${escapeHtml(aliasLine)}</div>
+									<div class="slots">${escapeHtml(availabilityLine)}</div>
+								</div>
+							</article>
+						`;
+					})
+					.join("");
+			}
+
+			function populateProfileForm(player = null) {
+				playerGuidInput.value = player?.playerGuid || "";
+				profileEmail.value = player?.email || emailInput.value.trim();
+				firstNameInput.value = player?.firstName || "";
+				lastNameInput.value = player?.lastName || "";
+				aliasInput.value = player?.displayName || "";
+				phoneInput.value = player?.phoneNumber || "";
+				postcodeInput.value = player?.postcode || "";
+				genderInput.value = player?.gender || "";
+				subscribeEmailInput.checked = false;
+				subscribeSmsInput.checked = false;
+
+				birthDayInput.value = "";
+				birthMonthInput.value = "";
+				birthYearInput.value = "";
+				if (player?.dateOfBirth) {
+					const date = new Date(player.dateOfBirth);
+					if (!Number.isNaN(date.getTime())) {
+						birthDayInput.value = String(date.getUTCDate()).padStart(2, "0");
+						birthMonthInput.value = String(date.getUTCMonth() + 1).padStart(
+							2,
+							"0",
+						);
+						birthYearInput.value = String(date.getUTCFullYear());
+					}
+				}
+			}
+
+			function renderProfileMatches() {
+				profileMatches.innerHTML = state.matchedPlayers
+					.map((player) => {
+						const alias = player.displayName?.trim() || "No alias";
+						const fullName =
+							[player.firstName, player.lastName]
+								.filter(Boolean)
+								.join(" ")
+								.trim() || "Name not available";
+
+						return `
+							<article class="booking-card" data-player-guid="${escapeHtml(player.playerGuid)}" style="grid-template-columns: 1fr; cursor: pointer;">
+								<div class="booking-body">
+									<div class="booking-title">${escapeHtml(alias)}</div>
+									<div class="aliases muted">${escapeHtml(fullName)}</div>
+								</div>
+							</article>
+							`;
+					})
+					.join("");
+			}
+
+			function collectProfileForm() {
+				const dateOfBirth = parseDateOfBirthFromInputs().value;
+
+				return {
+					playerGuid: playerGuidInput.value.trim(),
+					email: profileEmail.value.trim(),
+					firstName: firstNameInput.value.trim(),
+					lastName: lastNameInput.value.trim(),
+					displayName: aliasInput.value.trim(),
+					phoneNumber: phoneInput.value.trim(),
+					postcode: postcodeInput.value.trim(),
+					gender: genderInput.value.trim(),
+					dateOfBirth,
+					countryCode:
+						countryCodeInput.value || defaultSignInConfig.defaultCountryCode,
+					leftHanded: false,
+					signedWaiverDateTime: state.signedWaiverDateTimeIso,
+					subscribeEmail: subscribeEmailInput.checked,
+					subscribeSms: subscribeSmsInput.checked,
+				};
+			}
+
+			async function loadBootstrap(dateStamp = null) {
+				if (!token) {
+					setNotice(sessionNotice, "Missing kiosk sign-in token.", true);
+					return;
+				}
+
+				const params = new URLSearchParams({ token });
+				if (dateStamp) {
+					params.set("date", dateStamp);
+				}
+
+				const response = await fetch(
+					`/api/kiosk/sign-in/bootstrap?${params.toString()}`,
+				);
+				const result = await response.json().catch(() => ({}));
+				if (!response.ok) {
+					setNotice(
+						sessionNotice,
+						result.error || "Unable to load available sessions.",
+						true,
+					);
+					return;
+				}
+
+				state.sessions = Array.isArray(result.sessions) ? result.sessions : [];
+				state.selectedDate = result.date || dateStamp || null;
+				sessionDateOverride.value = state.selectedDate || "";
+				state.signInConfig = result.signInConfig || defaultSignInConfig;
+				applySignInConfig();
+				renderSessions();
+
+				if (state.selectedSessionId) {
+					renderBookings();
+				}
+			}
+
+			async function lookupPlayersByEmail() {
+				const email = emailInput.value.trim();
+				setNotice(emailError, "");
+				if (!email.includes("@")) {
+					setNotice(emailError, "Enter a valid email address.", true);
+					return;
+				}
+
+				emailContinue.disabled = true;
+				emailContinue.textContent = "Checking...";
+
+				const response = await fetch(
+					`/api/kiosk/sign-in/players?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`,
+				);
+				const result = await response.json().catch(() => ({}));
+				emailContinue.disabled = false;
+				emailContinue.textContent = "Continue";
+
+				if (!response.ok) {
+					setNotice(
+						emailError,
+						result.error || "Unable to check for existing player profiles.",
+						true,
+					);
+					return;
+				}
+
+				state.matchedPlayers = Array.isArray(result.players)
+					? result.players
+					: [];
+				state.selectedPlayer = null;
+				populateProfileForm({ email });
+
+				if (state.matchedPlayers.length > 0) {
+					renderProfileMatches();
+					setStep(4);
+					return;
+				}
+
+				setStep(5);
+			}
+
+			async function submitSignIn() {
+				const session = getSelectedSession();
+				const booking = getSelectedBooking();
+				const profile = collectProfileForm();
+				setNotice(doneNotice, "");
+
+				if (!session || !booking) {
+					setNotice(doneNotice, "Select a session and booking first.", true);
+					return;
+				}
+
+				if (booking.openSlots <= 0) {
+					setNotice(
+						doneNotice,
+						"That booking is already full. Please choose another booking.",
+						true,
+					);
+					state.selectedBookingId = null;
+					await loadBootstrap();
+					setStep(2);
+					return;
+				}
+
+				waiverContinue.disabled = true;
+				waiverContinue.textContent = "Signing in...";
+
+				const response = await fetch(
+					`/api/kiosk/sign-in/submit?token=${encodeURIComponent(token)}`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							date: state.selectedDate,
+							sessionId: session.sessionId,
+							bookingId: booking.bookingId,
+							playerGuid:
+								state.selectedPlayer?.playerGuid || profile.playerGuid || null,
+							profile,
+						}),
+					},
+				);
+				const result = await response.json().catch(() => ({}));
+
+				if (!response.ok) {
+					waiverContinue.disabled = false;
+					waiverContinue.textContent = "Complete sign in";
+					setNotice(doneNotice, result.error || "Sign in failed.", true);
+					return;
+				}
+
+				setNotice(
+					doneNotice,
+					`${result.playerName || "Player"} was signed in successfully.`,
+				);
+				waiverContinue.textContent = "Signed in";
+				completionActions.style.display = "grid";
+				await loadBootstrap();
+			}
+
+			sessionOptions.addEventListener("click", (event) => {
+				const card = event.target.closest("[data-session-id]");
+				if (!card) return;
+				state.selectedSessionId = Number(card.getAttribute("data-session-id"));
+				state.selectedBookingId = null;
+				renderBookings();
+				setStep(2);
+			});
+
+			togglePreviousSessionsButton.addEventListener("click", () => {
+				state.showPreviousSessions = !state.showPreviousSessions;
+				renderSessions();
+			});
+
+			sessionDateOverride.addEventListener("change", () => {
+				const dateStamp = sessionDateOverride.value;
+				if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStamp)) {
+					return;
+				}
+
+				state.selectedSessionId = null;
+				state.selectedBookingId = null;
+				state.showPreviousSessions = false;
+				setStep(1);
+				void loadBootstrap(dateStamp);
+			});
+
+			brandLogo.addEventListener("click", () => {
+				const now = Date.now();
+				const isDoubleTap = now - state.lastLogoTapMs <= 350;
+				state.lastLogoTapMs = now;
+				if (!isDoubleTap) return;
+
+				sessionDateOverride.value = state.selectedDate || "";
+				if (typeof sessionDateOverride.showPicker === "function") {
+					sessionDateOverride.showPicker();
+					return;
+				}
+
+				sessionDateOverride.click();
+			});
+
+			bookingOptions.addEventListener("click", (event) => {
+				const card = event.target.closest("[data-booking-id]");
+				if (!card) return;
+				const openSlots = Number(card.getAttribute("data-open-slots") || "0");
+				if (openSlots <= 0) {
+					setNotice(
+						bookingNotice,
+						"That booking is already full. Please pick one with open slots.",
+						true,
+					);
+					return;
+				}
+				setNotice(bookingNotice, "");
+				state.selectedBookingId = Number(card.getAttribute("data-booking-id"));
+				setStep(3);
+			});
+
+			profileMatches.addEventListener("click", async (event) => {
+				const card = event.target.closest("[data-player-guid]");
+				if (!card) return;
+
+				state.selectedPlayer = state.matchedPlayers.find(
+					(player) =>
+						player.playerGuid === card.getAttribute("data-player-guid"),
+				);
+				if (!state.selectedPlayer) return;
+
+				populateProfileForm(state.selectedPlayer);
+				state.shouldShowMarketingStep = await shouldShowMarketingForPlayer(
+					state.selectedPlayer.playerGuid,
+				);
+				if (state.shouldShowMarketingStep) {
+					setWaiverBackStep(6);
+					setStep(6);
+					return;
+				}
+
+				setWaiverBackStep(4);
+				setStep(7);
+			});
+
+			document.querySelectorAll("[data-back]").forEach((link) => {
+				link.addEventListener("click", (event) => {
+					event.preventDefault();
+					const previous = Number(link.getAttribute("data-back"));
+					if (getCurrentStepNumber() === 6 && state.selectedPlayer) {
+						setStep(4);
+						return;
+					}
+					setStep(previous);
+				});
+			});
+
+			cancelButton.addEventListener("click", () => {
+				if (isKioskDeviceLaunch) {
+					window.location.href = "/kiosk";
+					return;
+				}
+			});
+
+			emailInput.addEventListener("input", () => {
+				emailContinue.disabled = !emailInput.value.includes("@");
+			});
+
+			emailContinue.addEventListener("click", () => {
+				void lookupPlayersByEmail();
+			});
+
+			createNewProfileButton.addEventListener("click", () => {
+				state.selectedPlayer = null;
+				state.shouldShowMarketingStep = true;
+				setWaiverBackStep(6);
+				populateProfileForm({ email: emailInput.value.trim() });
+				setStep(5);
+			});
+
+			profileContinue.addEventListener("click", () => {
+				setNotice(profileError, "");
+				const profile = collectProfileForm();
+				const emailValue = profileEmail.value.trim();
+				const firstNameValue = firstNameInput.value.trim();
+				const lastNameValue = lastNameInput.value.trim();
+				const phoneValue = phoneInput.value.trim();
+				const postcodeValue = postcodeInput.value.trim();
+				const genderValue = genderInput.value.trim();
+				const dobParse = parseDateOfBirthFromInputs();
+
+				if (getFieldMode("email") === "required" && !emailValue) {
+					setNotice(profileError, "Email is required.", true);
+					return;
+				}
+
+				if (emailValue && !isValidEmail(emailValue)) {
+					setNotice(profileError, "Email format is invalid.", true);
+					return;
+				}
+
+				if (getFieldMode("firstName") === "required" && !firstNameValue) {
+					setNotice(profileError, "First name is required.", true);
+					return;
+				}
+
+				if (getFieldMode("lastName") === "required" && !lastNameValue) {
+					setNotice(profileError, "Last name is required.", true);
+					return;
+				}
+
+				if (getFieldMode("phoneNumber") === "required" && !phoneValue) {
+					setNotice(profileError, "Phone number is required.", true);
+					return;
+				}
+
+				if (phoneValue && !isValidPhoneNumber(phoneValue)) {
+					setNotice(profileError, "Phone number format is invalid.", true);
+					return;
+				}
+
+				if (postcodeValue && !isValidPostcode(postcodeValue)) {
+					setNotice(profileError, "Postcode format is invalid.", true);
+					return;
+				}
+
+				if (getFieldMode("gender") === "required" && !genderValue) {
+					setNotice(profileError, "Gender is required.", true);
+					return;
+				}
+
+				if (genderValue && !["M", "F", "O"].includes(genderValue)) {
+					setNotice(profileError, "Gender format is invalid.", true);
+					return;
+				}
+
+				if (
+					getFieldMode("dateOfBirth") === "required" &&
+					!profile.dateOfBirth
+				) {
+					setNotice(profileError, "Date of birth is required.", true);
+					return;
+				}
+
+				if (dobParse.error) {
+					setNotice(profileError, dobParse.error, true);
+					return;
+				}
+
+				state.shouldShowMarketingStep = true;
+				setWaiverBackStep(6);
+				setStep(6);
+			});
+
+			marketingContinue.addEventListener("click", () => {
+				setStep(7);
+			});
+
+			waiverCheck.addEventListener("change", () => {
+				state.signedWaiverDateTimeIso = waiverCheck.checked
+					? new Date().toISOString()
+					: null;
+				waiverSignedAtInput.value = state.signedWaiverDateTimeIso
+					? formatTimestampForInput(state.signedWaiverDateTimeIso)
+					: "";
+				updateWaiverReadState();
+			});
+
+			waiverTextBlock.addEventListener("scroll", () => {
+				updateWaiverReadState();
+			});
+
+			waiverScrollDownButton.addEventListener("click", () => {
+				waiverTextBlock.scrollTo({
+					top: waiverTextBlock.scrollHeight,
+					behavior: "smooth",
+				});
+				setTimeout(updateWaiverReadState, 200);
+			});
+
+			waiverContinue.addEventListener("click", () => {
+				if (!waiverCheck.checked || !state.waiverScrolledToBottom) return;
+				void submitSignIn();
+			});
+
+			signInAnotherButton.addEventListener("click", async () => {
+				await loadBootstrap();
+				state.selectedPlayer = null;
+				emailInput.value = "";
+				waiverCheck.checked = false;
+				populateProfileForm();
+				clearCompletionState();
+				renderBookings();
+				setStep(2);
+			});
+
+			closeFlowButton.addEventListener("click", () => {
+				if (launchSource === "kiosk-device") {
+					window.location.href = "/kiosk";
+					return;
+				}
+
+				window.close();
+				setStep(1);
+			});
+
+			clearCompletionState();
+			populateCountryCodeOptions();
+			void loadBootstrap();
+		</script>
+	</body>
+</html>

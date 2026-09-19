@@ -125,6 +125,21 @@ export async function setQueuePaused(paused: boolean) {
 	]);
 }
 
+export async function getAppSettingValue(key: string) {
+	const row = db
+		.query('SELECT value FROM app_settings WHERE key = ?')
+		.get(key) as { value: string } | null;
+
+	return row?.value ?? null;
+}
+
+export async function setAppSettingValue(key: string, value: string) {
+	db.run('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', [
+		key,
+		value,
+	]);
+}
+
 export async function getWebhookQueueItems() {
 	return db
 		.query(
@@ -271,4 +286,48 @@ export async function deleteSyncedItem(
     `,
 		[rollerBookingID, rollerItemID],
 	);
+}
+
+export async function saveKioskSignInRecord(record: {
+	playerGuid: string;
+	subscribeEmail: boolean;
+	subscribeSms: boolean;
+	syncedWithPatch: boolean;
+}) {
+	db.run(
+		`
+		INSERT INTO kiosk_signins (
+			player_guid,
+			subscribe_email,
+			subscribe_sms,
+			synced_with_patch
+		)
+		VALUES (?, ?, ?, ?)
+		ON CONFLICT(player_guid) DO UPDATE SET
+			subscribe_email = excluded.subscribe_email,
+			subscribe_sms = excluded.subscribe_sms,
+			synced_with_patch = excluded.synced_with_patch,
+			updated_at = CURRENT_TIMESTAMP
+		`,
+		[
+			record.playerGuid,
+			record.subscribeEmail,
+			record.subscribeSms,
+			record.syncedWithPatch,
+		],
+	);
+}
+
+export async function getKioskSignInRecordByPlayerGuid(playerGuid: string) {
+	return db
+		.query(
+			`SELECT player_guid, subscribe_email, subscribe_sms
+			 FROM kiosk_signins
+			 WHERE player_guid = ?`,
+		)
+		.get(playerGuid) as {
+		player_guid: string;
+		subscribe_email: number;
+		subscribe_sms: number;
+	} | null;
 }

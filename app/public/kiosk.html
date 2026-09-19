@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Kiosk</title>
+		<style>
+			:root {
+				--ink: #111321;
+				--paper: #ffffff;
+				--accent: #ff3d32;
+				--line: rgba(255, 255, 255, 0.12);
+				--muted: #8ba0d4;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				background: #dfe5f2;
+				color: #fff;
+				font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+			}
+
+			.shell {
+				min-height: 100vh;
+				display: grid;
+				grid-template-rows: 1fr auto;
+				margin: 0 auto;
+				background: #ffffff;
+				border-left: 1px solid #cfd8eb;
+				border-right: 1px solid #cfd8eb;
+			}
+
+			.top {
+				background: #fff;
+			}
+
+			.top-card {
+				height: 100%;
+				background: var(--ink);
+				padding: 14px 20px 24px;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.brand-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 16px;
+			}
+
+			.brand-logo {
+				height: 44px;
+				width: auto;
+				display: block;
+			}
+
+			.header-controls {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.header-chip,
+			.header-icon {
+				height: 34px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				color: #fff;
+			}
+
+			.header-icon {
+				width: 34px;
+				font-size: 15px;
+			}
+
+			.header-chip {
+				padding: 0 12px;
+				font-size: 13px;
+				font-weight: 700;
+			}
+
+			.hero {
+				padding-top: 70px;
+				text-align: center;
+			}
+
+			h1 {
+				margin: 0;
+				font-size: clamp(2.6rem, 4.5vw, 3.5rem);
+				line-height: 1.06;
+				letter-spacing: -0.01em;
+			}
+
+			.subtitle {
+				margin: 30px auto 0;
+				max-width: 30rem;
+				font-size: 1rem;
+				color: var(--muted);
+			}
+
+			.qr-wrap {
+				margin: 18px auto 0;
+				width: min(170px, 46vw);
+				padding: 8px;
+				border-radius: 6px;
+				background: #fff;
+				box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+			}
+
+			.qr-wrap img {
+				display: block;
+				width: 100%;
+				height: auto;
+				border-radius: 4px;
+				background: #fff;
+			}
+
+			.qr-hint {
+				margin-top: 12px;
+				font-size: 0.84rem;
+				color: var(--muted);
+			}
+
+			.divider {
+				width: min(76%, 560px);
+				height: 1px;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					rgba(255, 255, 255, 0.1),
+					transparent
+				);
+				margin: 24px auto 0;
+			}
+
+			.device-signin {
+				margin-top: 20px;
+				display: grid;
+				justify-items: center;
+				gap: 10px;
+			}
+
+			.device-signin-label {
+				font-size: 1rem;
+				color: #dce5ff;
+				font-weight: 700;
+			}
+
+			.device-signin-button {
+				width: min(330px, 78vw);
+				height: 48px;
+				border: 1px solid rgba(255, 255, 255, 0.35);
+				border-radius: 6px;
+				background: transparent;
+				color: #ffffff;
+				font: inherit;
+				font-weight: 700;
+				font-size: 1.15rem;
+				cursor: pointer;
+			}
+
+			.device-signin-button:disabled {
+				opacity: 0.45;
+				cursor: not-allowed;
+			}
+
+			.setup {
+				display: none;
+				margin: 28px auto 0;
+				max-width: 32rem;
+				padding: 18px;
+				border: 1px solid var(--line);
+				border-radius: 16px;
+				background: rgba(255, 255, 255, 0.03);
+				text-align: left;
+			}
+
+			.setup h2 {
+				margin: 0 0 10px;
+				font-size: 1.25rem;
+			}
+
+			.setup p {
+				margin: 0 0 14px;
+				color: var(--muted);
+			}
+
+			.setup-form {
+				display: grid;
+				gap: 10px;
+			}
+
+			.setup-form input,
+			.setup-form button {
+				border-radius: 12px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
+				padding: 0.95rem 1rem;
+				font: inherit;
+			}
+
+			.setup-form input {
+				background: rgba(255, 255, 255, 0.05);
+				color: #fff;
+			}
+
+			.setup-form button {
+				background: linear-gradient(180deg, #5dc8ff, #379fef);
+				color: #07121d;
+				font-weight: 700;
+				cursor: pointer;
+			}
+
+			.bottom {
+				background: #fff;
+				color: #10131b;
+				border-top: 1px solid #e0e6f2;
+			}
+
+			.bottom-inner {
+				min-height: 450px;
+				display: grid;
+				place-items: center;
+				padding: 50px 20px 20px;
+				text-align: center;
+				align-items: start;
+			}
+
+			.session-date {
+				font-size: 1.15rem;
+				color: #5b6892;
+			}
+
+			.session-title {
+				margin: 14px 0 0;
+				font-size: clamp(2.7rem, 4.8vw, 3.7rem);
+				line-height: 1.05;
+				font-weight: 900;
+				letter-spacing: -0.01em;
+				color: #0f1f4a;
+			}
+
+			.session-meta {
+				margin-top: 18px;
+				font-size: 1.35rem;
+				color: #546699;
+			}
+
+			.session-note {
+				margin-top: 42px;
+				font-size: 1.15rem;
+				color: #4f617d;
+			}
+
+			.player-aliases {
+				margin-top: 34px;
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 14px 24px;
+				max-width: 420px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.player-alias {
+				font-size: 1.5rem;
+				font-weight: 700;
+				color: #0f1f4a;
+				line-height: 1.2;
+				text-align: center;
+				word-break: break-word;
+			}
+
+			.footer {
+				background: var(--accent);
+				color: #fff;
+				text-align: center;
+				font-weight: 800;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				padding: 13px 18px;
+				font-size: 1.85rem;
+				opacity: 1;
+				transition: opacity 180ms ease;
+			}
+
+			.footer.is-hidden {
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			@media (max-width: 720px) {
+				.top {
+					padding: 4px 4px 0;
+				}
+
+				.top-card {
+					min-height: 480px;
+					padding: 10px 12px 18px;
+				}
+
+				h1 {
+					font-size: 1.7rem;
+				}
+
+				.bottom-inner {
+					min-height: 240px;
+					padding-bottom: 44px;
+				}
+
+				.session-title {
+					font-size: 2.1rem;
+				}
+
+				.session-meta {
+					font-size: 1.05rem;
+				}
+
+				.session-note {
+					font-size: 0.95rem;
+					margin-top: 26px;
+				}
+
+				.player-aliases {
+					margin-top: 24px;
+					gap: 10px 18px;
+					max-width: 320px;
+				}
+
+				.player-alias {
+					font-size: 0.95rem;
+				}
+
+				.footer {
+					font-size: 1.1rem;
+					padding: 12px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="shell">
+			<section class="top">
+				<div class="top-card">
+					<div class="brand-row">
+						<img
+							class="brand-logo"
+							src="/assets/zl-logo.png"
+							alt="Zero Latency VR"
+						/>
+						<div class="header-controls">
+							<div class="header-icon" aria-hidden="true">◔</div>
+							<div class="header-chip">English</div>
+						</div>
+					</div>
+
+					<div id="activeView" class="hero hidden">
+						<h1>Welcome, please sign in</h1>
+						<div class="subtitle">Scan code to sign in on your phone</div>
+						<div class="qr-wrap">
+							<img id="qrImage" alt="Kiosk QR code" />
+						</div>
+						<div class="qr-hint" id="qrHint"></div>
+						<div class="divider"></div>
+						<div class="device-signin">
+							<div class="device-signin-label">Sign in on this device</div>
+							<button
+								type="button"
+								id="kioskDeviceSignInButton"
+								class="device-signin-button"
+								disabled
+							>
+								Sign in
+							</button>
+						</div>
+					</div>
+
+					<div id="setupView" class="setup">
+						<h2>Register this kiosk</h2>
+						<p>
+							Enter the pairing code provided by an admin to register this
+							device. After pairing, this screen will automatically switch to
+							the live QR display.
+						</p>
+						<form id="pairForm" class="setup-form">
+							<input
+								name="code"
+								placeholder="Pairing code"
+								autocomplete="one-time-code"
+								required
+							/>
+							<input name="label" placeholder="Kiosk label (optional)" />
+							<button type="submit">Pair kiosk</button>
+						</form>
+						<div id="pairError" style="margin-top: 10px; color: #ffd4d1"></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="bottom">
+				<div class="bottom-inner">
+					<div>
+						<div id="sessionDate" class="session-date">
+							Waiting for kiosk pairing
+						</div>
+						<div id="sessionTitle" class="session-title">
+							Next session - --:--
+						</div>
+						<div id="sessionMeta" class="session-meta">
+							Waiting for next booking details
+						</div>
+						<div id="sessionNote" class="session-note">
+							Waiting for players to sign in...
+						</div>
+					</div>
+				</div>
+				<div id="footerStatus" class="footer">Waiting on players</div>
+			</section>
+		</div>
+
+		<script>
+			const activeView = document.getElementById("activeView");
+			const setupView = document.getElementById("setupView");
+			const sessionDate = document.getElementById("sessionDate");
+			const sessionTitle = document.getElementById("sessionTitle");
+			const sessionMeta = document.getElementById("sessionMeta");
+			const sessionNote = document.getElementById("sessionNote");
+			const footerStatus = document.getElementById("footerStatus");
+			const qrImage = document.getElementById("qrImage");
+			const qrHint = document.getElementById("qrHint");
+			const kioskDeviceSignInButton = document.getElementById(
+				"kioskDeviceSignInButton",
+			);
+			const pairForm = document.getElementById("pairForm");
+			const pairError = document.getElementById("pairError");
+
+			let refreshTimer = null;
+			let sessionSummaryTimer = null;
+			let currentRefreshAt = null;
+			let currentQrUrl = null;
+			let currentSessionId = null;
+			let currentSelectedDate = null;
+
+			function parseSessionWallClockDate(value) {
+				const match = String(value).match(
+					/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/,
+				);
+				if (!match) {
+					return null;
+				}
+
+				return new Date(
+					Number(match[1]),
+					Number(match[2]) - 1,
+					Number(match[3]),
+					Number(match[4]),
+					Number(match[5]),
+					Number(match[6] || "0"),
+				);
+			}
+
+			function formatDisplayDate(dateValue, options = {}) {
+				if (!dateValue) return "";
+				const date =
+					typeof dateValue === "string"
+						? parseSessionWallClockDate(dateValue) || new Date(dateValue)
+						: dateValue;
+				if (Number.isNaN(date.getTime())) return "";
+				return new Intl.DateTimeFormat(undefined, {
+					weekday: "long",
+					month: "long",
+					day: "numeric",
+					...options,
+				}).format(date);
+			}
+
+			function formatTimeForTitle(value) {
+				const date = parseSessionWallClockDate(value);
+				if (!date) return "--:--";
+				const formatter = new Intl.DateTimeFormat(undefined, {
+					hour: "numeric",
+					minute: "2-digit",
+					hour12: true,
+				});
+				return formatter.format(date).replace(" AM", "am").replace(" PM", "pm");
+			}
+
+			function escapeHtml(value) {
+				return String(value ?? "")
+					.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("'", "&#39;");
+			}
+
+			function pickNextSession(sessions) {
+				if (!Array.isArray(sessions) || sessions.length === 0) {
+					return null;
+				}
+
+				const now = Date.now();
+				const withDates = sessions
+					.map((session) => ({
+						session,
+						startMs:
+							parseSessionWallClockDate(session.startTime)?.getTime() || 0,
+					}))
+					.filter((entry) => entry.startMs > 0)
+					.sort((left, right) => left.startMs - right.startMs);
+
+				return (
+					withDates.find((entry) => entry.startMs >= now - 7 * 60 * 1000)
+						?.session ||
+					withDates[0]?.session ||
+					null
+				);
+			}
+
+			function summarizeSessionPlayers(session) {
+				const bookings = Array.isArray(session?.bookings)
+					? session.bookings
+					: [];
+				let total = 0;
+				let signed = 0;
+				const aliases = [];
+
+				for (const booking of bookings) {
+					total += Number(booking.playerCount || 0);
+					signed += Number(booking.occupiedCount || 0);
+					for (const alias of Array.isArray(booking.signedAliases)
+						? booking.signedAliases
+						: []) {
+						if (alias && !aliases.includes(alias)) {
+							aliases.push(alias);
+						}
+					}
+				}
+
+				return {
+					total,
+					signed,
+					waiting: Math.max(0, total - signed),
+					aliases,
+				};
+			}
+
+			function renderSessionPresence(players) {
+				if (!Array.isArray(players.aliases) || players.aliases.length === 0) {
+					sessionNote.className = "session-note";
+					sessionNote.textContent = "Waiting for players to sign in...";
+					return;
+				}
+
+				const visibleAliases = players.aliases.slice(0, 8);
+				sessionNote.className = "player-aliases";
+				sessionNote.innerHTML = visibleAliases
+					.map(
+						(alias) => `<div class="player-alias">${escapeHtml(alias)}</div>`,
+					)
+					.join("");
+			}
+
+			function startSessionSummaryPolling() {
+				if (sessionSummaryTimer) {
+					clearInterval(sessionSummaryTimer);
+				}
+
+				sessionSummaryTimer = setInterval(() => {
+					if (!currentQrUrl) return;
+					void loadSessionSummaryFromQrUrl(currentQrUrl, true);
+				}, 8000);
+			}
+
+			function showSetup(message = "") {
+				if (refreshTimer) {
+					clearTimeout(refreshTimer);
+					refreshTimer = null;
+				}
+
+				if (sessionSummaryTimer) {
+					clearInterval(sessionSummaryTimer);
+					sessionSummaryTimer = null;
+				}
+
+				activeView.classList.add("hidden");
+				setupView.style.display = "block";
+				sessionDate.textContent = "Waiting for kiosk pairing";
+				sessionTitle.textContent = "Next session - --:--";
+				sessionMeta.textContent = "Waiting for next booking details";
+				sessionNote.textContent = "Waiting for players to sign in...";
+				footerStatus.textContent = "Waiting on players";
+				qrHint.textContent = "";
+				currentSessionId = null;
+				currentSelectedDate = null;
+				pairError.textContent = message;
+				footerStatus.classList.remove("is-hidden");
+			}
+
+			function showActive() {
+				setupView.style.display = "none";
+				activeView.classList.remove("hidden");
+			}
+
+			function scheduleRefresh() {
+				if (refreshTimer) {
+					clearTimeout(refreshTimer);
+				}
+
+				if (!currentRefreshAt) return;
+
+				const delay = Math.max(1000, currentRefreshAt - Date.now() + 250);
+				refreshTimer = setTimeout(() => {
+					void loadState();
+				}, delay);
+			}
+
+			async function loadSessionSummaryFromQrUrl(
+				qrUrl,
+				preferCurrentSession = false,
+			) {
+				try {
+					const signInUrl = new URL(qrUrl);
+					const token = signInUrl.searchParams.get("token");
+					if (!token) return;
+
+					const response = await fetch(
+						`/api/kiosk/sign-in/bootstrap?token=${encodeURIComponent(token)}`,
+					);
+					const data = await response.json().catch(() => ({}));
+					if (!response.ok || !Array.isArray(data.sessions)) {
+						return;
+					}
+
+					let nextSession = null;
+					if (preferCurrentSession && currentSessionId) {
+						nextSession = data.sessions.find(
+							(session) => session.sessionId === currentSessionId,
+						);
+					}
+
+					if (!nextSession && currentSelectedDate) {
+						nextSession = data.sessions.find(
+							(session) =>
+								session.startTime?.slice(0, 10) === currentSelectedDate,
+						);
+					}
+
+					if (!nextSession) {
+						nextSession = pickNextSession(data.sessions);
+					}
+
+					if (!nextSession) return;
+
+					currentSessionId = nextSession.sessionId;
+					currentSelectedDate = nextSession.startTime?.slice(0, 10) || null;
+
+					const players = summarizeSessionPlayers(nextSession);
+					sessionDate.textContent =
+						formatDisplayDate(nextSession.startTime) || "Today";
+					sessionTitle.textContent = `Next session - ${formatTimeForTitle(nextSession.startTime)}`;
+					sessionMeta.textContent = `${nextSession.packageName} : ${players.total} players`;
+					renderSessionPresence(players);
+					if (players.waiting <= 0) {
+						footerStatus.classList.add("is-hidden");
+					} else {
+						footerStatus.classList.remove("is-hidden");
+						footerStatus.textContent =
+							players.waiting === 1
+								? "Waiting on 1 player"
+								: `Waiting on ${players.waiting} players`;
+					}
+				} catch {
+					// Keep fallback values if summary cannot be loaded.
+				}
+			}
+
+			async function loadState() {
+				const response = await fetch("/api/kiosk/state");
+				const data = await response.json();
+
+				if (!data?.paired) {
+					currentRefreshAt = null;
+					currentQrUrl = null;
+					kioskDeviceSignInButton.disabled = true;
+					showSetup();
+					return;
+				}
+
+				showActive();
+				pairError.textContent = "";
+				currentRefreshAt = data.refreshAt ? Date.parse(data.refreshAt) : null;
+				currentQrUrl = data.qrUrl || null;
+				kioskDeviceSignInButton.disabled = !currentQrUrl;
+
+				if (data.qrDataUrl) {
+					qrImage.src = data.qrDataUrl;
+					qrHint.textContent = "";
+				}
+
+				await loadSessionSummaryFromQrUrl(currentQrUrl);
+				startSessionSummaryPolling();
+				scheduleRefresh();
+			}
+
+			kioskDeviceSignInButton.addEventListener("click", () => {
+				if (!currentQrUrl) return;
+				const nextUrl = new URL(currentQrUrl, window.location.origin);
+				nextUrl.searchParams.set("source", "kiosk-device");
+				window.location.href = nextUrl.toString();
+			});
+
+			pairForm.addEventListener("submit", async (event) => {
+				event.preventDefault();
+				pairError.textContent = "";
+
+				const formData = new FormData(pairForm);
+				const payload = {
+					code: String(formData.get("code") || "").trim(),
+					label: String(formData.get("label") || "").trim(),
+				};
+
+				const response = await fetch("/api/kiosk/pair", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+
+				const result = await response.json().catch(() => ({}));
+				if (!response.ok) {
+					pairError.textContent = result.error || "Unable to pair kiosk.";
+					return;
+				}
+
+				await loadState();
+			});
+
+			loadState().catch(() => {
+				showSetup("Unable to load kiosk state. Try again.");
+			});
+		</script>
+	</body>
+</html>

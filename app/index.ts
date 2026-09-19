@@ -2,20 +2,33 @@ import {
 	getLatestBooking,
 	getLogs,
 	getLogsStream,
-	searchBookings,
-	getQueueStatus,
 	getQueueItems,
-	manageQueueAction,
+	getQueueStatus,
 	manageAdminAction,
+	manageQueueAction,
+	searchBookings,
 } from './api/dashboardAPI.ts';
 import {
 	dashboardLogin,
 	dashboardLogout,
-	requireDashboardAuth,
-	requireDashboardAdmin,
 	getDashboardSessionInfo,
+	requireDashboardAdmin,
+	requireDashboardAuth,
 } from './api/dashboardAuth.ts';
-import { customLog } from './utils/logger.ts';
+import {
+	getKioskDashboardData,
+	getKioskSignInMarketingPreferences,
+	getKioskPairingCodeForAdmin,
+	getKioskSignInBootstrap,
+	getKioskSignInPlayerMatches,
+	getKioskState,
+	pairKiosk,
+	renderKioskSignInPage,
+	submitKioskSignIn,
+	updateKioskSignInConfig,
+} from './api/kioskAPI.ts';
+import { getRollerToken } from './api/rollerAuth.ts';
+import { getSession } from './api/zlAPI.ts';
 import chain from './middleware/middleware.ts';
 import logging from './middleware/req_logging.ts';
 import {
@@ -25,9 +38,8 @@ import {
 	initEnv,
 	initMailer,
 } from './preflight.ts';
-import { getRollerToken } from './api/rollerAuth.ts';
+import { customLog } from './utils/logger.ts';
 import { processQueuedWebhooks, queueWebhook } from './webhooks/queue.ts';
-import { getSession } from './api/zlAPI.ts';
 
 customLog('-------------------------------------------------');
 const appVersion = await getAppVersion();
@@ -44,6 +56,15 @@ const server = Bun.serve({
 	hostname: config.server.host,
 	port: config.server.port,
 	routes: {
+		'/assets/:file': async (req) => {
+			const { pathname } = new URL(req.url);
+			if (pathname.includes('..')) {
+				return new Response('Not found', { status: 404 });
+			}
+
+			return new Response(Bun.file(`./app/public${pathname}`));
+		},
+
 		'/status': chain([logging], async (_req) => {
 			await getSession();
 			return new Response('OK', { status: 200 });
@@ -69,6 +90,62 @@ const server = Bun.serve({
 			if (authResponse) return authResponse;
 
 			return new Response(Bun.file('./app/public/dashboard.html'));
+		},
+
+		'/kiosk': async () => new Response(Bun.file('./app/public/kiosk.html')),
+
+		'/kiosk/sign-in': async (req) => renderKioskSignInPage(req),
+
+		'/api/kiosk/state': {
+			GET: async (req) => getKioskState(req),
+		},
+
+		'/api/kiosk/sign-in/bootstrap': {
+			GET: async (req) => getKioskSignInBootstrap(req),
+		},
+
+		'/api/kiosk/sign-in/players': {
+			GET: async (req) => getKioskSignInPlayerMatches(req),
+		},
+
+		'/api/kiosk/sign-in/preferences': {
+			GET: async (req) => getKioskSignInMarketingPreferences(req),
+		},
+
+		'/api/kiosk/sign-in/submit': {
+			POST: async (req) => submitKioskSignIn(req),
+		},
+
+		'/api/kiosk/pair': {
+			POST: async (req) => pairKiosk(req),
+		},
+
+		'/api/kiosk/dashboard': {
+			GET: async (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+
+				return getKioskDashboardData(req);
+			},
+			POST: async (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return updateKioskSignInConfig(req);
+			},
+		},
+
+		'/api/kiosk/pairing-code': {
+			POST: async (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return getKioskPairingCodeForAdmin();
+			},
 		},
 
 		'/api/dashboard/logs': {

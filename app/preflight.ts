@@ -232,6 +232,120 @@ export async function initDb() {
   )
 `);
 
+	db.run(`
+	CREATE TABLE IF NOT EXISTS kiosk_devices (
+		id TEXT PRIMARY KEY,
+		label TEXT,
+		paired_at TEXT,
+		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+	)
+`);
+
+	db.run(`
+	CREATE TABLE IF NOT EXISTS kiosk_pairing_codes (
+		code TEXT PRIMARY KEY,
+		expires_at TEXT NOT NULL,
+		used_at TEXT,
+		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+	)
+`);
+
+	db.run(`
+	CREATE TABLE IF NOT EXISTS kiosk_qr_tokens (
+		token TEXT PRIMARY KEY,
+		kiosk_id TEXT NOT NULL,
+		issued_at TEXT NOT NULL,
+		refresh_at TEXT NOT NULL,
+		expires_at TEXT NOT NULL,
+		revoked_at TEXT,
+		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+	)
+`);
+
+	db.run(`
+	CREATE TABLE IF NOT EXISTS kiosk_signins (
+		player_guid TEXT NOT NULL,
+		subscribe_email BOOLEAN NOT NULL DEFAULT 0,
+		subscribe_sms BOOLEAN NOT NULL DEFAULT 0,
+		synced_with_patch BOOLEAN NOT NULL DEFAULT 0,
+		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (player_guid)
+	)
+`);
+
+	const kioskSigninsColumns = db
+		.query(`PRAGMA table_info(kiosk_signins)`)
+		.all() as Array<{ name: string }>;
+	const hasLegacyBookingColumns = kioskSigninsColumns.some(
+		(column) =>
+			column.name === 'booking_id' || column.name === 'booking_slot_id',
+	);
+	const hasSubscribeEmailColumn = kioskSigninsColumns.some(
+		(column) => column.name === 'subscribe_email',
+	);
+	const hasSubscribeSmsColumn = kioskSigninsColumns.some(
+		(column) => column.name === 'subscribe_sms',
+	);
+	const hasSyncedWithPatchColumn = kioskSigninsColumns.some(
+		(column) => column.name === 'synced_with_patch',
+	);
+	if (
+		hasLegacyBookingColumns ||
+		!hasSubscribeEmailColumn ||
+		!hasSubscribeSmsColumn ||
+		!hasSyncedWithPatchColumn
+	) {
+		db.run(`
+			CREATE TABLE IF NOT EXISTS kiosk_signins_new (
+				player_guid TEXT NOT NULL PRIMARY KEY,
+				subscribe_email BOOLEAN NOT NULL DEFAULT 0,
+				subscribe_sms BOOLEAN NOT NULL DEFAULT 0,
+				synced_with_patch BOOLEAN NOT NULL DEFAULT 0,
+				created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+			)
+		`);
+
+		const subscribeEmailSelect = hasSubscribeEmailColumn
+			? 'COALESCE(subscribe_email, 0)'
+			: '0';
+		const subscribeSmsSelect = hasSubscribeSmsColumn
+			? 'COALESCE(subscribe_sms, 0)'
+			: '0';
+		const syncedWithPatchSelect = hasSyncedWithPatchColumn
+			? 'COALESCE(synced_with_patch, 0)'
+			: kioskSigninsColumns.some(
+						(column) => column.name === 'synced_with_roller',
+					)
+				? 'COALESCE(synced_with_roller, 0)'
+				: '0';
+
+		db.run(`
+			INSERT OR REPLACE INTO kiosk_signins_new (
+				player_guid,
+				subscribe_email,
+				subscribe_sms,
+				synced_with_roller,
+				created_at,
+				updated_at
+			)
+			SELECT
+				player_guid,
+				${subscribeEmailSelect},
+				${subscribeSmsSelect},
+				${syncedWithPatchSelect},
+				created_at,
+				updated_at
+			FROM kiosk_signins
+		`);
+
+		db.run(`DROP TABLE kiosk_signins`);
+		db.run(`ALTER TABLE kiosk_signins_new RENAME TO kiosk_signins`);
+		logMessage += 'Migrated table: kiosk_signins\n';
+	}
+
 	if (itemTableExists) {
 		logMessage += 'Found table: synced_items\n';
 	} else {

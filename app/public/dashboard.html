@@ -53,6 +53,18 @@
 				padding: 9px;
 			}
 
+			textarea {
+				background: #ececec;
+				color: #101014;
+				border: 1px solid #d0d0d0;
+				border-radius: 3px;
+				padding: 9px;
+				width: 100%;
+				min-height: 180px;
+				font: inherit;
+				resize: vertical;
+			}
+
 			nav button {
 				cursor: pointer;
 				width: 100px;
@@ -206,6 +218,25 @@
 				margin-bottom: 4px;
 			}
 
+			.config-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px;
+			}
+
+			.config-actions {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				margin-top: 14px;
+				flex-wrap: wrap;
+			}
+
+			.config-status {
+				font-size: 13px;
+				color: #4f6179;
+			}
+
 			a {
 				color: #9ad1ff;
 				text-decoration: none;
@@ -263,6 +294,14 @@
 				class="navButton"
 			>
 				Requests
+			</button>
+			<button
+				type="button"
+				id="signInButton"
+				onclick="showTab('signIn')"
+				class="navButton"
+			>
+				Sign In
 			</button>
 			<button
 				type="button"
@@ -383,15 +422,242 @@
 					</table>
 				</div>
 			</section>
+
+			<section id="signIn" class="tab">
+				<div class="panel">
+					<h3>Kiosk info</h3>
+					<div class="toolbar">
+						<a id="kioskLink" href="/kiosk" target="_blank" rel="noreferrer"
+							><button type="button">Open kiosk page</button></a
+						>
+						<button
+							type="button"
+							id="kioskGenerateCodeButton"
+							onclick="generateKioskPairingCode()"
+						>
+							Generate kiosk code
+						</button>
+					</div>
+					<div class="latest" style="grid-template-columns: 260px 1fr">
+						<div class="field" style="display: grid; place-items: center">
+							<img
+								id="kioskDashboardQr"
+								alt="Kiosk page QR"
+								style="
+									width: 220px;
+									height: 220px;
+									background: #fff;
+									padding: 6px;
+								"
+							/>
+						</div>
+						<div class="field" id="kioskPairingOutput">
+							<strong>Latest code</strong>
+							No code generated yet.
+						</div>
+					</div>
+				</div>
+
+				<div class="panel">
+					<h3>Registered kiosks</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Kiosk ID</th>
+								<th>Label</th>
+								<th>Paired at</th>
+								<th>Updated</th>
+							</tr>
+						</thead>
+						<tbody id="kioskRows"></tbody>
+					</table>
+				</div>
+
+				<div class="panel">
+					<h3>Sign-in configuration</h3>
+					<div class="field">
+						<strong>Waiver text</strong>
+						<textarea id="signInWaiverText"></textarea>
+					</div>
+					<div class="field" style="margin-top: 14px">
+						<strong>Default country code</strong>
+						<select id="defaultCountryCode"></select>
+					</div>
+					<div class="config-grid" style="margin-top: 14px">
+						<div class="field">
+							<strong>Phone</strong
+							><select id="fieldMode_phoneNumber">
+								<option value="required">Required</option>
+								<option value="optional">Optional</option>
+								<option value="hidden">Hidden</option>
+							</select>
+						</div>
+						<div class="field">
+							<strong>Postcode</strong
+							><select id="fieldMode_postcode">
+								<option value="required">Required</option>
+								<option value="optional">Optional</option>
+								<option value="hidden">Hidden</option>
+							</select>
+						</div>
+						<div class="field">
+							<strong>Date of birth</strong
+							><select id="fieldMode_dateOfBirth">
+								<option value="required">Required</option>
+								<option value="optional">Optional</option>
+								<option value="hidden">Hidden</option>
+							</select>
+						</div>
+						<div class="field">
+							<strong>Gender</strong
+							><select id="fieldMode_gender">
+								<option value="required">Required</option>
+								<option value="optional">Optional</option>
+								<option value="hidden">Hidden</option>
+							</select>
+						</div>
+					</div>
+					<div class="config-actions">
+						<button
+							type="button"
+							id="saveSignInConfigButton"
+							onclick="saveSignInConfig()"
+						>
+							Save sign-in settings
+						</button>
+						<span id="signInConfigStatus" class="config-status"></span>
+					</div>
+				</div>
+			</section>
 		</main>
 
 		<script>
-			let dashboardRole = "user";
 			let isAdmin = false;
 			let eventSource = null;
 			let logsOffset = 0;
 			let logsTotal = 0;
 			const LOG_PAGE_SIZE = 200;
+			const signInFieldKeys = [
+				"phoneNumber",
+				"postcode",
+				"dateOfBirth",
+				"gender",
+			];
+			const countryCodeOptions = [
+				{ code: "+1", label: "Canada / US (+1)" },
+				{ code: "+7", label: "Russia / Kazakhstan (+7)" },
+				{ code: "+20", label: "Egypt (+20)" },
+				{ code: "+27", label: "South Africa (+27)" },
+				{ code: "+30", label: "Greece (+30)" },
+				{ code: "+31", label: "Netherlands (+31)" },
+				{ code: "+32", label: "Belgium (+32)" },
+				{ code: "+33", label: "France (+33)" },
+				{ code: "+34", label: "Spain (+34)" },
+				{ code: "+36", label: "Hungary (+36)" },
+				{ code: "+39", label: "Italy (+39)" },
+				{ code: "+40", label: "Romania (+40)" },
+				{ code: "+41", label: "Switzerland (+41)" },
+				{ code: "+43", label: "Austria (+43)" },
+				{ code: "+44", label: "United Kingdom (+44)" },
+				{ code: "+45", label: "Denmark (+45)" },
+				{ code: "+46", label: "Sweden (+46)" },
+				{ code: "+47", label: "Norway (+47)" },
+				{ code: "+48", label: "Poland (+48)" },
+				{ code: "+49", label: "Germany (+49)" },
+				{ code: "+51", label: "Peru (+51)" },
+				{ code: "+52", label: "Mexico (+52)" },
+				{ code: "+53", label: "Cuba (+53)" },
+				{ code: "+54", label: "Argentina (+54)" },
+				{ code: "+55", label: "Brazil (+55)" },
+				{ code: "+56", label: "Chile (+56)" },
+				{ code: "+57", label: "Colombia (+57)" },
+				{ code: "+58", label: "Venezuela (+58)" },
+				{ code: "+60", label: "Malaysia (+60)" },
+				{ code: "+61", label: "Australia (+61)" },
+				{ code: "+62", label: "Indonesia (+62)" },
+				{ code: "+63", label: "Philippines (+63)" },
+				{ code: "+64", label: "New Zealand (+64)" },
+				{ code: "+65", label: "Singapore (+65)" },
+				{ code: "+66", label: "Thailand (+66)" },
+				{ code: "+81", label: "Japan (+81)" },
+				{ code: "+82", label: "South Korea (+82)" },
+				{ code: "+84", label: "Vietnam (+84)" },
+				{ code: "+86", label: "China (+86)" },
+				{ code: "+90", label: "Turkey (+90)" },
+				{ code: "+91", label: "India (+91)" },
+				{ code: "+92", label: "Pakistan (+92)" },
+				{ code: "+93", label: "Afghanistan (+93)" },
+				{ code: "+94", label: "Sri Lanka (+94)" },
+				{ code: "+95", label: "Myanmar (+95)" },
+				{ code: "+98", label: "Iran (+98)" },
+				{ code: "+212", label: "Morocco (+212)" },
+				{ code: "+213", label: "Algeria (+213)" },
+				{ code: "+216", label: "Tunisia (+216)" },
+				{ code: "+218", label: "Libya (+218)" },
+				{ code: "+233", label: "Ghana (+233)" },
+				{ code: "+234", label: "Nigeria (+234)" },
+				{ code: "+254", label: "Kenya (+254)" },
+				{ code: "+255", label: "Tanzania (+255)" },
+				{ code: "+256", label: "Uganda (+256)" },
+				{ code: "+263", label: "Zimbabwe (+263)" },
+				{ code: "+351", label: "Portugal (+351)" },
+				{ code: "+352", label: "Luxembourg (+352)" },
+				{ code: "+353", label: "Ireland (+353)" },
+				{ code: "+354", label: "Iceland (+354)" },
+				{ code: "+355", label: "Albania (+355)" },
+				{ code: "+356", label: "Malta (+356)" },
+				{ code: "+357", label: "Cyprus (+357)" },
+				{ code: "+358", label: "Finland (+358)" },
+				{ code: "+359", label: "Bulgaria (+359)" },
+				{ code: "+370", label: "Lithuania (+370)" },
+				{ code: "+371", label: "Latvia (+371)" },
+				{ code: "+372", label: "Estonia (+372)" },
+				{ code: "+380", label: "Ukraine (+380)" },
+				{ code: "+385", label: "Croatia (+385)" },
+				{ code: "+386", label: "Slovenia (+386)" },
+				{ code: "+420", label: "Czechia (+420)" },
+				{ code: "+421", label: "Slovakia (+421)" },
+				{ code: "+852", label: "Hong Kong (+852)" },
+				{ code: "+853", label: "Macau (+853)" },
+				{ code: "+855", label: "Cambodia (+855)" },
+				{ code: "+856", label: "Laos (+856)" },
+				{ code: "+880", label: "Bangladesh (+880)" },
+				{ code: "+886", label: "Taiwan (+886)" },
+				{ code: "+960", label: "Maldives (+960)" },
+				{ code: "+961", label: "Lebanon (+961)" },
+				{ code: "+962", label: "Jordan (+962)" },
+				{ code: "+963", label: "Syria (+963)" },
+				{ code: "+964", label: "Iraq (+964)" },
+				{ code: "+965", label: "Kuwait (+965)" },
+				{ code: "+966", label: "Saudi Arabia (+966)" },
+				{ code: "+967", label: "Yemen (+967)" },
+				{ code: "+968", label: "Oman (+968)" },
+				{ code: "+971", label: "United Arab Emirates (+971)" },
+				{ code: "+972", label: "Israel (+972)" },
+				{ code: "+973", label: "Bahrain (+973)" },
+				{ code: "+974", label: "Qatar (+974)" },
+				{ code: "+975", label: "Bhutan (+975)" },
+				{ code: "+976", label: "Mongolia (+976)" },
+				{ code: "+977", label: "Nepal (+977)" },
+				{ code: "+992", label: "Tajikistan (+992)" },
+				{ code: "+993", label: "Turkmenistan (+993)" },
+				{ code: "+994", label: "Azerbaijan (+994)" },
+				{ code: "+995", label: "Georgia (+995)" },
+				{ code: "+996", label: "Kyrgyzstan (+996)" },
+				{ code: "+998", label: "Uzbekistan (+998)" },
+			];
+
+			function populateDefaultCountryCodeOptions() {
+				const select = document.getElementById("defaultCountryCode");
+				if (!select) return;
+
+				select.innerHTML = countryCodeOptions
+					.map(
+						(option) =>
+							`<option value="${option.code}">${option.label}</option>`,
+					)
+					.join("");
+			}
 
 			function todayAsInputValue() {
 				const now = new Date();
@@ -442,7 +708,6 @@
 				}
 
 				const me = await res.json();
-				dashboardRole = me.role;
 				isAdmin = me.isAdmin;
 
 				if (!isAdmin) {
@@ -450,6 +715,14 @@
 					document.getElementById("logsButton").style.display = "none";
 					document.getElementById("queue").remove();
 					document.getElementById("logs").remove();
+					const codeButton = document.getElementById("kioskGenerateCodeButton");
+					codeButton.disabled = true;
+					codeButton.title = "Admin access required";
+					const saveConfigButton = document.getElementById(
+						"saveSignInConfigButton",
+					);
+					saveConfigButton.disabled = true;
+					saveConfigButton.title = "Admin access required";
 					showTab("bookings");
 				} else {
 					document.getElementById("backupButton").style.display =
@@ -459,6 +732,15 @@
 					document.getElementById("updateButton").style.display =
 						"inline-block";
 				}
+			}
+
+			function escapeHtml(value) {
+				return String(value ?? "")
+					.replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;")
+					.replaceAll(">", "&gt;")
+					.replaceAll('"', "&quot;")
+					.replaceAll("'", "&#39;");
 			}
 
 			async function callAdminAction(action) {
@@ -500,6 +782,125 @@
 				await callAdminAction("backup");
 			}
 
+			async function generateKioskPairingCode() {
+				if (!isAdmin) {
+					alert("Admin access required to generate kiosk codes.");
+					return;
+				}
+
+				const res = await fetch("/api/kiosk/pairing-code", {
+					method: "POST",
+				});
+
+				const data = await res.json().catch(() => ({}));
+				if (!res.ok) {
+					alert(data.error || `Request failed (${res.status})`);
+					return;
+				}
+
+				const output = document.getElementById("kioskPairingOutput");
+				output.innerHTML = `
+					<strong>Latest code</strong>
+					<div style="font-size: 1.4rem; font-weight: 700; letter-spacing: 0.2em; margin-top: 4px;">${data.code}</div>
+					<div>Expires at ${formatSqlUtcToLocal(data.expiresAt)}</div>
+				`;
+				await loadKioskDashboardData();
+			}
+
+			async function loadKioskDashboardData() {
+				const res = await fetch("/api/kiosk/dashboard");
+				if (!res.ok) {
+					return;
+				}
+
+				const data = await res.json();
+				const kioskLink = document.getElementById("kioskLink");
+				const kioskQr = document.getElementById("kioskDashboardQr");
+				const rows = document.getElementById("kioskRows");
+				applySignInConfigToDashboard(data.signInConfig || null);
+
+				kioskLink.href = data.kioskUrl || "/kiosk";
+				if (data.kioskQrDataUrl) {
+					kioskQr.src = data.kioskQrDataUrl;
+				}
+
+				const devices = Array.isArray(data.devices) ? data.devices : [];
+				if (!devices.length) {
+					rows.innerHTML =
+						'<tr><td colspan="4">No registered kiosks yet.</td></tr>';
+					return;
+				}
+
+				rows.innerHTML = devices
+					.map((device) => {
+						const label = device.label?.trim() ? device.label : "—";
+						return `
+							<tr>
+								<td>${escapeHtml(device.id)}</td>
+								<td>${escapeHtml(label)}</td>
+								<td>${escapeHtml(formatSqlUtcToLocal(device.paired_at))}</td>
+								<td>${escapeHtml(formatSqlUtcToLocal(device.updated_at))}</td>
+							</tr>
+						`;
+					})
+					.join("");
+			}
+
+			function defaultSignInConfig() {
+				return {
+					waiverText: "",
+					defaultCountryCode: "+1",
+					fields: Object.fromEntries(
+						signInFieldKeys.map((key) => [key, "optional"]),
+					),
+				};
+			}
+
+			function applySignInConfigToDashboard(config) {
+				const normalized = config || defaultSignInConfig();
+				document.getElementById("signInWaiverText").value =
+					normalized.waiverText || "";
+				document.getElementById("defaultCountryCode").value =
+					normalized.defaultCountryCode || "+1";
+
+				signInFieldKeys.forEach((key) => {
+					const select = document.getElementById(`fieldMode_${key}`);
+					const value = normalized.fields?.[key] || "optional";
+					select.value = value;
+				});
+			}
+
+			async function saveSignInConfig() {
+				const payload = {
+					waiverText: document.getElementById("signInWaiverText").value,
+					defaultCountryCode:
+						document.getElementById("defaultCountryCode").value || "+1",
+					fields: Object.fromEntries(
+						signInFieldKeys.map((key) => [
+							key,
+							document.getElementById(`fieldMode_${key}`).value,
+						]),
+					),
+				};
+
+				const status = document.getElementById("signInConfigStatus");
+				status.textContent = "Saving...";
+				const res = await fetch("/api/kiosk/dashboard", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+				});
+
+				const data = await res.json().catch(() => ({}));
+				if (!res.ok) {
+					status.textContent = data.error || `Save failed (${res.status})`;
+					return;
+				}
+
+				applySignInConfigToDashboard(data.signInConfig || payload);
+				status.textContent = "Sign-in settings saved.";
+			}
+
 			function showTab(name) {
 				document.querySelectorAll(".tab").forEach((tab) => {
 					tab.classList.remove("active");
@@ -509,7 +910,7 @@
 					tab.classList.remove("active");
 				});
 
-				document.getElementById(name + "Button").classList.add("active");
+				document.getElementById(`${name}Button`).classList.add("active");
 				document.getElementById(name).classList.add("active");
 
 				if (name === "bookings") {
@@ -520,6 +921,10 @@
 				if (name === "queue") {
 					if (!isAdmin) return;
 					refreshQueue();
+				}
+
+				if (name === "signIn") {
+					loadKioskDashboardData();
 				}
 			}
 
@@ -773,8 +1178,10 @@
 				.addEventListener("change", searchBookings);
 
 			async function initDashboard() {
+				populateDefaultCountryCodeOptions();
 				await initDashboardRole();
 				await loadDashboardVersion();
+				await loadKioskDashboardData();
 				document.getElementById("logDate").value = todayAsInputValue();
 				if (isAdmin) {
 					loadLogs(true);
@@ -814,10 +1221,16 @@
 
 			function formatSqlUtcToLocal(value) {
 				if (!value) return "";
-				const isoUtc = String(value).replace(" ", "T") + "Z";
+				const raw = String(value).trim();
+				const hasTimezone = /([zZ]|[+-]\d{2}:\d{2})$/.test(raw);
+				const isoUtc = raw.includes("T")
+					? hasTimezone
+						? raw
+						: `${raw}Z`
+					: `${raw.replace(" ", "T")}Z`;
 				const date = new Date(isoUtc);
 				if (Number.isNaN(date.getTime())) {
-					return String(value);
+					return raw;
 				}
 				return formatDate(date);
 			}
