@@ -15,6 +15,8 @@ venue:
 zl:
   api_base_url: "https://api.zerolatencyvr.com/api/v1"
   site_id: 
+  # "user" (legacy, uses ZL_USERNAME/ZL_PASSWORD) or "service_account" (uses ZL_CLIENT_ID/ZL_CLIENT_SECRET)
+  auth_mode: "user"
 
 roller:
   api_base_url: "https://api.roller.app"

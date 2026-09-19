@@ -22,6 +22,7 @@ type AppConfig = {
 	zl: {
 		api_base_url: string;
 		site_id: number;
+		auth_mode?: 'user' | 'service_account';
 	};
 	roller: {
 		api_base_url: string;

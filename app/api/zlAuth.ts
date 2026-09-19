@@ -1,11 +1,13 @@
 // ZL API AUTHENTICATION FUNCTIONS
 //
+// Two auth modes, selected via config.zl.auth_mode:
+// - "service_account" (recommended): OAuth2 client-credentials grant using
+//   ZL_CLIENT_ID / ZL_CLIENT_SECRET against POST /auth/token.
+// - "user" (legacy, default when unset): username/password grant against
+//   /auth/user/token with refresh via /auth/user/refresh.
+//
 // Usage: getToken()
 // Returns: Access token string or null if failed
-// Also stores it and refresh token for next calls
-//
-// Usage: refreshToken()
-// Returns: New access token string or null if failed
 // Also stores it and refresh token for next calls
 
 import { jwtDecode } from 'jwt-decode';
@@ -16,9 +18,90 @@ let isFirstRequest = true;
 export let ZLAuthToken: string | null = null;
 export let ZLCookie: string | null = null;
 let ZLRefreshToken: string | null = null;
+let ZLTokenExpiresAt: number | null = null;
 let logMessage: string = 'Initializing ZL API authentication...\n';
 
+function usesServiceAccount() {
+	return config.zl.auth_mode === 'service_account';
+}
+
 export async function getToken(): Promise<string> {
+	if (usesServiceAccount()) {
+		return getServiceAccountToken();
+	}
+
+	return getUserToken();
+}
+
+// -- Service account (OAuth2 client-credentials) auth --
+
+async function getServiceAccountToken(): Promise<string> {
+	const hasValidToken =
+		ZLAuthToken !== null &&
+		ZLTokenExpiresAt !== null &&
+		Date.now() < ZLTokenExpiresAt;
+
+	if (hasValidToken) {
+		return ZLAuthToken as string;
+	}
+
+	const token = await requestServiceAccountToken();
+	return token ?? '';
+}
+
+async function requestServiceAccountToken() {
+	const retryMax = 3;
+	const delay = 1000;
+	// Refresh a bit before actual expiry to avoid racing a 401 on in-flight requests.
+	const expiryBufferMs = 30_000;
+
+	for (let attempt = 1; attempt <= retryMax; attempt++) {
+		const response = await fetch(`${config.zl.api_base_url}/auth/token`, {
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				grant_type: 'client_credentials',
+				client_id: Bun.env.ZL_CLIENT_ID,
+				client_secret: Bun.env.ZL_CLIENT_SECRET,
+			}),
+			method: 'POST',
+		});
+
+		if (!response.ok) {
+			const text = await response.text();
+			customLog(
+				`Failed to get ZL service account token: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
+				'WARN',
+			);
+			await Bun.sleep(delay);
+			continue;
+		}
+
+		const data = (await response.json()) as {
+			accessToken: string;
+			tokenType?: string;
+			expiresIn?: number;
+		};
+
+		ZLAuthToken = data.accessToken;
+		ZLTokenExpiresAt =
+			Date.now() + (data.expiresIn ?? 0) * 1000 - expiryBufferMs;
+		customLog('ZL API service account token obtained successfully', 'INFO');
+		return data.accessToken;
+	}
+
+	customLog(
+		`Failed to get ZL service account token after ${retryMax} attempts`,
+		'ERROR',
+	);
+	return null;
+}
+
+// -- Legacy user (username/password) auth --
+
+async function getUserToken(): Promise<string> {
 	if (isFirstRequest === true || !ZLAuthToken) {
 		customLog('First request detected. Requesting new token.');
 		await getZLToken();
