@@ -37,7 +37,7 @@ export async function getToken(): Promise<string> {
 
 async function getServiceAccountToken(): Promise<string> {
 	const hasValidToken =
-		ZLAuthToken !== null &&
+		Boolean(ZLAuthToken) &&
 		ZLTokenExpiresAt !== null &&
 		Date.now() < ZLTokenExpiresAt;
 
@@ -79,17 +79,28 @@ async function requestServiceAccountToken() {
 			continue;
 		}
 
-		const data = (await response.json()) as {
-			accessToken: string;
-			tokenType?: string;
-			expiresIn?: number;
-		};
+		const data = (await response.json()) as Record<string, unknown>;
+		// API casing for this endpoint is inconsistent across environments, accept both.
+		const accessToken = (data.accessToken ?? data.AccessToken) as
+			| string
+			| undefined;
+		const expiresIn = (data.expiresIn ?? data.ExpiresIn) as
+			| number
+			| undefined;
 
-		ZLAuthToken = data.accessToken;
-		ZLTokenExpiresAt =
-			Date.now() + (data.expiresIn ?? 0) * 1000 - expiryBufferMs;
+		if (!accessToken) {
+			customLog(
+				`ZL service account token response missing accessToken: ${JSON.stringify(data)}`,
+				'ERROR',
+			);
+			await Bun.sleep(delay);
+			continue;
+		}
+
+		ZLAuthToken = accessToken;
+		ZLTokenExpiresAt = Date.now() + (expiresIn ?? 0) * 1000 - expiryBufferMs;
 		customLog('ZL API service account token obtained successfully', 'INFO');
-		return data.accessToken;
+		return accessToken;
 	}
 
 	customLog(
