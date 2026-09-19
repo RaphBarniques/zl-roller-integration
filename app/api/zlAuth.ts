@@ -80,11 +80,11 @@ async function requestServiceAccountToken() {
 		}
 
 		const data = (await response.json()) as Record<string, unknown>;
-		// API casing for this endpoint is inconsistent across environments, accept both.
-		const accessToken = (data.accessToken ?? data.AccessToken) as
+		// This endpoint returns snake_case (access_token/expires_in) unlike other ZL endpoints; accept all casings.
+		const accessToken = (data.access_token ?? data.accessToken ?? data.AccessToken) as
 			| string
 			| undefined;
-		const expiresIn = (data.expiresIn ?? data.ExpiresIn) as
+		const expiresIn = (data.expires_in ?? data.expiresIn ?? data.ExpiresIn) as
 			| number
 			| undefined;
 
