@@ -1,0 +1,23 @@
+[Unit]
+Description=ZL Roller Integration
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Update these two paths for your server.
+WorkingDirectory=/opt/zl-roller-integration
+ExecStart=/usr/local/bin/bun run start
+
+Restart=always
+RestartSec=5
+
+# Run as a dedicated non-root user with write access to the repo (db/, logs/, backups/).
+User=zlintegration
+Group=zlintegration
+
+# Needed so the dashboard's "Update" action (git pull) works when run as this user.
+Environment=HOME=/opt/zl-roller-integration
+
+[Install]
+WantedBy=multi-user.target
