@@ -1,8 +1,10 @@
 import { Database } from 'bun:sqlite';
+import { mkdirSync } from 'node:fs';
 import { parse } from 'yaml';
 import { customLog } from './utils/logger.ts';
 
 const DB_PATH = './db/sync.db';
+mkdirSync('./db', { recursive: true });
 const dbExists = await Bun.file(DB_PATH).exists();
 export const db = new Database(DB_PATH);
 export let allowedVRPackages: Map<number, PackageConfig> = new Map();

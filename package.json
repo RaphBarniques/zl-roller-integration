@@ -12,7 +12,8 @@
 		"typescript": "^5"
 	},
 	"scripts": {
-		"dev": "bun --watch src/index.ts",
+		"dev": "bun --watch app/index.ts",
+		"start": "bun app/index.ts",
 		"format": "bunx biome check --write . --max-diagnostics 99999",
 		"package:setup": "bun scripts/generatePackageSetup.ts"
 	},

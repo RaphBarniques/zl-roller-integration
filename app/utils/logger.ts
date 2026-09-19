@@ -13,6 +13,9 @@
 //                       (ERROR) This is another line
 
 import { appendFile } from 'node:fs/promises';
+import { mkdirSync } from 'node:fs';
+
+mkdirSync('./logs', { recursive: true });
 
 const logClients = new Set<ReadableStreamDefaultController>();
 
