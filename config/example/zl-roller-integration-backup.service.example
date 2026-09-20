@@ -1,0 +1,9 @@
+[Unit]
+Description=ZL Roller Integration - Scheduled Backup
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/zl-roller-integration
+ExecStart=/bin/bash /opt/zl-roller-integration/scripts/backup.sh
+User=zlintegration
+Group=zlintegration
