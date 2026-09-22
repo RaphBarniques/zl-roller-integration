@@ -204,7 +204,10 @@ const server = Bun.serve({
 				const authResponse = requireDashboardAuth(req);
 				if (authResponse) return authResponse;
 
-				return Response.json({ version: appVersion });
+				return Response.json({
+					version: appVersion,
+					location: config.venue.location,
+				});
 			},
 		},
 
