@@ -358,6 +358,11 @@
 				font-size: 16px;
 			}
 
+			#countryCodeInput {
+				width: 82px;
+				padding: 0 7px;
+			}
+
 			.inline-2,
 			.inline-3 {
 				display: grid;
@@ -370,6 +375,10 @@
 
 			.inline-3 {
 				grid-template-columns: 1fr 1fr 1fr;
+			}
+
+			#phoneRow {
+				grid-template-columns: 82px minmax(0, 2fr) minmax(120px, 1fr);
 			}
 
 			.why {
@@ -509,8 +518,15 @@
 			}
 
 			.btn.secondary {
+				background: var(--button);
+				color: #fff;
+			}
+
+			.btn:disabled {
 				background: #a1a3af;
 				color: #fff;
+				cursor: not-allowed;
+				opacity: 0.72;
 			}
 
 			.waiver-text {
@@ -842,6 +858,20 @@
 				.inline-3 {
 					grid-template-columns: 1fr;
 				}
+
+				#phoneRow {
+					grid-template-columns: 82px minmax(0, 1fr);
+					gap: 8px;
+				}
+
+				#phoneRow #postcodeGroup {
+					grid-column: 1 / -1;
+				}
+
+				#phoneNumberGroup,
+				#phoneNumberInputGroup {
+					min-width: 0;
+				}
 			}
 
 			@media (max-width: 420px) {
@@ -1074,7 +1104,7 @@
 							<label id="displayNameLabel">Player alias</label>
 							<input id="aliasInput" type="text" />
 						</div>
-						<div class="inline-3 form-row">
+						<div class="inline-3 form-row" id="phoneRow">
 							<div id="phoneNumberGroup">
 								<label id="phoneNumberLabel"
 									>Phone <span class="required">*</span></label
@@ -1127,6 +1157,7 @@
 								</select>
 							</div>
 						</div>
+						<div id="customSignInFields"></div>
 					</div>
 					<div class="actions-bottom">
 						<button type="button" class="btn" id="profileContinue">
@@ -1339,6 +1370,7 @@
 			const birthMonthInput = document.getElementById("birthMonthInput");
 			const birthYearInput = document.getElementById("birthYearInput");
 			const genderInput = document.getElementById("genderInput");
+			const customSignInFields = document.getElementById("customSignInFields");
 			const subscribeEmailInput = document.getElementById(
 				"subscribeEmailInput",
 			);
@@ -1394,6 +1426,7 @@
 					dateOfBirth: "optional",
 					gender: "required",
 				},
+				customFields: [],
 			};
 
 			const countryCodeOptions = [
@@ -1504,9 +1537,18 @@
 				countryCodeInput.innerHTML = countryCodeOptions
 					.map(
 						(option) =>
-							`<option value="${option.code}">${option.label}</option>`,
+							`<option value="${option.code}" data-country-label="${option.label}">${option.label}</option>`,
 					)
 					.join("");
+				setCountryCodeDisplay(true);
+			}
+
+			function setCountryCodeDisplay(compact) {
+				Array.from(countryCodeInput.options).forEach((option) => {
+					option.textContent = compact
+						? option.value
+						: option.dataset.countryLabel || option.value;
+				});
 			}
 
 			const fixedFieldModes = {
@@ -1768,6 +1810,18 @@
 					getFieldMode("dateOfBirth") === "required",
 				);
 				setLabelRequired("genderLabel", getFieldMode("gender") === "required");
+				customSignInFields.innerHTML = (config.customFields || [])
+					.map(
+						(field) => `
+							<div class="form-row">
+								<label for="customField_${escapeHtml(field.key)}">
+									${escapeHtml(field.label)}${field.mode === "required" ? ' <span class="required">*</span>' : ""}
+								</label>
+								<input id="customField_${escapeHtml(field.key)}" type="text" data-custom-field="${escapeHtml(field.key)}" />
+							</div>
+						`,
+					)
+					.join("");
 			}
 
 			function formatTime(value) {
@@ -2081,6 +2135,9 @@
 				phoneInput.value = player?.phoneNumber || "";
 				postcodeInput.value = player?.postcode || "";
 				genderInput.value = player?.gender || "";
+				customSignInFields.querySelectorAll("[data-custom-field]").forEach((input) => {
+					input.value = player?.customFields?.[input.dataset.customField] || "";
+				});
 				subscribeEmailInput.checked = false;
 				subscribeSmsInput.checked = false;
 
@@ -2124,6 +2181,10 @@
 
 			function collectProfileForm() {
 				const dateOfBirth = parseDateOfBirthFromInputs().value;
+				const customFields = {};
+				customSignInFields.querySelectorAll("[data-custom-field]").forEach((input) => {
+					customFields[input.dataset.customField] = input.value.trim();
+				});
 
 				return {
 					playerGuid: playerGuidInput.value.trim(),
@@ -2141,6 +2202,7 @@
 					signedWaiverDateTime: state.signedWaiverDateTimeIso,
 					subscribeEmail: subscribeEmailInput.checked,
 					subscribeSms: subscribeSmsInput.checked,
+					customFields,
 				};
 			}
 
@@ -2483,6 +2545,13 @@
 					return;
 				}
 
+				for (const field of state.signInConfig?.customFields || []) {
+					if (field.mode === "required" && !profile.customFields?.[field.key]) {
+						setNotice(profileError, `${field.label} is required.`, true);
+						return;
+					}
+				}
+
 				state.shouldShowMarketingStep = true;
 				setWaiverBackStep(6);
 				setStep(6);
@@ -2551,6 +2620,13 @@
 			if (isSessionLinkMode) {
 				setStep(0);
 			}
+
+			countryCodeInput.addEventListener("focus", () => {
+				setCountryCodeDisplay(false);
+			});
+			countryCodeInput.addEventListener("blur", () => {
+				setCountryCodeDisplay(true);
+			});
 
 			clearCompletionState();
 			populateCountryCodeOptions();

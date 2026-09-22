@@ -16,7 +16,6 @@ import {
 	requireDashboardAuth,
 } from './api/dashboardAuth.ts';
 import {
-	buildKioskSessionSignInLink,
 	getKioskDashboardData,
 	getKioskSignInMarketingPreferences,
 	getKioskPairingCodeForAdmin,
@@ -168,16 +167,6 @@ const server = Bun.serve({
 			},
 		},
 
-		'/api/kiosk/session-link': {
-			POST: async (req) => {
-				const authResponse = requireDashboardAuth(req);
-				if (authResponse) return authResponse;
-				const adminResponse = requireDashboardAdmin(req);
-				if (adminResponse) return adminResponse;
-
-				return buildKioskSessionSignInLink(req);
-			},
-		},
 
 		'/api/dashboard/logs': {
 			GET: async (req) => {

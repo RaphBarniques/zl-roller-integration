@@ -474,53 +474,6 @@
 				</div>
 
 				<div class="panel">
-					<h3>Booking sign-in link</h3>
-					<div class="hint" style="margin-bottom: 10px">
-						Build a link for a specific ZL session/booking. It never expires
-						and lets that guest register in advance without a kiosk pairing.
-					</div>
-					<div class="config-grid">
-						<div class="field">
-							<strong>ZL session ID</strong>
-							<input type="number" id="directLinkSessionId" />
-						</div>
-						<div class="field">
-							<strong>ZL booking ID</strong>
-							<input type="number" id="directLinkBookingId" />
-						</div>
-					</div>
-					<div class="config-actions">
-						<button
-							type="button"
-							id="generateDirectLinkButton"
-							onclick="generateDirectSignInLink()"
-						>
-							Build link
-						</button>
-						<span id="directLinkStatus" class="config-status"></span>
-					</div>
-					<div
-						class="latest"
-						id="directLinkResult"
-						style="display: none; grid-template-columns: 220px 1fr; margin-top: 14px"
-					>
-						<div class="field" style="display: grid; place-items: center">
-							<img
-								id="directLinkQr"
-								alt="Direct booking link QR"
-								style="
-									width: 200px;
-									height: 200px;
-									background: #fff;
-									padding: 6px;
-								"
-							/>
-						</div>
-						<div class="field" id="directLinkOutput"></div>
-					</div>
-				</div>
-
-				<div class="panel">
 					<h3>Sign-in configuration</h3>
 					<div class="field">
 						<strong>Waiver text</strong>
@@ -563,6 +516,17 @@
 								<option value="hidden">Hidden</option>
 							</select>
 						</div>
+					</div>
+					<div style="margin-top: 18px">
+						<strong>Custom signup fields</strong>
+						<div id="customSignInFieldsEditor" style="margin-top: 8px"></div>
+						<button type="button" style="margin-top: 10px" onclick="addCustomSignInField()">
+							Add signup field
+						</button>
+					</div>
+					<div style="margin-top: 18px">
+						<strong>Attractions shown on kiosk</strong>
+						<div id="kioskAttractionsEditor" class="config-grid" style="margin-top: 8px"></div>
 					</div>
 					<div class="config-actions">
 						<button
@@ -770,11 +734,6 @@
 					);
 					saveConfigButton.disabled = true;
 					saveConfigButton.title = "Admin access required";
-					const directLinkButton = document.getElementById(
-						"generateDirectLinkButton",
-					);
-					directLinkButton.disabled = true;
-					directLinkButton.title = "Admin access required";
 					showTab("bookings");
 				} else {
 					document.getElementById("backupButton").style.display =
@@ -859,51 +818,6 @@
 				await loadKioskDashboardData();
 			}
 
-			async function generateDirectSignInLink() {
-				if (!isAdmin) {
-					alert("Admin access required to build sign-in links.");
-					return;
-				}
-
-				const sessionId = Number(
-					document.getElementById("directLinkSessionId").value,
-				);
-				const bookingId = Number(
-					document.getElementById("directLinkBookingId").value,
-				);
-				const status = document.getElementById("directLinkStatus");
-
-				if (!Number.isFinite(sessionId) || !Number.isFinite(bookingId)) {
-					status.textContent = "Enter a session ID and booking ID.";
-					return;
-				}
-
-				status.textContent = "Building...";
-				const res = await fetch("/api/kiosk/session-link", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ sessionId, bookingId }),
-				});
-
-				const data = await res.json().catch(() => ({}));
-				if (!res.ok) {
-					status.textContent = data.error || `Request failed (${res.status})`;
-					return;
-				}
-
-				status.textContent = "Link ready.";
-				const result = document.getElementById("directLinkResult");
-				const qr = document.getElementById("directLinkQr");
-				const output = document.getElementById("directLinkOutput");
-
-				result.style.display = "grid";
-				qr.src = data.qrDataUrl || "";
-				output.innerHTML = `
-					<div style="word-break: break-all;">${escapeHtml(data.url)}</div>
-					<button type="button" style="margin-top: 10px" onclick="navigator.clipboard.writeText(${JSON.stringify(data.url)})">Copy link</button>
-				`;
-			}
-
 			async function loadKioskDashboardData() {
 				const res = await fetch("/api/kiosk/dashboard");
 				if (!res.ok) {
@@ -914,6 +828,9 @@
 				const kioskLink = document.getElementById("kioskLink");
 				const kioskQr = document.getElementById("kioskDashboardQr");
 				const rows = document.getElementById("kioskRows");
+				window.kioskAttractions = Array.isArray(data.attractions)
+					? data.attractions
+					: [];
 				applySignInConfigToDashboard(data.signInConfig || null);
 
 				kioskLink.href = data.kioskUrl || "/kiosk";
@@ -947,6 +864,7 @@
 				return {
 					waiverText: "",
 					defaultCountryCode: "+1",
+					attractions: [],
 					fields: Object.fromEntries(
 						signInFieldKeys.map((key) => [key, "optional"]),
 					),
@@ -965,6 +883,71 @@
 					const value = normalized.fields?.[key] || "optional";
 					select.value = value;
 				});
+
+				renderCustomSignInFields(normalized.customFields || []);
+				renderKioskAttractions(normalized.attractions || [], window.kioskAttractions || []);
+			}
+
+			function renderKioskAttractions(selected, attractions) {
+				const editor = document.getElementById("kioskAttractionsEditor");
+				const selectedSet = new Set(selected);
+				editor.innerHTML = attractions
+					.map(
+						(attraction) => `
+							<label class="field" style="display: flex; gap: 8px; align-items: center">
+								<input type="checkbox" data-kiosk-attraction value="${escapeHtml(attraction.name)}" ${selectedSet.has(attraction.name) ? "checked" : ""} />
+								<span>${escapeHtml(attraction.name)}</span>
+							</label>
+						`,
+					)
+					.join("");
+			}
+
+			function getSelectedKioskAttractions() {
+				return Array.from(document.querySelectorAll("[data-kiosk-attraction]:checked")).map(
+					(input) => input.value,
+				);
+			}
+
+			function renderCustomSignInFields(fields) {
+				const editor = document.getElementById("customSignInFieldsEditor");
+				editor.innerHTML = fields
+					.map(
+						(field, index) => `
+							<div class="config-grid" data-custom-field-row style="margin-top: 8px">
+								<input data-custom-field-key value="${escapeHtml(field.key || "")}" placeholder="key" />
+								<input data-custom-field-label value="${escapeHtml(field.label || "")}" placeholder="Label shown to guest" />
+								<select data-custom-field-mode>
+									<option value="required" ${field.mode === "required" ? "selected" : ""}>Required</option>
+									<option value="optional" ${field.mode !== "required" ? "selected" : ""}>Optional</option>
+								</select>
+								<button type="button" onclick="removeCustomSignInField(${index})">Remove</button>
+							</div>
+						`,
+					)
+					.join("");
+			}
+
+			function getCustomSignInFieldsFromDashboard() {
+				return Array.from(document.querySelectorAll("[data-custom-field-row]")).map(
+					(row) => ({
+						key: row.querySelector("[data-custom-field-key]").value,
+						label: row.querySelector("[data-custom-field-label]").value,
+						mode: row.querySelector("[data-custom-field-mode]").value,
+					}),
+				);
+			}
+
+			function addCustomSignInField() {
+				const fields = getCustomSignInFieldsFromDashboard();
+				fields.push({ key: "", label: "", mode: "optional" });
+				renderCustomSignInFields(fields);
+			}
+
+			function removeCustomSignInField(index) {
+				const fields = getCustomSignInFieldsFromDashboard();
+				fields.splice(index, 1);
+				renderCustomSignInFields(fields);
 			}
 
 			async function saveSignInConfig() {
@@ -978,6 +961,8 @@
 							document.getElementById(`fieldMode_${key}`).value,
 						]),
 					),
+					customFields: getCustomSignInFieldsFromDashboard(),
+					attractions: getSelectedKioskAttractions(),
 				};
 
 				const status = document.getElementById("signInConfigStatus");

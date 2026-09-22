@@ -83,9 +83,17 @@ type KioskSignInSessionSummary = {
 
 type SignInFieldMode = 'hidden' | 'optional' | 'required';
 
+type CustomSignInField = {
+	key: string;
+	label: string;
+	mode: Exclude<SignInFieldMode, 'hidden'>;
+};
+
 type SignInConfig = {
 	waiverText: string;
 	defaultCountryCode: string;
+	attractions: string[];
+	customFields: CustomSignInField[];
 	fields: {
 		phoneNumber: SignInFieldMode;
 		postcode: SignInFieldMode;
@@ -109,6 +117,8 @@ local regulations.`;
 const DEFAULT_SIGN_IN_CONFIG: SignInConfig = {
 	waiverText: DEFAULT_WAIVER_TEXT,
 	defaultCountryCode: DEFAULT_COUNTRY_CODE,
+	attractions: [],
+	customFields: [],
 	fields: {
 		phoneNumber: 'required',
 		postcode: 'optional',
@@ -251,6 +261,44 @@ function normalizeCountryCode(value: unknown) {
 	return /^\+\d{1,4}$/.test(normalized) ? normalized : DEFAULT_COUNTRY_CODE;
 }
 
+function normalizeCustomFields(value: unknown): CustomSignInField[] {
+	if (!Array.isArray(value)) return [];
+
+	const fields: CustomSignInField[] = [];
+	const keys = new Set<string>();
+	for (const item of value.slice(0, 12)) {
+		if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+		const raw = item as Record<string, unknown>;
+		const key = String(raw.key ?? '')
+			.trim()
+			.toLowerCase()
+			.replace(/[^a-z0-9_]+/g, '_')
+			.replace(/^_+|_+$/g, '')
+			.slice(0, 40);
+		const label = String(raw.label ?? '').trim().slice(0, 80);
+		if (!key || !label || keys.has(key)) continue;
+		keys.add(key);
+		fields.push({
+			key,
+			label,
+			mode: raw.mode === 'required' ? 'required' : 'optional',
+		});
+	}
+	return fields;
+}
+
+function normalizeKioskAttractions(value: unknown) {
+	const available = new Set(
+		config.venue.attractions.map((attraction) => attraction.name),
+	);
+	if (!Array.isArray(value)) return [...available];
+
+	const selected = value.filter(
+		(item): item is string => typeof item === 'string' && available.has(item),
+	);
+	return selected.length > 0 ? [...new Set(selected)] : [...available];
+}
+
 function normalizeSignInConfig(value: unknown): SignInConfig {
 	if (!value || typeof value !== 'object' || Array.isArray(value)) {
 		return DEFAULT_SIGN_IN_CONFIG;
@@ -268,6 +316,8 @@ function normalizeSignInConfig(value: unknown): SignInConfig {
 				? raw.waiverText
 				: DEFAULT_SIGN_IN_CONFIG.waiverText,
 		defaultCountryCode: normalizeCountryCode(raw.defaultCountryCode),
+		attractions: normalizeKioskAttractions(raw.attractions),
+		customFields: normalizeCustomFields(raw.customFields),
 		fields: {
 			phoneNumber: normalizeFieldMode(rawFields.phoneNumber),
 			postcode: normalizeFieldMode(rawFields.postcode),
@@ -280,13 +330,13 @@ function normalizeSignInConfig(value: unknown): SignInConfig {
 async function getSignInConfig() {
 	const raw = await getAppSettingValue(SIGN_IN_CONFIG_KEY);
 	if (!raw) {
-		return DEFAULT_SIGN_IN_CONFIG;
+		return normalizeSignInConfig(DEFAULT_SIGN_IN_CONFIG);
 	}
 
 	try {
 		return normalizeSignInConfig(JSON.parse(raw));
 	} catch {
-		return DEFAULT_SIGN_IN_CONFIG;
+		return normalizeSignInConfig(DEFAULT_SIGN_IN_CONFIG);
 	}
 }
 
@@ -742,6 +792,7 @@ export async function getKioskDashboardData(req: Request) {
 		kioskUrl,
 		kioskQrDataUrl,
 		devices,
+		attractions: config.venue.attractions,
 		signInConfig,
 	});
 }
@@ -914,6 +965,8 @@ export async function getKioskSignInBootstrap(req: Request) {
 			{ status: 502 },
 		);
 	}
+	const signInConfig = await getSignInConfig();
+	const selectedAttractions = new Set(signInConfig.attractions);
 
 	// A direct booking link only ever exposes the one session/booking it was created for.
 	const scopedSessions =
@@ -930,6 +983,16 @@ export async function getKioskSignInBootstrap(req: Request) {
 
 	const mappedSessions = scopedSessions
 		.filter((session) => access.kind === 'session' || !session.IsHidden)
+		.filter((session) => {
+			const attraction = config.venue.attractions.find(
+				(entry) => entry.gamespace === session.GameSpaceId,
+			);
+			return (
+				selectedAttractions.size === 0 ||
+				!attraction ||
+				selectedAttractions.has(attraction.name)
+			);
+		})
 		.filter((session) => (session.Bookings || []).length > 0)
 		.map(mapSessionSummary);
 
@@ -951,7 +1014,7 @@ export async function getKioskSignInBootstrap(req: Request) {
 	return Response.json({
 		date: requestedDateStamp,
 		timeZone: config.venue.timezone,
-		signInConfig: await getSignInConfig(),
+		signInConfig: signInConfig,
 		sessions: visibleSessions,
 		directAccess: access.kind === 'session',
 	});
@@ -1116,6 +1179,24 @@ export async function submitKioskSignIn(req: Request) {
 	const signedWaiverDateTime = normalizeOptionalString(
 		profile.signedWaiverDateTime,
 	);
+	const signInConfig = await getSignInConfig();
+	const submittedCustomFields =
+		typeof profile.customFields === 'object' &&
+		profile.customFields &&
+		!Array.isArray(profile.customFields)
+			? (profile.customFields as Record<string, unknown>)
+			: {};
+	const customFields: Record<string, string> = {};
+	for (const field of signInConfig.customFields) {
+		const value = normalizeOptionalString(submittedCustomFields[field.key]);
+		if (field.mode === 'required' && !value) {
+			return Response.json(
+				{ error: `${field.label} is required.` },
+				{ status: 400 },
+			);
+		}
+		if (value) customFields[field.key] = value.slice(0, 500);
+	}
 	customLog(
 		`Kiosk sign-in request for booking ${bookingId}: client playerGuid=${String(body?.playerGuid ?? '') || 'null'}, profile playerGuid=${String(profile.playerGuid ?? '') || 'null'}, resolved playerGuid=${playerGuid || 'null'}`,
 		'INFO',
@@ -1213,6 +1294,7 @@ export async function submitKioskSignIn(req: Request) {
 			playerGuid: persistedPlayerGuid,
 			subscribeEmail: Boolean(profile.subscribeEmail),
 			subscribeSms: Boolean(profile.subscribeSms),
+			customFields,
 			syncedWithPatch: false,
 		});
 	}
@@ -1226,32 +1308,5 @@ export async function submitKioskSignIn(req: Request) {
 			[firstName, lastName].filter(Boolean).join(' ') ||
 			emailAddress,
 	});
-}
-
-export async function buildKioskSessionSignInLink(req: Request) {
-	const body = (await req.json().catch(() => null)) as Record<
-		string,
-		unknown
-	> | null;
-
-	const sessionId = Number(body?.sessionId);
-	const bookingId = Number(body?.bookingId);
-
-	if (!Number.isFinite(sessionId) || !Number.isFinite(bookingId)) {
-		return Response.json(
-			{ error: 'Missing or invalid sessionId or bookingId.' },
-			{ status: 400 },
-		);
-	}
-
-	const origin = new URL(req.url).origin;
-	const url = `${origin}/kiosk/signin/session?session=${encodeURIComponent(sessionId)}&booking=${encodeURIComponent(bookingId)}`;
-	const qrDataUrl = await QRCode.toDataURL(url, {
-		margin: 1,
-		width: 280,
-		color: { dark: '#0f1018', light: '#ffffff' },
-	});
-
-	return Response.json({ url, qrDataUrl });
 }
 

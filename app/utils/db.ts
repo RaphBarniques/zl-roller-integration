@@ -292,6 +292,7 @@ export async function saveKioskSignInRecord(record: {
 	playerGuid: string;
 	subscribeEmail: boolean;
 	subscribeSms: boolean;
+	customFields?: Record<string, string>;
 	syncedWithPatch: boolean;
 }) {
 	db.run(
@@ -300,12 +301,14 @@ export async function saveKioskSignInRecord(record: {
 			player_guid,
 			subscribe_email,
 			subscribe_sms,
+			custom_fields,
 			synced_with_patch
 		)
-		VALUES (?, ?, ?, ?)
+		VALUES (?, ?, ?, ?, ?)
 		ON CONFLICT(player_guid) DO UPDATE SET
 			subscribe_email = excluded.subscribe_email,
 			subscribe_sms = excluded.subscribe_sms,
+			custom_fields = excluded.custom_fields,
 			synced_with_patch = excluded.synced_with_patch,
 			updated_at = CURRENT_TIMESTAMP
 		`,
@@ -313,6 +316,7 @@ export async function saveKioskSignInRecord(record: {
 			record.playerGuid,
 			record.subscribeEmail,
 			record.subscribeSms,
+			JSON.stringify(record.customFields ?? {}),
 			record.syncedWithPatch,
 		],
 	);

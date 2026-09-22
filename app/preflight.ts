@@ -271,6 +271,7 @@ export async function initDb() {
 		player_guid TEXT NOT NULL,
 		subscribe_email BOOLEAN NOT NULL DEFAULT 0,
 		subscribe_sms BOOLEAN NOT NULL DEFAULT 0,
+		custom_fields TEXT NOT NULL DEFAULT '{}',
 		synced_with_patch BOOLEAN NOT NULL DEFAULT 0,
 		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -294,6 +295,15 @@ export async function initDb() {
 	const hasSyncedWithPatchColumn = kioskSigninsColumns.some(
 		(column) => column.name === 'synced_with_patch',
 	);
+	const hasCustomFieldsColumn = kioskSigninsColumns.some(
+		(column) => column.name === 'custom_fields',
+	);
+	if (!hasCustomFieldsColumn) {
+		db.run(
+			`ALTER TABLE kiosk_signins ADD COLUMN custom_fields TEXT NOT NULL DEFAULT '{}'`,
+		);
+		logMessage += 'Added column: kiosk_signins.custom_fields\n';
+	}
 	if (
 		hasLegacyBookingColumns ||
 		!hasSubscribeEmailColumn ||
@@ -305,6 +315,7 @@ export async function initDb() {
 				player_guid TEXT NOT NULL PRIMARY KEY,
 				subscribe_email BOOLEAN NOT NULL DEFAULT 0,
 				subscribe_sms BOOLEAN NOT NULL DEFAULT 0,
+				custom_fields TEXT NOT NULL DEFAULT '{}',
 				synced_with_patch BOOLEAN NOT NULL DEFAULT 0,
 				created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -324,13 +335,17 @@ export async function initDb() {
 					)
 				? 'COALESCE(synced_with_roller, 0)'
 				: '0';
+		const customFieldsSelect = hasCustomFieldsColumn
+			? "COALESCE(custom_fields, '{}')"
+			: "'{}'";
 
 		db.run(`
 			INSERT OR REPLACE INTO kiosk_signins_new (
 				player_guid,
 				subscribe_email,
 				subscribe_sms,
-				synced_with_roller,
+				custom_fields,
+				synced_with_patch,
 				created_at,
 				updated_at
 			)
@@ -338,6 +353,7 @@ export async function initDb() {
 				player_guid,
 				${subscribeEmailSelect},
 				${subscribeSmsSelect},
+				${customFieldsSelect},
 				${syncedWithPatchSelect},
 				created_at,
 				updated_at
