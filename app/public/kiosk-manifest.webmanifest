@@ -1,0 +1,23 @@
+{
+	"name": "Zero Latency Kiosk",
+	"short_name": "ZL Kiosk",
+	"start_url": "/kiosk",
+	"scope": "/kiosk",
+	"display": "standalone",
+	"background_color": "#171826",
+	"theme_color": "#171826",
+	"icons": [
+		{
+			"src": "/assets/sign_in_tablet_icon_lightning.png",
+			"sizes": "500x500",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/kiosk-icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any maskable"
+		}
+	]
+}

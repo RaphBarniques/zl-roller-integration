@@ -486,6 +486,47 @@ export async function getSiteSessionsForDate(date: string) {
 	return false;
 }
 
+export async function getBookingById(bookingId: number) {
+	const retryMax = 3;
+	const delay = 1000;
+
+	for (let attempt = 1; attempt <= retryMax; attempt++) {
+		const headers = await buildZLHeaders();
+
+		const response = await fetch(
+			`${config.zl.api_base_url}/sites/${config.zl.site_id}/bookings/${bookingId}`,
+			{
+				method: 'GET',
+				headers,
+			},
+		);
+
+		if (!response.ok && response.status === 401) {
+			customLog(
+				`Unauthorized when fetching booking ${bookingId}, refreshing token and retrying...`,
+				'WARN',
+			);
+			await Bun.sleep(delay);
+		} else if (!response.ok) {
+			const text = await response.text();
+			customLog(
+				`Failed to fetch booking ${bookingId}: ${response.status} ${response.statusText}. ${text || 'No response body'}`,
+				'ERROR',
+			);
+			await Bun.sleep(delay);
+		} else {
+			customLog(`Successfully fetched booking ${bookingId}`, 'INFO');
+			return (await response.json()) as ZLBooking;
+		}
+	}
+
+	customLog(
+		`Failed to fetch booking ${bookingId} after ${retryMax} attempts`,
+		'ERROR',
+	);
+	return false;
+}
+
 export async function searchPlayersByEmail(email: string) {
 	const retryMax = 3;
 	const delay = 1000;

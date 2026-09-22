@@ -16,6 +16,7 @@ import {
 	requireDashboardAuth,
 } from './api/dashboardAuth.ts';
 import {
+	buildKioskSessionSignInLink,
 	getKioskDashboardData,
 	getKioskSignInMarketingPreferences,
 	getKioskPairingCodeForAdmin,
@@ -23,6 +24,7 @@ import {
 	getKioskSignInPlayerMatches,
 	getKioskState,
 	pairKiosk,
+	renderKioskSessionSignInPage,
 	renderKioskSignInPage,
 	submitKioskSignIn,
 	updateKioskSignInConfig,
@@ -65,6 +67,21 @@ const server = Bun.serve({
 			return new Response(Bun.file(`./app/public${pathname}`));
 		},
 
+		'/kiosk-manifest.webmanifest': () =>
+			new Response(Bun.file('./app/public/kiosk-manifest.webmanifest'), {
+				headers: { 'Content-Type': 'application/manifest+json' },
+			}),
+
+		'/kiosk-icon.svg': () =>
+			new Response(Bun.file('./app/public/kiosk-icon.svg'), {
+				headers: { 'Content-Type': 'image/svg+xml' },
+			}),
+
+		'/kiosk-sw.js': () =>
+			new Response(Bun.file('./app/public/kiosk-sw.js'), {
+				headers: { 'Content-Type': 'application/javascript' },
+			}),
+
 		'/status': chain([logging], async (_req) => {
 			await getSession();
 			return new Response('OK', { status: 200 });
@@ -95,6 +112,9 @@ const server = Bun.serve({
 		'/kiosk': async () => new Response(Bun.file('./app/public/kiosk.html')),
 
 		'/kiosk/sign-in': async (req) => renderKioskSignInPage(req),
+
+		'/kiosk/signin/session': async (req) =>
+			renderKioskSessionSignInPage(req),
 
 		'/api/kiosk/state': {
 			GET: async (req) => getKioskState(req),
@@ -145,6 +165,17 @@ const server = Bun.serve({
 				if (adminResponse) return adminResponse;
 
 				return getKioskPairingCodeForAdmin();
+			},
+		},
+
+		'/api/kiosk/session-link': {
+			POST: async (req) => {
+				const authResponse = requireDashboardAuth(req);
+				if (authResponse) return authResponse;
+				const adminResponse = requireDashboardAdmin(req);
+				if (adminResponse) return adminResponse;
+
+				return buildKioskSessionSignInLink(req);
 			},
 		},
 

@@ -3,6 +3,13 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#171826" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="ZL Kiosk" />
+		<link rel="manifest" href="/kiosk-manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/assets/zl-logo-gun.png" />
 		<title>Kiosk</title>
 		<style>
 			:root {
@@ -521,12 +528,9 @@
 					.filter((entry) => entry.startMs > 0)
 					.sort((left, right) => left.startMs - right.startMs);
 
-				return (
-					withDates.find((entry) => entry.startMs >= now - 7 * 60 * 1000)
-						?.session ||
-					withDates[0]?.session ||
-					null
-				);
+				return withDates.find(
+					(entry) => entry.startMs >= now - 7 * 60 * 1000,
+				)?.session || null;
 			}
 
 			function summarizeSessionPlayers(session) {
@@ -614,6 +618,16 @@
 				activeView.classList.remove("hidden");
 			}
 
+			function showNoUpcomingSession() {
+				currentSessionId = null;
+				sessionDate.textContent = "No upcoming session";
+				sessionTitle.textContent = "No upcoming session";
+				sessionMeta.textContent = "There are no more sessions for today";
+				sessionNote.className = "session-note";
+				sessionNote.textContent = "Please check back later.";
+				footerStatus.classList.add("is-hidden");
+			}
+
 			function scheduleRefresh() {
 				if (refreshTimer) {
 					clearTimeout(refreshTimer);
@@ -652,17 +666,30 @@
 					}
 
 					if (!nextSession && currentSelectedDate) {
-						nextSession = data.sessions.find(
+						const selectedDateSession = data.sessions.find(
 							(session) =>
 								session.startTime?.slice(0, 10) === currentSelectedDate,
 						);
+						const selectedDateStart = selectedDateSession
+							? parseSessionWallClockDate(selectedDateSession.startTime)?.getTime()
+							: null;
+						if (
+							selectedDateSession &&
+							selectedDateStart !== null &&
+							selectedDateStart >= Date.now() - 7 * 60 * 1000
+						) {
+							nextSession = selectedDateSession;
+						}
 					}
 
 					if (!nextSession) {
 						nextSession = pickNextSession(data.sessions);
 					}
 
-					if (!nextSession) return;
+					if (!nextSession) {
+						showNoUpcomingSession();
+						return;
+					}
 
 					currentSessionId = nextSession.sessionId;
 					currentSelectedDate = nextSession.startTime?.slice(0, 10) || null;
@@ -750,6 +777,11 @@
 			loadState().catch(() => {
 				showSetup("Unable to load kiosk state. Try again.");
 			});
+			if ("serviceWorker" in navigator) {
+				window.addEventListener("load", () => {
+					void navigator.serviceWorker.register("/kiosk-sw.js");
+				});
+			}
 		</script>
 	</body>
 </html>

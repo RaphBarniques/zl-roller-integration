@@ -474,6 +474,53 @@
 				</div>
 
 				<div class="panel">
+					<h3>Booking sign-in link</h3>
+					<div class="hint" style="margin-bottom: 10px">
+						Build a link for a specific ZL session/booking. It never expires
+						and lets that guest register in advance without a kiosk pairing.
+					</div>
+					<div class="config-grid">
+						<div class="field">
+							<strong>ZL session ID</strong>
+							<input type="number" id="directLinkSessionId" />
+						</div>
+						<div class="field">
+							<strong>ZL booking ID</strong>
+							<input type="number" id="directLinkBookingId" />
+						</div>
+					</div>
+					<div class="config-actions">
+						<button
+							type="button"
+							id="generateDirectLinkButton"
+							onclick="generateDirectSignInLink()"
+						>
+							Build link
+						</button>
+						<span id="directLinkStatus" class="config-status"></span>
+					</div>
+					<div
+						class="latest"
+						id="directLinkResult"
+						style="display: none; grid-template-columns: 220px 1fr; margin-top: 14px"
+					>
+						<div class="field" style="display: grid; place-items: center">
+							<img
+								id="directLinkQr"
+								alt="Direct booking link QR"
+								style="
+									width: 200px;
+									height: 200px;
+									background: #fff;
+									padding: 6px;
+								"
+							/>
+						</div>
+						<div class="field" id="directLinkOutput"></div>
+					</div>
+				</div>
+
+				<div class="panel">
 					<h3>Sign-in configuration</h3>
 					<div class="field">
 						<strong>Waiver text</strong>
@@ -723,6 +770,11 @@
 					);
 					saveConfigButton.disabled = true;
 					saveConfigButton.title = "Admin access required";
+					const directLinkButton = document.getElementById(
+						"generateDirectLinkButton",
+					);
+					directLinkButton.disabled = true;
+					directLinkButton.title = "Admin access required";
 					showTab("bookings");
 				} else {
 					document.getElementById("backupButton").style.display =
@@ -805,6 +857,51 @@
 					<div>Expires at ${formatSqlUtcToLocal(data.expiresAt)}</div>
 				`;
 				await loadKioskDashboardData();
+			}
+
+			async function generateDirectSignInLink() {
+				if (!isAdmin) {
+					alert("Admin access required to build sign-in links.");
+					return;
+				}
+
+				const sessionId = Number(
+					document.getElementById("directLinkSessionId").value,
+				);
+				const bookingId = Number(
+					document.getElementById("directLinkBookingId").value,
+				);
+				const status = document.getElementById("directLinkStatus");
+
+				if (!Number.isFinite(sessionId) || !Number.isFinite(bookingId)) {
+					status.textContent = "Enter a session ID and booking ID.";
+					return;
+				}
+
+				status.textContent = "Building...";
+				const res = await fetch("/api/kiosk/session-link", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ sessionId, bookingId }),
+				});
+
+				const data = await res.json().catch(() => ({}));
+				if (!res.ok) {
+					status.textContent = data.error || `Request failed (${res.status})`;
+					return;
+				}
+
+				status.textContent = "Link ready.";
+				const result = document.getElementById("directLinkResult");
+				const qr = document.getElementById("directLinkQr");
+				const output = document.getElementById("directLinkOutput");
+
+				result.style.display = "grid";
+				qr.src = data.qrDataUrl || "";
+				output.innerHTML = `
+					<div style="word-break: break-all;">${escapeHtml(data.url)}</div>
+					<button type="button" style="margin-top: 10px" onclick="navigator.clipboard.writeText(${JSON.stringify(data.url)})">Copy link</button>
+				`;
 			}
 
 			async function loadKioskDashboardData() {

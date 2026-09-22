@@ -3,6 +3,13 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#171826" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="ZL Kiosk" />
+		<link rel="manifest" href="/kiosk-manifest.webmanifest" />
+		<link rel="apple-touch-icon" href="/assets/sign_in_tablet_icon_lightning.png" />
 		<title>Kiosk Sign-in</title>
 		<style>
 			:root {
@@ -48,6 +55,7 @@
 			}
 
 			.logo {
+				position: relative;
 				display: flex;
 				align-items: center;
 				line-height: 1;
@@ -93,6 +101,22 @@
 				font-weight: 700;
 				background: transparent;
 				cursor: pointer;
+			}
+
+			.date-picker-reveal {
+				position: absolute;
+				top: calc(100% + 8px);
+				left: 0;
+				z-index: 20;
+				width: min(220px, calc(100vw - 28px));
+				height: 42px;
+				padding: 0 12px;
+				border: 1px solid #c8d2e8;
+				border-radius: 10px;
+				background: #fff;
+				color: #1f365f;
+				font: inherit;
+				font-size: 15px;
 			}
 
 			.page {
@@ -247,6 +271,12 @@
 				font-size: 18px;
 				color: #5270a0;
 				margin-top: 8px;
+			}
+
+			.session-facts {
+				display: flex;
+				gap: 10px;
+				flex-wrap: wrap;
 			}
 
 			.poster {
@@ -691,11 +721,11 @@
 
 				.session-card,
 				.booking-card {
-					grid-template-columns: 1fr;
+					grid-template-columns: minmax(0, 1fr) minmax(128px, 45%);
 				}
 
 				.poster {
-					min-height: 140px;
+					min-height: 104px;
 				}
 
 				.actions {
@@ -710,23 +740,93 @@
 
 				.session-body,
 				.booking-body {
-					padding: 14px;
+					padding: 12px;
+					min-height: 104px;
 				}
 
 				.time {
-					font-size: 27px;
+					font-size: 23px;
 				}
 
 				.players {
-					font-size: 27px;
+					font-size: 15px;
 				}
 
 				.booking-title {
-					font-size: 24px;
+					font-size: 17px;
+				}
+
+				.meta,
+				.booking-email {
+					font-size: 13px;
+				}
+
+				.session-facts {
+					gap: 2px;
+					flex-direction: column;
+				}
+
+				.more,
+				.slots {
+					font-size: 14px;
+				}
+
+				.poster::after {
+					font-size: 13px;
+					left: 8px;
+					width: calc(100% - 16px);
+					bottom: 8px;
+				}
+
+				.badge {
+					font-size: 10px;
+					padding: 3px 8px;
+				}
+
+				.back {
+					font-size: 16px;
+				}
+
+				label {
+					font-size: 15px;
+				}
+
+				.why h3,
+				.why-item {
+					font-size: 14px;
+				}
+
+				.notice,
+				.aliases {
+					font-size: 13px;
+				}
+
+				.waiver-text {
+					font-size: 13px;
+					max-height: 260px;
+				}
+
+				.marketing-copy {
+					font-size: 13px;
+				}
+
+				.marketing-perk-text {
+					font-size: 11px;
+				}
+
+				.marketing-perk-dot {
+					width: 40px;
+					height: 40px;
+				}
+
+				.marketing-perk-dot img {
+					width: 40px;
+					height: 40px;
 				}
 
 				.btn {
 					height: 48px;
+					font-size: 15px;
 				}
 
 				.marketing-title {
@@ -747,7 +847,7 @@
 			@media (max-width: 420px) {
 				h1,
 				h2 {
-					font-size: 32px;
+					font-size: 28px;
 				}
 
 				.hint,
@@ -755,6 +855,42 @@
 				label,
 				.why-item {
 					font-size: 13px;
+				}
+
+				.time {
+					font-size: 22px;
+				}
+
+				.players {
+					font-size: 15px;
+				}
+
+				.booking-title {
+					font-size: 20px;
+				}
+
+				.meta,
+				.booking-email {
+					font-size: 14px;
+				}
+
+				.poster {
+					min-height: 110px;
+				}
+
+				.poster::after {
+					font-size: 15px;
+				}
+
+				.marketing-perks {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+					gap: 8px;
+				}
+
+				.session-body,
+				.booking-body {
+					padding: 12px;
+					min-height: 0;
 				}
 
 				.page {
@@ -766,18 +902,16 @@
 	<body>
 		<div class="app">
 			<header class="topbar">
-				<div
-					class="logo"
-					id="brandLogo"
-					title="Double tap to select a different date"
-				>
-					<img
-						class="logo-image"
-						src="/assets/zl-logo.png"
-						alt="Zero Latency VR"
+				<div class="logo" id="brandLogo" title="Double tap to select a different date">
+					<img class="logo-image" src="/assets/zl-logo.png" alt="Zero Latency VR" />
+					<input
+						id="sessionDateOverride"
+						class="date-picker-reveal"
+						type="date"
+						aria-label="Choose session date"
+						hidden
 					/>
 				</div>
-				<input id="sessionDateOverride" type="date" hidden />
 				<div class="actions">
 					<div class="lang-pill">English</div>
 					<button type="button" id="cancelButton" class="cancel">Cancel</button>
@@ -785,6 +919,19 @@
 			</header>
 
 			<main class="page">
+				<section class="step" data-step="0">
+					<h1>Your booking</h1>
+					<div class="panel">
+						<div id="previewCard" class="match-list"></div>
+						<div id="previewNotice" class="notice" style="display: none"></div>
+						<div class="actions-bottom">
+							<button type="button" id="previewContinueButton" class="btn">
+								Sign up
+							</button>
+						</div>
+					</div>
+				</section>
+
 				<section class="step active" data-step="1">
 					<h1>Select your session</h1>
 					<div class="panel">
@@ -1148,9 +1295,18 @@
 		<script>
 			const query = new URLSearchParams(window.location.search);
 			const token = query.get("token") || "";
+			const sessionParam = query.get("session") || "";
+			const bookingParam = query.get("booking") || "";
+			const isSessionLinkMode =
+				!token && Boolean(sessionParam) && Boolean(bookingParam);
 			const launchSource = query.get("source") || "phone";
 			const steps = Array.from(document.querySelectorAll(".step"));
 			const cancelButton = document.getElementById("cancelButton");
+			const previewCard = document.getElementById("previewCard");
+			const previewNotice = document.getElementById("previewNotice");
+			const previewContinueButton = document.getElementById(
+				"previewContinueButton",
+			);
 			const sessionOptions = document.getElementById("sessionOptions");
 			const sessionNotice = document.getElementById("sessionNotice");
 			const togglePreviousSessionsButton = document.getElementById(
@@ -1395,11 +1551,25 @@
 				}
 			}
 
+			function guestParams(extra = {}) {
+				const params = new URLSearchParams(extra);
+				if (isSessionLinkMode) {
+					params.set("session", sessionParam);
+					params.set("booking", bookingParam);
+					if (state.selectedDate) {
+						params.set("date", state.selectedDate);
+					}
+				} else {
+					params.set("token", token);
+				}
+				return params;
+			}
+
 			async function shouldShowMarketingForPlayer(playerGuid) {
 				if (!playerGuid) return true;
 
 				const response = await fetch(
-					`/api/kiosk/sign-in/preferences?token=${encodeURIComponent(token)}&playerGuid=${encodeURIComponent(playerGuid)}`,
+					`/api/kiosk/sign-in/preferences?${guestParams({ playerGuid }).toString()}`,
 				);
 				if (!response.ok) {
 					return true;
@@ -1770,6 +1940,48 @@
 				return `background-image: linear-gradient(180deg, rgba(18, 18, 28, 0.12), rgba(18, 18, 28, 0.55)), url('${safeUrl}');`;
 			}
 
+			function renderPreview() {
+				const session = getSelectedSession();
+				const booking = getSelectedBooking();
+
+				if (!session || !booking) {
+					previewCard.innerHTML = "";
+					setNotice(
+						previewNotice,
+						"This booking link is no longer valid.",
+						true,
+					);
+					previewContinueButton.disabled = true;
+					return;
+				}
+
+				setNotice(previewNotice, "");
+				const aliasLine = booking.signedAliases.length
+					? `Signed in: ${booking.signedAliases.join(", ")}`
+					: `${booking.occupiedCount} signed in so far`;
+				const availabilityLine =
+					booking.openSlots > 0
+						? `${booking.playerCount} players · ${booking.openSlots} open slots`
+						: "Booking is full";
+
+				previewCard.innerHTML = `
+					<article class="session-card" style="grid-template-columns: 1fr;">
+						<div class="session-body">
+							<div class="time">${escapeHtml(formatTime(session.startTime))}</div>
+							<div class="meta">${escapeHtml(session.packageName)}</div>
+							<div class="booking-title" style="margin-top: 10px;">${escapeHtml(booking.leadName)}</div>
+							<div class="booking-email">${escapeHtml(aliasLine)}</div>
+							<div class="slots">${escapeHtml(availabilityLine)}</div>
+						</div>
+					</article>
+				`;
+
+				previewContinueButton.disabled = booking.openSlots <= 0;
+				if (booking.openSlots <= 0) {
+					setNotice(previewNotice, "This booking is already full.", true);
+				}
+			}
+
 			function renderSessions() {
 				const visibleSessions = getVisibleSessions();
 				const nextSessionId = getNextUpcomingSessionId(visibleSessions);
@@ -1804,7 +2016,10 @@
 								<div class="session-body">
 									${badge}
 									<div class="time">${escapeHtml(formatTime(session.startTime))}</div>
-									<div class="meta">${escapeHtml(`${session.durationMinutes} min session · ${occupancy} players`)}</div>
+									<div class="session-facts">
+										<div class="meta">${escapeHtml(`${session.durationMinutes} min session`)}</div>
+										<div class="meta">${escapeHtml(`${occupancy} players`)}</div>
+									</div>
 									<div class="players">${escapeHtml(session.bookingSummary)}</div>
 								</div>
 								<div class="poster" data-title="${escapeHtml(session.packageName)}" style="${buildPosterStyle(session.imageUrl)}"></div>
@@ -1930,12 +2145,12 @@
 			}
 
 			async function loadBootstrap(dateStamp = null) {
-				if (!token) {
+				if (!isSessionLinkMode && !token) {
 					setNotice(sessionNotice, "Missing kiosk sign-in token.", true);
 					return;
 				}
 
-				const params = new URLSearchParams({ token });
+				const params = guestParams();
 				if (dateStamp) {
 					params.set("date", dateStamp);
 				}
@@ -1945,11 +2160,15 @@
 				);
 				const result = await response.json().catch(() => ({}));
 				if (!response.ok) {
-					setNotice(
-						sessionNotice,
-						result.error || "Unable to load available sessions.",
-						true,
-					);
+					const message =
+						result.error || "Unable to load available sessions.";
+					if (isSessionLinkMode) {
+						previewCard.innerHTML = "";
+						setNotice(previewNotice, message, true);
+						previewContinueButton.disabled = true;
+					} else {
+						setNotice(sessionNotice, message, true);
+					}
 					return;
 				}
 
@@ -1958,6 +2177,16 @@
 				sessionDateOverride.value = state.selectedDate || "";
 				state.signInConfig = result.signInConfig || defaultSignInConfig;
 				applySignInConfig();
+
+				if (isSessionLinkMode) {
+					const session = state.sessions[0] || null;
+					const booking = session?.bookings?.[0] || null;
+					state.selectedSessionId = session?.sessionId ?? null;
+					state.selectedBookingId = booking?.bookingId ?? null;
+					renderPreview();
+					return;
+				}
+
 				renderSessions();
 
 				if (state.selectedSessionId) {
@@ -1977,7 +2206,7 @@
 				emailContinue.textContent = "Checking...";
 
 				const response = await fetch(
-					`/api/kiosk/sign-in/players?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`,
+					`/api/kiosk/sign-in/players?${guestParams({ email }).toString()}`,
 				);
 				const result = await response.json().catch(() => ({}));
 				emailContinue.disabled = false;
@@ -2026,7 +2255,7 @@
 					);
 					state.selectedBookingId = null;
 					await loadBootstrap();
-					setStep(2);
+					setStep(isSessionLinkMode ? 0 : 2);
 					return;
 				}
 
@@ -2034,7 +2263,7 @@
 				waiverContinue.textContent = "Signing in...";
 
 				const response = await fetch(
-					`/api/kiosk/sign-in/submit?token=${encodeURIComponent(token)}`,
+					`/api/kiosk/sign-in/submit?${guestParams().toString()}`,
 					{
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
@@ -2086,6 +2315,7 @@
 					return;
 				}
 
+					sessionDateOverride.hidden = true;
 				state.selectedSessionId = null;
 				state.selectedBookingId = null;
 				state.showPreviousSessions = false;
@@ -2100,12 +2330,8 @@
 				if (!isDoubleTap) return;
 
 				sessionDateOverride.value = state.selectedDate || "";
-				if (typeof sessionDateOverride.showPicker === "function") {
-					sessionDateOverride.showPicker();
-					return;
-				}
-
-				sessionDateOverride.click();
+				sessionDateOverride.hidden = false;
+				sessionDateOverride.focus();
 			});
 
 			bookingOptions.addEventListener("click", (event) => {
@@ -2155,6 +2381,10 @@
 					const previous = Number(link.getAttribute("data-back"));
 					if (getCurrentStepNumber() === 6 && state.selectedPlayer) {
 						setStep(4);
+						return;
+					}
+					if (isSessionLinkMode && previous === 2) {
+						setStep(0);
 						return;
 					}
 					setStep(previous);
@@ -2296,6 +2526,10 @@
 				waiverCheck.checked = false;
 				populateProfileForm();
 				clearCompletionState();
+				if (isSessionLinkMode) {
+					setStep(0);
+					return;
+				}
 				renderBookings();
 				setStep(2);
 			});
@@ -2307,12 +2541,25 @@
 				}
 
 				window.close();
-				setStep(1);
+				setStep(isSessionLinkMode ? 0 : 1);
 			});
+
+			previewContinueButton.addEventListener("click", () => {
+				setStep(3);
+			});
+
+			if (isSessionLinkMode) {
+				setStep(0);
+			}
 
 			clearCompletionState();
 			populateCountryCodeOptions();
 			void loadBootstrap();
+			if ("serviceWorker" in navigator) {
+				window.addEventListener("load", () => {
+					void navigator.serviceWorker.register("/kiosk-sw.js");
+				});
+			}
 		</script>
 	</body>
 </html>

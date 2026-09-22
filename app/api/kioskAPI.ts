@@ -9,6 +9,7 @@ import {
 import { customLog } from '../utils/logger.ts';
 import { getKioskIdFromRequest, kioskSessionCookie } from './kioskAuth.ts';
 import {
+	getBookingById,
 	getSiteSessionsForDate,
 	searchPlayersByEmail,
 	signInPlayerToSession,
@@ -45,6 +46,10 @@ type KioskTokenRow = {
 	revoked_at: string | null;
 	created_at: string;
 };
+
+type KioskGuestAccess =
+	| { kind: 'kiosk'; kioskId: string }
+	| { kind: 'session'; sessionId: number; bookingId: number; date: string };
 
 type KioskDashboardRow = {
 	id: string;
@@ -326,27 +331,25 @@ function getRequestedSubmitDateStamp(body: Record<string, unknown> | null) {
 	return normalizeVenueDateStamp(body?.date) || getVenueDateStamp();
 }
 
-function getGuestToken(req: Request) {
-	return new URL(req.url).searchParams.get('token') || '';
-}
-
 async function requireKioskGuestToken(req: Request) {
-	const token = getGuestToken(req);
-	const record = token ? await getKioskQrToken(token) : null;
+	const access = await resolveKioskGuestAccess(req);
 
-	if (!record || record.revoked_at || isExpired(record.expires_at)) {
+	if (!access) {
 		return {
 			error: Response.json(
-				{ error: 'Kiosk sign-in token is invalid or expired.' },
+				{
+					error:
+						'Kiosk sign-in link is invalid, expired, or missing required parameters.',
+				},
 				{ status: 410 },
 			),
-			record: null,
+			access: null,
 		};
 	}
 
 	return {
 		error: null,
-		record,
+		access,
 	};
 }
 
@@ -590,6 +593,77 @@ async function getKioskQrToken(token: string) {
 		.get(token) as KioskTokenRow | null;
 }
 
+// No stored token for these links: fetch the booking directly by ID (gives
+// SessionId + StartTime), then a single date-scoped session lookup for the
+// richer package/gamespace/sibling-bookings data. No need to scan dates.
+async function findSessionAndBooking(sessionId: number, bookingId: number) {
+	const booking = await getBookingById(bookingId);
+	if (!booking?.StartTime) {
+		return null;
+	}
+
+	if (booking.SessionId && booking.SessionId !== sessionId) {
+		customLog(
+			`Booking ${bookingId} belongs to session ${booking.SessionId}, not requested session ${sessionId}`,
+			'WARN',
+		);
+		return null;
+	}
+
+	const dateStamp = booking.StartTime.slice(0, 10);
+	const sessions = await getSiteSessionsForDate(dateStamp);
+	if (!sessions) {
+		return null;
+	}
+
+	const session = sessions.find((entry) => entry.SessionId === sessionId);
+	const matchedBooking = session?.Bookings?.find(
+		(entry) => entry.BookingId === bookingId,
+	);
+	if (!session || !matchedBooking) {
+		return null;
+	}
+
+	return { date: dateStamp, session, booking: matchedBooking };
+}
+
+async function resolveKioskGuestAccess(
+	req: Request,
+): Promise<KioskGuestAccess | null> {
+	const url = new URL(req.url);
+	const token = url.searchParams.get('token') || '';
+
+	if (token) {
+		const kioskRecord = await getKioskQrToken(token);
+		if (
+			kioskRecord &&
+			!kioskRecord.revoked_at &&
+			!isExpired(kioskRecord.expires_at)
+		) {
+			return { kind: 'kiosk', kioskId: kioskRecord.kiosk_id };
+		}
+		return null;
+	}
+
+	const sessionId = Number(url.searchParams.get('session'));
+	const bookingId = Number(url.searchParams.get('booking'));
+	if (!Number.isFinite(sessionId) || !Number.isFinite(bookingId)) {
+		return null;
+	}
+
+	const explicitDate = normalizeVenueDateStamp(url.searchParams.get('date'));
+	if (explicitDate) {
+		return { kind: 'session', sessionId, bookingId, date: explicitDate };
+	}
+
+	const found = await findSessionAndBooking(sessionId, bookingId);
+	if (!found) {
+		return null;
+	}
+
+	return { kind: 'session', sessionId, bookingId, date: found.date };
+}
+
 async function getLatestKioskQrToken(kioskId: string) {
 	return db
 		.query(
@@ -803,7 +877,7 @@ export async function renderKioskSignInPage(req: Request) {
 
 	const kiosk = await getKioskDeviceById(record.kiosk_id);
 	customLog(
-		`Serving kiosk sign-in flow for token ${record.token}${kiosk?.label ? ` (${kiosk.label})` : ''}`,
+		`Serving kiosk sign-in flow for token ${token}${kiosk?.label ? ` (${kiosk.label})` : ''}`,
 		'INFO',
 	);
 
@@ -813,13 +887,26 @@ export async function renderKioskSignInPage(req: Request) {
 	});
 }
 
+export function renderKioskSessionSignInPage(_req: Request) {
+	// Stateless: no token to check. The page itself resolves the session/booking client-side.
+	return new Response(Bun.file('./app/public/kiosk-signin.html'), {
+		status: 200,
+		headers: { 'Content-Type': 'text/html; charset=UTF-8' },
+	});
+}
+
+
 export async function getKioskSignInBootstrap(req: Request) {
 	const guestToken = await requireKioskGuestToken(req);
 	if (guestToken.error) {
 		return guestToken.error;
 	}
+	const access = guestToken.access;
 
-	const requestedDateStamp = getRequestedSessionDateStamp(req);
+	const requestedDateStamp =
+		access.kind === 'session'
+			? access.date
+			: getRequestedSessionDateStamp(req);
 	const sessions = await getSiteSessionsForDate(requestedDateStamp);
 	if (!sessions) {
 		return Response.json(
@@ -828,30 +915,45 @@ export async function getKioskSignInBootstrap(req: Request) {
 		);
 	}
 
-	const mappedSessions = sessions
-		.filter((session) => !session.IsHidden)
+	// A direct booking link only ever exposes the one session/booking it was created for.
+	const scopedSessions =
+		access.kind === 'session'
+			? sessions
+					.filter((session) => session.SessionId === access.sessionId)
+					.map((session) => ({
+						...session,
+						Bookings: (session.Bookings || []).filter(
+							(booking) => booking.BookingId === access.bookingId,
+						),
+					}))
+			: sessions;
+
+	const mappedSessions = scopedSessions
+		.filter((session) => access.kind === 'session' || !session.IsHidden)
 		.filter((session) => (session.Bookings || []).length > 0)
 		.map(mapSessionSummary);
 
-	const visibleSessions = await Promise.all(
-		mappedSessions.map(async (sessionSummary) => ({
-			...sessionSummary,
-			imageUrl:
-				(await getLocalPackageImageUrl(
-					sessionSummary.packageName,
-					sessionSummary.imageUrl,
-				)) || null,
-		})),
-	)
-		.sort(
-			(left, right) => Date.parse(left.startTime) - Date.parse(right.startTime),
-		);
+	const visibleSessions = (
+		await Promise.all(
+			mappedSessions.map(async (sessionSummary) => ({
+				...sessionSummary,
+				imageUrl:
+					(await getLocalPackageImageUrl(
+						sessionSummary.packageName,
+						sessionSummary.imageUrl,
+					)) || null,
+			})),
+		)
+	).sort(
+		(left, right) => Date.parse(left.startTime) - Date.parse(right.startTime),
+	);
 
 	return Response.json({
 		date: requestedDateStamp,
 		timeZone: config.venue.timezone,
 		signInConfig: await getSignInConfig(),
 		sessions: visibleSessions,
+		directAccess: access.kind === 'session',
 	});
 }
 
@@ -927,6 +1029,7 @@ export async function submitKioskSignIn(req: Request) {
 	if (guestToken.error) {
 		return guestToken.error;
 	}
+	const access = guestToken.access;
 
 	const body = (await req.json().catch(() => null)) as Record<
 		string,
@@ -949,6 +1052,16 @@ export async function submitKioskSignIn(req: Request) {
 		);
 	}
 
+	if (
+		access.kind === 'session' &&
+		(access.sessionId !== sessionId || access.bookingId !== bookingId)
+	) {
+		return Response.json(
+			{ error: 'This link is only valid for a specific booking.' },
+			{ status: 403 },
+		);
+	}
+
 	const emailAddress = normalizeOptionalString(profile.email);
 
 	if (!emailAddress) {
@@ -965,7 +1078,8 @@ export async function submitKioskSignIn(req: Request) {
 		);
 	}
 
-	const submitDateStamp = getRequestedSubmitDateStamp(body);
+	const submitDateStamp =
+		access.kind === 'session' ? access.date : getRequestedSubmitDateStamp(body);
 	const sessions = await getSiteSessionsForDate(submitDateStamp);
 	if (!sessions) {
 		return Response.json(
@@ -1113,3 +1227,31 @@ export async function submitKioskSignIn(req: Request) {
 			emailAddress,
 	});
 }
+
+export async function buildKioskSessionSignInLink(req: Request) {
+	const body = (await req.json().catch(() => null)) as Record<
+		string,
+		unknown
+	> | null;
+
+	const sessionId = Number(body?.sessionId);
+	const bookingId = Number(body?.bookingId);
+
+	if (!Number.isFinite(sessionId) || !Number.isFinite(bookingId)) {
+		return Response.json(
+			{ error: 'Missing or invalid sessionId or bookingId.' },
+			{ status: 400 },
+		);
+	}
+
+	const origin = new URL(req.url).origin;
+	const url = `${origin}/kiosk/signin/session?session=${encodeURIComponent(sessionId)}&booking=${encodeURIComponent(bookingId)}`;
+	const qrDataUrl = await QRCode.toDataURL(url, {
+		margin: 1,
+		width: 280,
+		color: { dark: '#0f1018', light: '#ffffff' },
+	});
+
+	return Response.json({ url, qrDataUrl });
+}
+
