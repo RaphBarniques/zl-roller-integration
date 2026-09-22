@@ -25,7 +25,7 @@
 				gap: 8px;
 			}
 
-			#dashboardVersion {
+			.header-meta {
 				font-size: 0.75rem;
 				opacity: 0.9;
 				font-weight: 600;
@@ -216,7 +216,10 @@
 		<header>
 			<div class="header-title">
 				<h2>Dashboard - Integration ROLLER &gt; ZL</h2>
-				<span id="dashboardVersion"></span>
+				<div class="header-meta">
+					<span id="venueLocation"></span>
+					<span id="dashboardVersion"></span>
+				</div>
 			</div>
 			<div class="header-actions">
 				<button
@@ -432,6 +435,9 @@
 
 				document.getElementById("dashboardVersion").textContent =
 					`v${data.version}`;
+				document.getElementById("venueLocation").textContent = data.location
+					? data.location + " - "
+					: "";
 			}
 
 			async function initDashboardRole() {
